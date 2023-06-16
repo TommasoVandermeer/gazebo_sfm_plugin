@@ -72,6 +72,73 @@
       <uri>model://cafe_table</uri>
     </include>
 
+    <!-- ACTORS COLLISION MODELS -->
+    <model name="actor1_collision_model">
+    <allow_auto_disable>false</allow_auto_disable>
+      <pose>0 0 -100 0 0 0</pose>
+      <static>true</static>
+      <link name="link">
+        <collision name="link">
+          <pose>0 -0.18 0.05 0 -1.5707963267948966 0</pose>
+          <geometry>
+            <box>
+              <size>0.44 1.62 0.60</size>
+            </box>
+          </geometry>
+        </collision>
+      </link>
+    </model>
+
+    <model name="actor2_collision_model">
+    <allow_auto_disable>false</allow_auto_disable>
+      <pose>0 0 -100 0 0 0</pose>
+      <static>true</static>
+      <link name="link">
+        <collision name="link">
+          <pose>0 -0.18 0.00 1.57 0 0</pose>
+          <geometry>
+            <cylinder>
+              <radius>0.3</radius>
+              <length>1.8</length>
+            </cylinder>
+          </geometry>
+        </collision>
+      </link>
+    </model> 
+
+    <model name="actor4_collision_model">
+    <allow_auto_disable>false</allow_auto_disable>
+      <pose>0 0 -100 0 0 0</pose>
+      <static>true</static>
+      <link name="link">
+        <collision name="link">
+          <pose>0 -0.18 0.05 0 -1.5707963267948966 0</pose>
+          <geometry>
+            <box>
+              <size>0.44 1.62 0.60</size>
+            </box>
+          </geometry>
+        </collision>
+      </link>
+    </model>
+
+    <model name="actor5_collision_model">
+    <allow_auto_disable>false</allow_auto_disable>
+      <pose>0 0 -100 0 0 0</pose>
+      <static>true</static>
+      <link name="link">
+        <collision name="link">
+          <pose>0 -0.18 0.05 0 -1.5707963267948966 0</pose>
+          <geometry>
+            <box>
+              <size>0.44 1.62 0.60</size>
+            </box>
+          </geometry>
+        </collision>
+      </link>
+    </model>
+
+    <!-- ACTORS -->
     <actor name="actor1">
       <pose>-1 2 1.25 0 0 0</pose>
       <skin>
@@ -83,7 +150,7 @@
         <scale>1.000000</scale>
         <interpolate_x>true</interpolate_x>
       </animation>
-
+      <!-- SFM Plugin -->
       <plugin name="actor1_plugin" filename="libPedestrianSFMPlugin.so">
         <velocity>0.9</velocity>
         <radius>0.4</radius>
@@ -100,12 +167,22 @@
         <ignore_obstacles>
           <model>cafe</model>
           <model>ground_plane</model>
+          <model>actor1_collision_model</model>
         </ignore_obstacles>
         <trajectory>
           <cyclic>true</cyclic>
           <waypoint>-1 2 1.25</waypoint>
           <waypoint>-1 -8 1.25</waypoint>
         </trajectory>
+      </plugin>
+      <!-- Enable collisions -->
+      <plugin name="actor1_collision" filename="libAttachModelPlugin.so">
+        <link>
+          <link_name>actor1_pose</link_name>
+          <model>
+            <model_name>actor1_collision_model</model_name>
+          </model>
+        </link>
       </plugin>
     </actor>
 
@@ -120,7 +197,7 @@
         <scale>1.000000</scale>
         <interpolate_x>true</interpolate_x>
       </animation>
-
+      <!-- SFM Plugin -->
       <plugin name="actor2_plugin" filename="libPedestrianSFMPlugin.so">
         <velocity>1.2</velocity>
         <radius>0.4</radius>
@@ -136,12 +213,22 @@
         <ignore_obstacles>
           <model>cafe</model>
           <model>ground_plane</model>
+          <model>actor2_collision_model</model>
         </ignore_obstacles>
         <trajectory>
           <cyclic>true</cyclic>
           <waypoint>-1 -8 1.25</waypoint>
           <waypoint>-1 2 1.25</waypoint>
         </trajectory>
+      </plugin>
+      <!-- Enable collisions -->
+      <plugin name="actor2_collision" filename="libAttachModelPlugin.so">
+        <link>
+          <link_name>actor2_pose</link_name>
+          <model>
+            <model_name>actor2_collision_model</model_name>
+          </model>
+        </link>
       </plugin>
     </actor>
 
@@ -169,7 +256,7 @@
         <scale>1.000000</scale>
         <interpolate_x>true</interpolate_x>
       </animation>
-
+      <!-- SFM Plugin -->
       <plugin name="actor4_plugin" filename="libPedestrianSFMPlugin.so">
         <velocity>1.0</velocity>
         <radius>0.4</radius>
@@ -188,12 +275,22 @@
         <ignore_obstacles>
           <model>cafe</model>
           <model>ground_plane</model>
+          <model>actor4_collision_model</model>
         </ignore_obstacles>
         <trajectory>
           <cyclic>true</cyclic>
           <waypoint>3 0 1.25</waypoint>
           <waypoint>-3 0 1.25</waypoint>
         </trajectory>
+      </plugin>
+      <!-- Enable collisions -->
+      <plugin name="actor4_collision" filename="libAttachModelPlugin.so">
+        <link>
+          <link_name>actor4_pose</link_name>
+          <model>
+            <model_name>actor4_collision_model</model_name>
+          </model>
+        </link>
       </plugin>
     </actor>
 
@@ -208,7 +305,7 @@
         <scale>1.000000</scale>
         <interpolate_x>true</interpolate_x>
       </animation>
-
+      <!-- SFM Plugin -->
       <plugin name="actor5_plugin" filename="libPedestrianSFMPlugin.so">
         <velocity>0.7</velocity>
         <radius>0.4</radius>
@@ -227,12 +324,22 @@
         <ignore_obstacles> 
           <model>cafe</model>
           <model>ground_plane</model>
+          <model>actor5_collision_model</model>
         </ignore_obstacles>
         <trajectory>
           <cyclic>true</cyclic>
           <waypoint>3 0.8 1.25</waypoint>
           <waypoint>-3 0.8 1.25</waypoint>
         </trajectory>
+      </plugin>
+      <!-- Enable collisions -->
+      <plugin name="actor5_collision" filename="libAttachModelPlugin.so">
+        <link>
+          <link_name>actor5_pose</link_name>
+          <model>
+            <model_name>actor5_collision_model</model_name>
+          </model>
+        </link>
       </plugin>
     </actor>
 

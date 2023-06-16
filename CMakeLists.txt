@@ -56,4 +56,21 @@ install(DIRECTORY models/
    DESTINATION share/${PROJECT_NAME}/models
 )
 
+# Create the libAttachModelPlugin.so library.
+set(attach_model_plugin_name AttachModelPlugin)
+add_library(${attach_model_plugin_name} SHARED
+  src/AttachModelPlugin.cc
+)
+target_link_libraries(${attach_model_plugin_name}
+  ${GAZEBO_LIBRARIES}
+)
+#add_dependencies(${attach_model_plugin_name}
+#  ${PROJECT_NAME}_generate_messages_cpp
+#)
+install(TARGETS ${attach_model_plugin_name}
+  ARCHIVE DESTINATION lib
+  LIBRARY DESTINATION lib
+  RUNTIME DESTINATION bin
+)
+
 ament_package()

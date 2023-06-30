@@ -30,10 +30,9 @@
 #include "gazebo/common/Plugin.hh"
 #include "gazebo/physics/physics.hh"
 #include "gazebo/util/system.hh"
-#include "gazebo/sensors/sensors.hh"
 
 // Social Force Model
-#include <lightsfm/sfm.hpp>
+#include <lightsfm/hsfm.hpp>
 
 namespace gazebo {
 class GZ_PLUGIN_VISIBLE PedestrianSFMPlugin : public ModelPlugin {

@@ -36,8 +36,24 @@ ament_target_dependencies(PedestrianSFMPlugin
 ament_export_libraries(PedestrianSFMPlugin)
 target_link_libraries(PedestrianSFMPlugin ${GAZEBO_LIBRARIES}) #${Boost_LIBRARIES
 
+add_library(PedestrianHSFMPlugin SHARED src/PedestrianHSFMPlugin.cpp)
+target_include_directories(PedestrianHSFMPlugin PUBLIC include)
+ament_target_dependencies(PedestrianHSFMPlugin 
+  "rclcpp" 
+  "gazebo" 
+  "gazebo_ros"
+)
+ament_export_libraries(PedestrianHSFMPlugin)
+target_link_libraries(PedestrianHSFMPlugin ${GAZEBO_LIBRARIES}) #${Boost_LIBRARIES
+
 
 install(TARGETS PedestrianSFMPlugin
+  ARCHIVE DESTINATION lib
+  LIBRARY DESTINATION lib
+  RUNTIME DESTINATION bin
+)
+
+install(TARGETS PedestrianHSFMPlugin
   ARCHIVE DESTINATION lib
   LIBRARY DESTINATION lib
   RUNTIME DESTINATION bin

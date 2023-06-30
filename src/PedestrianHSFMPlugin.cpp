@@ -24,7 +24,7 @@
 
 //#include <ignition/math.hh>
 //#include <ignition/math/gzmath.hh>
-#include <gazebo_sfm_plugin/PedestrianSFMPlugin.h>
+#include <gazebo_sfm_plugin/PedestrianHSFMPlugin.h>
 
 using namespace gazebo;
 GZ_REGISTER_MODEL_PLUGIN(PedestrianSFMPlugin)
@@ -59,29 +59,12 @@ void PedestrianSFMPlugin::Load(physics::ModelPtr _model, sdf::ElementPtr _sdf) {
   else
     this->sfmActor.desiredVelocity = 0.8;
 
-  // Read in the target weight
-  if (_sdf->HasElement("goal_weight"))
-    this->sfmActor.params.forceFactorDesired = _sdf->Get<double>("goal_weight");
-  // Read in the obstacle weight
-  if (_sdf->HasElement("obstacle_weight"))
-    this->sfmActor.params.forceFactorObstacle =
-        _sdf->Get<double>("obstacle_weight");
-  // Read in the social weight
-  if (_sdf->HasElement("social_weight"))
-    this->sfmActor.params.forceFactorSocial =
-        _sdf->Get<double>("social_weight");
-  // Read in the group gaze weight
-  if (_sdf->HasElement("group_gaze_weight"))
-    this->sfmActor.params.forceFactorGroupGaze =
-        _sdf->Get<double>("group_gaze_weight");
-  // Read in the group coherence weight
-  if (_sdf->HasElement("group_coh_weight"))
-    this->sfmActor.params.forceFactorGroupCoherence =
-        _sdf->Get<double>("group_coh_weight");
-  // Read in the group repulsion weight
-  if (_sdf->HasElement("group_rep_weight"))
-    this->sfmActor.params.forceFactorGroupRepulsion =
-        _sdf->Get<double>("group_rep_weight");
+  // Read in the target actor radius
+  if (_sdf->HasElement("actor_radius"))
+    this->sfmActor.radius = _sdf->Get<double>("actor_radius");
+  // Read in the target actor mass
+  if (_sdf->HasElement("actor_mass"))
+    this->sfmActor.mass = _sdf->Get<double>("actor_mass");
 
   // Read in the animation factor (applied in the OnUpdate function).
   if (_sdf->HasElement("animation_factor"))
@@ -186,44 +169,30 @@ void PedestrianSFMPlugin::HandleObstacles() {
   for (unsigned int i = 0; i < this->world->ModelCount(); ++i) {
     physics::ModelPtr model = this->world->ModelByIndex(i); // GetModel(i);
     if (std::find(this->ignoreModels.begin(), this->ignoreModels.end(), model->GetName()) == this->ignoreModels.end()) {
-      // PART UNDER TESTING
-      std::vector<physics::LinkPtr> links = model->GetLinks();
-      for (unsigned int j = 0; j < links.size(); ++j) {
-        std::vector<physics::CollisionPtr> collisions = links[j]->GetCollisions();
-        for (unsigned int k = 0; k < collisions.size(); ++k) {
-          physics::CollisionPtr coll = collisions[k];
-          ignition::math::Vector3d actorPos = this->actor->WorldPose().Pos();
-          ignition::math::Vector3d collPos = coll->WorldPose().Pos();
-          std::tuple<bool, double, ignition::math::Vector3d> intersect = coll->CollisionBoundingBox().Intersect(collPos, actorPos, 0.05, 8.0);
-          if (std::get<0>(intersect) == true) {
-            ignition::math::Vector3d offset = std::get<2>(intersect) - actorPos;
-            double collDist = offset.Length();
-            if (collDist < minDist) {
-              minDist = collDist;
-              // closest_obs = offset;
-              closest_obs = std::get<2>(intersect);
-            }
-          }
+      ignition::math::Vector3d actorPos = this->actor->WorldPose().Pos();
+      ignition::math::Vector3d modelPos = model->WorldPose().Pos();
+      std::tuple<bool, double, ignition::math::Vector3d> intersect = model->BoundingBox().Intersect(modelPos, actorPos, 0.05, 8.0);
+
+      if (std::get<0>(intersect) == true) {
+
+        // ignition::math::Vector3d = model->BoundingBox().Center();
+        // double approximated_radius = std::max(model->BoundingBox().XLength(),
+        //                                      model->BoundingBox().YLength());
+
+        // ignition::math::Vector3d offset1 = modelPos - actorPos;
+        // double modelDist1 = offset1.Length();
+        // double dist1 = actorPos.Distance(modelPos);
+
+        ignition::math::Vector3d offset = std::get<2>(intersect) - actorPos;
+        double modelDist = offset.Length(); // - approximated_radius;
+        // double dist2 = actorPos.Distance(std::get<2>(intersect));
+
+        if (modelDist < minDist) {
+          minDist = modelDist;
+          // closest_obs = offset;
+          closest_obs = std::get<2>(intersect);
         }
       }
-      // END OF PART UNDER TESTING - BEGINNING OF WORKING PART
-      // ignition::math::Vector3d actorPos = this->actor->WorldPose().Pos();
-      // ignition::math::Vector3d modelPos = model->WorldPose().Pos();
-      // std::tuple<bool, double, ignition::math::Vector3d> intersect = model->CollisionBoundingBox().Intersect(modelPos, actorPos, 0.05, 8.0);
-      // if (std::get<0>(intersect) == true) {
-      //   // std::cout<<"Model pose: "<<modelPos<<std::endl;
-      //   // std::cout<<"Intersect1: "<<std::get<2>(intersect)<<std::endl;
-      //   // std::cout<<"Collision bounding box Size: "<<model->CollisionBoundingBox().Size()<<std::endl;
-      //   //double dist1 = actorPos.Distance(modelPos);
-      //   ignition::math::Vector3d offset = std::get<2>(intersect) - actorPos;
-      //   double modelDist = offset.Length(); // - approximated_radius;
-      //   if (modelDist < minDist) {
-      //     minDist = modelDist;
-      //     // closest_obs = offset;
-      //     closest_obs = std::get<2>(intersect);
-      //   }
-      // }
-      // END OF WORKING PART
     }
   }
 
@@ -335,13 +304,10 @@ void PedestrianSFMPlugin::OnUpdate(const common::UpdateInfo &_info) {
   // actorPose.Pos().Y(std::max(-10.0, std::min(2.0, actorPose.Pos().Y())));
   actorPose.Pos().Z(1.01); //1.2138
 
-  // Distance traveled is used to coordinate motion with the walking
-  // animation
-  double distanceTraveled =
-      (actorPose.Pos() - this->actor->WorldPose().Pos()).Length();
+  // Distance traveled is used to coordinate motion with the walking animation
+  double distanceTraveled = (actorPose.Pos() - this->actor->WorldPose().Pos()).Length();
 
   this->actor->SetWorldPose(actorPose, false, false);
-  this->actor->SetScriptTime(this->actor->ScriptTime() +
-                             (distanceTraveled * this->animationFactor));
+  this->actor->SetScriptTime(this->actor->ScriptTime() + (distanceTraveled * this->animationFactor));
   this->lastUpdate = _info.simTime;
 }

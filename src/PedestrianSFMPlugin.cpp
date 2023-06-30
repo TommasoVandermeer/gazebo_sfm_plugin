@@ -186,43 +186,43 @@ void PedestrianSFMPlugin::HandleObstacles() {
   for (unsigned int i = 0; i < this->world->ModelCount(); ++i) {
     physics::ModelPtr model = this->world->ModelByIndex(i); // GetModel(i);
     if (std::find(this->ignoreModels.begin(), this->ignoreModels.end(), model->GetName()) == this->ignoreModels.end()) {
-      // PART UNDER TESTING
-      std::vector<physics::LinkPtr> links = model->GetLinks();
-      for (unsigned int j = 0; j < links.size(); ++j) {
-        std::vector<physics::CollisionPtr> collisions = links[j]->GetCollisions();
-        for (unsigned int k = 0; k < collisions.size(); ++k) {
-          physics::CollisionPtr coll = collisions[k];
-          ignition::math::Vector3d actorPos = this->actor->WorldPose().Pos();
-          ignition::math::Vector3d collPos = coll->WorldPose().Pos();
-          std::tuple<bool, double, ignition::math::Vector3d> intersect = coll->CollisionBoundingBox().Intersect(collPos, actorPos, 0.05, 8.0);
-          if (std::get<0>(intersect) == true) {
-            ignition::math::Vector3d offset = std::get<2>(intersect) - actorPos;
-            double collDist = offset.Length();
-            if (collDist < minDist) {
-              minDist = collDist;
-              // closest_obs = offset;
-              closest_obs = std::get<2>(intersect);
-            }
-          }
-        }
-      }
-      // END OF PART UNDER TESTING - BEGINNING OF WORKING PART
-      // ignition::math::Vector3d actorPos = this->actor->WorldPose().Pos();
-      // ignition::math::Vector3d modelPos = model->WorldPose().Pos();
-      // std::tuple<bool, double, ignition::math::Vector3d> intersect = model->CollisionBoundingBox().Intersect(modelPos, actorPos, 0.05, 8.0);
-      // if (std::get<0>(intersect) == true) {
-      //   // std::cout<<"Model pose: "<<modelPos<<std::endl;
-      //   // std::cout<<"Intersect1: "<<std::get<2>(intersect)<<std::endl;
-      //   // std::cout<<"Collision bounding box Size: "<<model->CollisionBoundingBox().Size()<<std::endl;
-      //   //double dist1 = actorPos.Distance(modelPos);
-      //   ignition::math::Vector3d offset = std::get<2>(intersect) - actorPos;
-      //   double modelDist = offset.Length(); // - approximated_radius;
-      //   if (modelDist < minDist) {
-      //     minDist = modelDist;
-      //     // closest_obs = offset;
-      //     closest_obs = std::get<2>(intersect);
+      // // PART UNDER TESTING
+      // std::vector<physics::LinkPtr> links = model->GetLinks();
+      // for (unsigned int j = 0; j < links.size(); ++j) {
+      //   std::vector<physics::CollisionPtr> collisions = links[j]->GetCollisions();
+      //   for (unsigned int k = 0; k < collisions.size(); ++k) {
+      //     physics::CollisionPtr coll = collisions[k];
+      //     ignition::math::Vector3d actorPos = this->actor->WorldPose().Pos();
+      //     ignition::math::Vector3d collPos = coll->WorldPose().Pos();
+      //     std::tuple<bool, double, ignition::math::Vector3d> intersect = coll->CollisionBoundingBox().Intersect(collPos, actorPos, 0.05, 8.0);
+      //     if (std::get<0>(intersect) == true) {
+      //       ignition::math::Vector3d offset = std::get<2>(intersect) - actorPos;
+      //       double collDist = offset.Length();
+      //       if (collDist < minDist) {
+      //         minDist = collDist;
+      //         // closest_obs = offset;
+      //         closest_obs = std::get<2>(intersect);
+      //       }
+      //     }
       //   }
       // }
+      // END OF PART UNDER TESTING - BEGINNING OF WORKING PART
+      ignition::math::Vector3d actorPos = this->actor->WorldPose().Pos();
+      ignition::math::Vector3d modelPos = model->WorldPose().Pos();
+      std::tuple<bool, double, ignition::math::Vector3d> intersect = model->CollisionBoundingBox().Intersect(modelPos, actorPos, 0.05, 8.0);
+      if (std::get<0>(intersect) == true) {
+        // std::cout<<"Model pose: "<<modelPos<<std::endl;
+        // std::cout<<"Intersect1: "<<std::get<2>(intersect)<<std::endl;
+        // std::cout<<"Collision bounding box Size: "<<model->CollisionBoundingBox().Size()<<std::endl;
+        //double dist1 = actorPos.Distance(modelPos);
+        ignition::math::Vector3d offset = std::get<2>(intersect) - actorPos;
+        double modelDist = offset.Length(); // - approximated_radius;
+        if (modelDist < minDist) {
+          minDist = modelDist;
+          // closest_obs = offset;
+          closest_obs = std::get<2>(intersect);
+        }
+      }
       // END OF WORKING PART
     }
   }

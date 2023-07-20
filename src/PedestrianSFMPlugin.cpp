@@ -209,18 +209,36 @@ void PedestrianSFMPlugin::HandleObstacles() {
       // END OF PART UNDER TESTING - BEGINNING OF WORKING PART
       ignition::math::Vector3d actorPos = this->actor->WorldPose().Pos();
       ignition::math::Vector3d modelPos = model->WorldPose().Pos();
-      std::tuple<bool, double, ignition::math::Vector3d> intersect = model->CollisionBoundingBox().Intersect(modelPos, actorPos, 0.05, 8.0);
+
+      ignition::math::Line3d act_obs_line(actorPos, modelPos);
+
+      std::tuple<bool, double, ignition::math::Vector3d> intersect = model->BoundingBox().Intersect(act_obs_line);
+      // std::cout<<"Model Position: "<<modelPos<<std::endl;
+      // std::cout<<"Actor Position: "<<actorPos<<std::endl;
+      // std::cout<<"Bool Intersect: "<<std::get<0>(intersect)<<std::endl;
+      // std::cout<<"Dist Intersect: "<<std::get<1>(intersect)<<std::endl;
+      // std::cout<<"Vector3d Intersect: "<<std::get<2>(intersect)<<std::endl;
+      // std::cout<<"Bounding Box Center: "<<model->BoundingBox().Center()<<std::endl;
+      // std::cout<<"Bounding Box Max: "<<model->BoundingBox().Max()<<std::endl;
+      // std::cout<<"Bounding Box Min: "<<model->BoundingBox().Min()<<std::endl;
+      // std::cout<<"Actor obstacle line: "<<act_obs_line<<std::endl;
+      ignition::math::Vector3d intersecPos;
+      double dist = -1;
+
       if (std::get<0>(intersect) == true) {
-        // std::cout<<"Model pose: "<<modelPos<<std::endl;
-        // std::cout<<"Intersect1: "<<std::get<2>(intersect)<<std::endl;
-        // std::cout<<"Collision bounding box Size: "<<model->CollisionBoundingBox().Size()<<std::endl;
-        //double dist1 = actorPos.Distance(modelPos);
-        ignition::math::Vector3d offset = std::get<2>(intersect) - actorPos;
-        double modelDist = offset.Length(); // - approximated_radius;
+        intersecPos = std::get<2>(intersect);
+        dist = std::get<1>(intersect);
+      }
+
+      if (dist > 0) {
+        ignition::math::Vector3d offset = intersecPos - actorPos;
+        double modelDist = offset.Length(); //-approximated_radius;
+        // double dist2 = actorPos.Distance(std::get<2>(intersect));
+
         if (modelDist < minDist) {
           minDist = modelDist;
           // closest_obs = offset;
-          closest_obs = std::get<2>(intersect);
+          closest_obs = intersecPos;
         }
       }
       // END OF WORKING PART
@@ -236,6 +254,8 @@ void PedestrianSFMPlugin::HandleObstacles() {
   if (minDist <= 10.0) {
     utils::Vector2d ob(closest_obs.X(), closest_obs.Y());
     this->sfmActor.obstacles1.push_back(ob);
+    //DEBUG LINES
+    //std::cout<<"Closest obstacle: "<<ob<<std::endl;
   }
 }
 

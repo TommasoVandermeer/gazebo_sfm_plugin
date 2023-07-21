@@ -179,63 +179,100 @@ void PedestrianSFMPlugin::Reset() {
 /////////////////////////////////////////////////
 void PedestrianSFMPlugin::HandleObstacles() {
   double minDist = 10000.0;
-  ignition::math::Vector3d closest_obs;
-  ignition::math::Vector3d closest_obs2;
+  // ignition::math::Vector3d closest_obs;
+  // ignition::math::Vector3d closest_obs2;
+  ignition::math::Vector2d closest_obs;
+  ignition::math::Vector2d closest_obs2;
+  // bool same_obs = false;
   this->sfmActor.obstacles1.clear();
 
   for (unsigned int i = 0; i < this->world->ModelCount(); ++i) {
     physics::ModelPtr model = this->world->ModelByIndex(i); // GetModel(i);
     if (std::find(this->ignoreModels.begin(), this->ignoreModels.end(), model->GetName()) == this->ignoreModels.end()) {
-      // // PART UNDER TESTING
-      // std::vector<physics::LinkPtr> links = model->GetLinks();
-      // for (unsigned int j = 0; j < links.size(); ++j) {
-      //   std::vector<physics::CollisionPtr> collisions = links[j]->GetCollisions();
-      //   for (unsigned int k = 0; k < collisions.size(); ++k) {
-      //     physics::CollisionPtr coll = collisions[k];
-      //     ignition::math::Vector3d actorPos = this->actor->WorldPose().Pos();
-      //     ignition::math::Vector3d collPos = coll->WorldPose().Pos();
-      //     std::tuple<bool, double, ignition::math::Vector3d> intersect = coll->CollisionBoundingBox().Intersect(collPos, actorPos, 0.05, 8.0);
-      //     if (std::get<0>(intersect) == true) {
-      //       ignition::math::Vector3d offset = std::get<2>(intersect) - actorPos;
-      //       double collDist = offset.Length();
-      //       if (collDist < minDist) {
-      //         minDist = collDist;
-      //         // closest_obs = offset;
-      //         closest_obs = std::get<2>(intersect);
-      //       }
-      //     }
-      //   }
-      // }
-      // END OF PART UNDER TESTING - BEGINNING OF WORKING PART
       ignition::math::Vector3d actorPos = this->actor->WorldPose().Pos();
       ignition::math::Vector3d modelPos = model->WorldPose().Pos();
-      std::tuple<bool, double, ignition::math::Vector3d> intersect = model->CollisionBoundingBox().Intersect(modelPos, actorPos, 0.05, 8.0);
-      if (std::get<0>(intersect) == true) {
-        // std::cout<<"Model pose: "<<modelPos<<std::endl;
-        // std::cout<<"Intersect1: "<<std::get<2>(intersect)<<std::endl;
-        // std::cout<<"Collision bounding box Size: "<<model->CollisionBoundingBox().Size()<<std::endl;
-        //double dist1 = actorPos.Distance(modelPos);
-        ignition::math::Vector3d offset = std::get<2>(intersect) - actorPos;
-        double modelDist = offset.Length(); // - approximated_radius;
-        if (modelDist < minDist) {
-          minDist = modelDist;
-          // closest_obs = offset;
-          closest_obs = std::get<2>(intersect);
+      
+      ignition::math::Vector2d minBB(model->CollisionBoundingBox().Min().X(),model->CollisionBoundingBox().Min().Y());
+      ignition::math::Vector2d maxBB(model->CollisionBoundingBox().Max().X(),model->CollisionBoundingBox().Max().Y());
+      ignition::math::Vector2d thirdV(minBB.X(),maxBB.Y());
+      ignition::math::Vector2d fourthV(maxBB.X(),minBB.Y());
+      // std::cout<<"MinBB: ["<<minBB<<"]"<<std::endl;
+      // std::cout<<"MaxBB: ["<<maxBB<<"]"<<std::endl;
+      // std::cout<<"ThirdV: ["<<thirdV<<"]"<<std::endl;
+      // std::cout<<"FourthV: ["<<fourthV<<"]"<<std::endl;
+
+      // The closest point lays between the two edges whose vetices include the closest vertex to the actor
+      // Map(vertexID, vertexCoordinates, vertexDistance)
+      // std::map<int, std::pair<ignition::math::Vector2d, double>> vertex_sequence = {
+      //   {0, std::make_pair(minBB, std::sqrt(std::pow(minBB.X() - actorPos.X(), 2) + std::pow(minBB.Y() - actorPos.Y(),2)))},
+      //   {1, std::make_pair(thirdV, std::sqrt(std::pow(thirdV.X() - actorPos.X(), 2) + std::pow(thirdV.Y() - actorPos.Y(),2)))},
+      //   {2, std::make_pair(maxBB, std::sqrt(std::pow(maxBB.X() - actorPos.X(), 2) + std::pow(maxBB.Y() - actorPos.Y(),2)))},
+      //   {3, std::make_pair(fourthV, std::sqrt(std::pow(fourthV.X() - actorPos.X(), 2) + std::pow(fourthV.Y() - actorPos.Y(),2)))}
+      // };
+      // double minDist_vertex = 10000;
+      // ignition::math::Vector2d closest_vertex;
+      // int closest_vertex_id;
+      // for (unsigned int i; i < vertex_sequence.size(); ++i) {
+      //   if(vertex_sequence[i].second < minDist_vertex) {
+      //     minDist_vertex = vertex_sequence[i].second;
+      //     closest_vertex = vertex_sequence[i].first;
+      //     closest_vertex_id = i;
+      //   }
+      // }
+      // int v2_id;
+      // int v3_id;
+      // if(closest_vertex_id - 1 < 0){
+      //   v2_id = 3;
+      // }
+      // else {
+      //   v2_id = closest_vertex_id - 1;
+      // }
+      // if(closest_vertex_id + 1 > 3){
+      //   v3_id = 0;
+      // }
+      // else {
+      //   v3_id = closest_vertex_id + 1;
+      // }
+      // std::vector<std::vector<ignition::math::Vector2d>> segments = {{closest_vertex,vertex_sequence[v2_id].first},{closest_vertex,vertex_sequence[v3_id].first}};
+      std::vector<std::vector<ignition::math::Vector2d>> segments = {{minBB,fourthV},{fourthV,maxBB},{thirdV,maxBB},{minBB,thirdV}};
+      // std::cout<<"Segment0: ["<<segments[0][0]<<","<<segments[0][1]<<"]"<<std::endl;
+      // std::cout<<"Segment1: ["<<segments[1][0]<<","<<segments[1][1]<<"]"<<std::endl;
+      // std::cout<<"Segment2: ["<<segments[2][0]<<","<<segments[2][1]<<"]"<<std::endl;
+      // std::cout<<"Segment3: ["<<segments[3][0]<<","<<segments[3][1]<<"]"<<std::endl;
+
+      ignition::math::Vector2d a;
+      ignition::math::Vector2d b;
+      ignition::math::Vector2d h;
+      double dist;
+
+      // same_obs = false;
+
+      for(unsigned int i = 0; i < segments.size(); ++i) {
+        a = std::min(segments[i][0], segments[i][1]);
+        b = std::max(segments[i][0], segments[i][1]);
+        double t = ((actorPos.X() - a.X()) * (b.X() - a.X()) + (actorPos.Y() - a.Y()) * (b.Y() - a.Y())) / (std::pow(b.X() - a.X(), 2) + std::pow(b.Y() - a.Y(), 2));
+        double t_star = std::min(std::max(0.0,t),1.0);
+        h = a + t_star * (b - a);
+        dist = std::sqrt(std::pow(h.X() - actorPos.X(), 2) + std::pow(h.Y() - actorPos.Y(),2));
+        if (dist < minDist) {
+          minDist = dist;
+          // if (!same_obs) {
+          //   closest_obs2 = closest_obs;
+          // }
+          closest_obs = h;
+          // same_obs = true;
         }
       }
-      // END OF WORKING PART
     }
   }
 
-  // printf("Actor %s x: %.2f y: %.2f\n", this->actor->GetName().c_str(),
-  //        this->actor->WorldPose().Pos().X(),
-  //        this->actor->WorldPose().Pos().Y());
-  // printf("Model offset x: %.2f y: %.2f\n", closest_obs.X(), closest_obs.Y());
-  // printf("Model intersec x: %.2f y: %.2f\n\n", closest_obs2.X(),
-  //        closest_obs2.Y());
   if (minDist <= 10.0) {
     utils::Vector2d ob(closest_obs.X(), closest_obs.Y());
+    // utils::Vector2d ob2(closest_obs2.X(), closest_obs2.Y());
+    // std::cout<<"Closest obstacle: "<<ob<<std::endl;
+    // std::cout<<"Min dist: "<<minDist<<std::endl;
     this->sfmActor.obstacles1.push_back(ob);
+    // this->sfmActor.obstacles1.push_back(ob2);
   }
 }
 

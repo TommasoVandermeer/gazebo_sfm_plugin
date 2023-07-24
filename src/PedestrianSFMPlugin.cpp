@@ -183,7 +183,6 @@ void PedestrianSFMPlugin::HandleObstacles() {
   // ignition::math::Vector3d closest_obs2;
   ignition::math::Vector2d closest_obs;
   ignition::math::Vector2d closest_obs2;
-  // bool same_obs = false;
   this->sfmActor.obstacles1.clear();
 
   for (unsigned int i = 0; i < this->world->ModelCount(); ++i) {
@@ -201,39 +200,6 @@ void PedestrianSFMPlugin::HandleObstacles() {
       // std::cout<<"ThirdV: ["<<thirdV<<"]"<<std::endl;
       // std::cout<<"FourthV: ["<<fourthV<<"]"<<std::endl;
 
-      // The closest point lays between the two edges whose vetices include the closest vertex to the actor
-      // Map(vertexID, vertexCoordinates, vertexDistance)
-      // std::map<int, std::pair<ignition::math::Vector2d, double>> vertex_sequence = {
-      //   {0, std::make_pair(minBB, std::sqrt(std::pow(minBB.X() - actorPos.X(), 2) + std::pow(minBB.Y() - actorPos.Y(),2)))},
-      //   {1, std::make_pair(thirdV, std::sqrt(std::pow(thirdV.X() - actorPos.X(), 2) + std::pow(thirdV.Y() - actorPos.Y(),2)))},
-      //   {2, std::make_pair(maxBB, std::sqrt(std::pow(maxBB.X() - actorPos.X(), 2) + std::pow(maxBB.Y() - actorPos.Y(),2)))},
-      //   {3, std::make_pair(fourthV, std::sqrt(std::pow(fourthV.X() - actorPos.X(), 2) + std::pow(fourthV.Y() - actorPos.Y(),2)))}
-      // };
-      // double minDist_vertex = 10000;
-      // ignition::math::Vector2d closest_vertex;
-      // int closest_vertex_id;
-      // for (unsigned int i; i < vertex_sequence.size(); ++i) {
-      //   if(vertex_sequence[i].second < minDist_vertex) {
-      //     minDist_vertex = vertex_sequence[i].second;
-      //     closest_vertex = vertex_sequence[i].first;
-      //     closest_vertex_id = i;
-      //   }
-      // }
-      // int v2_id;
-      // int v3_id;
-      // if(closest_vertex_id - 1 < 0){
-      //   v2_id = 3;
-      // }
-      // else {
-      //   v2_id = closest_vertex_id - 1;
-      // }
-      // if(closest_vertex_id + 1 > 3){
-      //   v3_id = 0;
-      // }
-      // else {
-      //   v3_id = closest_vertex_id + 1;
-      // }
-      // std::vector<std::vector<ignition::math::Vector2d>> segments = {{closest_vertex,vertex_sequence[v2_id].first},{closest_vertex,vertex_sequence[v3_id].first}};
       std::vector<std::vector<ignition::math::Vector2d>> segments = {{minBB,fourthV},{fourthV,maxBB},{thirdV,maxBB},{minBB,thirdV}};
       // std::cout<<"Segment0: ["<<segments[0][0]<<","<<segments[0][1]<<"]"<<std::endl;
       // std::cout<<"Segment1: ["<<segments[1][0]<<","<<segments[1][1]<<"]"<<std::endl;
@@ -245,7 +211,7 @@ void PedestrianSFMPlugin::HandleObstacles() {
       ignition::math::Vector2d h;
       double dist;
 
-      // same_obs = false;
+      minDist = 10000;
 
       for(unsigned int i = 0; i < segments.size(); ++i) {
         a = std::min(segments[i][0], segments[i][1]);
@@ -256,23 +222,15 @@ void PedestrianSFMPlugin::HandleObstacles() {
         dist = std::sqrt(std::pow(h.X() - actorPos.X(), 2) + std::pow(h.Y() - actorPos.Y(),2));
         if (dist < minDist) {
           minDist = dist;
-          // if (!same_obs) {
-          //   closest_obs2 = closest_obs;
-          // }
           closest_obs = h;
-          // same_obs = true;
+        }
+        // At the last segment,the closest point of the obstacle is passed to the lightSFM library if its distance is lower than 2 meters
+        if (i == segments.size() - 1 && minDist < 2) {
+          utils::Vector2d ob(closest_obs.X(), closest_obs.Y());
+          this->sfmActor.obstacles1.push_back(ob);
         }
       }
     }
-  }
-
-  if (minDist <= 10.0) {
-    utils::Vector2d ob(closest_obs.X(), closest_obs.Y());
-    // utils::Vector2d ob2(closest_obs2.X(), closest_obs2.Y());
-    // std::cout<<"Closest obstacle: "<<ob<<std::endl;
-    // std::cout<<"Min dist: "<<minDist<<std::endl;
-    this->sfmActor.obstacles1.push_back(ob);
-    // this->sfmActor.obstacles1.push_back(ob2);
   }
 }
 

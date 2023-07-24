@@ -1,6 +1,6 @@
 /***********************************************************************/
 /**                                                                    */
-/** PedestrianSFMPlugin.h                                              */
+/** PedestrianHSFMPlugin.h                                              */
 /**                                                                    */
 /** Copyright (c) 2022, Service Robotics Lab (SRL).                    */
 /**                     http://robotics.upo.es                         */
@@ -18,8 +18,8 @@
 /**                                                                    */
 /***********************************************************************/
 
-#ifndef GAZEBO_PLUGINS_PEDESTRIANSFMPLUGIN_HH_
-#define GAZEBO_PLUGINS_PEDESTRIANSFMPLUGIN_HH_
+#ifndef GAZEBO_PLUGINS_PEDESTRIANHSFMPLUGIN_HH_
+#define GAZEBO_PLUGINS_PEDESTRIANHSFMPLUGIN_HH_
 
 // C++
 #include <algorithm>
@@ -35,10 +35,10 @@
 #include <lightsfm/hsfm.hpp>
 
 namespace gazebo {
-class GZ_PLUGIN_VISIBLE PedestrianSFMPlugin : public ModelPlugin {
+class GZ_PLUGIN_VISIBLE PedestrianHSFMPlugin : public ModelPlugin {
   /// \brief Constructor
 public:
-  PedestrianSFMPlugin();
+  PedestrianHSFMPlugin();
 
   /// \brief Load the actor plugin.
   /// \param[in] _model Pointer to the parent model.
@@ -69,7 +69,7 @@ private:
 
   /// \brief this actor as a SFM agent
 private:
-  sfm::Agent sfmActor;
+  hsfm::Agent hsfmActor;
 
   /// \brief names of the other models in my walking group.
 private:
@@ -77,7 +77,7 @@ private:
 
   /// \brief vector of pedestrians detected.
 private:
-  std::vector<sfm::Agent> otherActors;
+  std::vector<hsfm::Agent> otherActors;
 
   /// \brief Maximum distance to detect nearby pedestrians.
 private:

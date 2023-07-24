@@ -178,9 +178,7 @@ void PedestrianSFMPlugin::Reset() {
 
 /////////////////////////////////////////////////
 void PedestrianSFMPlugin::HandleObstacles() {
-  double minDist = 10000.0;
-  // ignition::math::Vector3d closest_obs;
-  // ignition::math::Vector3d closest_obs2;
+  double minDist;
   ignition::math::Vector2d closest_obs;
   ignition::math::Vector2d closest_obs2;
   this->sfmActor.obstacles1.clear();

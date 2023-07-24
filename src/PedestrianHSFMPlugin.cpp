@@ -1,6 +1,6 @@
 /***********************************************************************/
 /**                                                                    */
-/** PedestrianSFMPlugin.cpp                                            */
+/** PedestrianHSFMPlugin.cpp                                            */
 /**                                                                    */
 /** Copyright (c) 2022, Service Robotics Lab (SRL).                    */
 /**                     http://robotics.upo.es                         */
@@ -27,44 +27,44 @@
 #include <gazebo_sfm_plugin/PedestrianHSFMPlugin.h>
 
 using namespace gazebo;
-GZ_REGISTER_MODEL_PLUGIN(PedestrianSFMPlugin)
+GZ_REGISTER_MODEL_PLUGIN(PedestrianHSFMPlugin)
 
 #define WALKING_ANIMATION "walking"
 
 /////////////////////////////////////////////////
-PedestrianSFMPlugin::PedestrianSFMPlugin() {}
+PedestrianHSFMPlugin::PedestrianHSFMPlugin() {}
 
 /////////////////////////////////////////////////
-void PedestrianSFMPlugin::Load(physics::ModelPtr _model, sdf::ElementPtr _sdf) {
+void PedestrianHSFMPlugin::Load(physics::ModelPtr _model, sdf::ElementPtr _sdf) {
   this->sdf = _sdf;
   this->actor = boost::dynamic_pointer_cast<physics::Actor>(_model);
   this->world = this->actor->GetWorld();
 
-  this->sfmActor.id = this->actor->GetId();
+  this->hsfmActor.id = this->actor->GetId();
 
-  // Initialize sfmActor position
+  // Initialize hsfmActor position
   ignition::math::Vector3d pos = this->actor->WorldPose().Pos();
   ignition::math::Vector3d rpy = this->actor->WorldPose().Rot().Euler();
-  this->sfmActor.position.set(pos.X(), pos.Y());
-  this->sfmActor.yaw = utils::Angle::fromRadian(rpy.Z()); // yaw
+  this->hsfmActor.position.set(pos.X(), pos.Y());
+  this->hsfmActor.yaw = utils::Angle::fromRadian(rpy.Z()); // yaw
   ignition::math::Vector3d linvel = this->actor->WorldLinearVel();
-  this->sfmActor.velocity.set(linvel.X(), linvel.Y());
-  this->sfmActor.linearVelocity = linvel.Length();
+  this->hsfmActor.velocity.set(linvel.X(), linvel.Y());
+  this->hsfmActor.linearVelocity = linvel.Length();
   ignition::math::Vector3d angvel = this->actor->WorldAngularVel();
-  this->sfmActor.angularVelocity = angvel.Z(); // Length()
+  this->hsfmActor.angularVelocity = angvel.Z(); // Length()
 
   // Read in the maximum velocity of the pedestrian
   if (_sdf->HasElement("velocity"))
-    this->sfmActor.desiredVelocity = _sdf->Get<double>("velocity");
+    this->hsfmActor.desiredVelocity = _sdf->Get<double>("velocity");
   else
-    this->sfmActor.desiredVelocity = 0.8;
+    this->hsfmActor.desiredVelocity = 0.8;
 
   // Read in the target actor radius
   if (_sdf->HasElement("actor_radius"))
-    this->sfmActor.radius = _sdf->Get<double>("actor_radius");
+    this->hsfmActor.radius = _sdf->Get<double>("actor_radius");
   // Read in the target actor mass
   if (_sdf->HasElement("actor_mass"))
-    this->sfmActor.mass = _sdf->Get<double>("actor_mass");
+    this->hsfmActor.mass = _sdf->Get<double>("actor_mass");
 
   // Read in the animation factor (applied in the OnUpdate function).
   if (_sdf->HasElement("animation_factor"))
@@ -84,15 +84,15 @@ void PedestrianSFMPlugin::Load(physics::ModelPtr _model, sdf::ElementPtr _sdf) {
 
   // Read in the pedestrians in your walking group
   if (_sdf->HasElement("group")) {
-    this->sfmActor.groupId = this->sfmActor.id;
+    this->hsfmActor.groupId = this->hsfmActor.id;
     sdf::ElementPtr modelElem = _sdf->GetElement("group")->GetElement("model");
     while (modelElem) {
       this->groupNames.push_back(modelElem->Get<std::string>());
       modelElem = modelElem->GetNextElement("model");
     }
-    this->sfmActor.groupId = this->sfmActor.id;
+    this->hsfmActor.groupId = this->hsfmActor.id;
   } else
-    this->sfmActor.groupId = -1;
+    this->hsfmActor.groupId = -1;
 
   // Read in the other obstacles to ignore
   if (_sdf->HasElement("ignore_obstacles")) {
@@ -116,13 +116,13 @@ void PedestrianSFMPlugin::Load(physics::ModelPtr _model, sdf::ElementPtr _sdf) {
   }
 
   this->connections.push_back(event::Events::ConnectWorldUpdateBegin(
-      std::bind(&PedestrianSFMPlugin::OnUpdate, this, std::placeholders::_1)));
+      std::bind(&PedestrianHSFMPlugin::OnUpdate, this, std::placeholders::_1)));
 
   this->Reset();
 }
 
 /////////////////////////////////////////////////
-void PedestrianSFMPlugin::Reset() {
+void PedestrianHSFMPlugin::Reset() {
   // this->velocity = 0.8;
   this->lastUpdate = 0;
 
@@ -132,16 +132,16 @@ void PedestrianSFMPlugin::Reset() {
         this->sdf->GetElement("trajectory")->GetElement("cyclic");
 
     if (modelElemCyclic)
-      this->sfmActor.cyclicGoals = modelElemCyclic->Get<bool>();
+      this->hsfmActor.cyclicGoals = modelElemCyclic->Get<bool>();
 
     sdf::ElementPtr modelElem =
         this->sdf->GetElement("trajectory")->GetElement("waypoint");
     while (modelElem) {
       ignition::math::Vector3d g = modelElem->Get<ignition::math::Vector3d>();
-      sfm::Goal goal;
+      hsfm::Goal goal;
       goal.center.set(g.X(), g.Y());
       goal.radius = 0.3;
-      this->sfmActor.goals.push_back(goal);
+      this->hsfmActor.goals.push_back(goal);
       modelElem = modelElem->GetNextElement("waypoint");
     }
   }
@@ -160,56 +160,63 @@ void PedestrianSFMPlugin::Reset() {
 }
 
 /////////////////////////////////////////////////
-void PedestrianSFMPlugin::HandleObstacles() {
-  double minDist = 10000.0;
-  ignition::math::Vector3d closest_obs;
-  ignition::math::Vector3d closest_obs2;
-  this->sfmActor.obstacles1.clear();
+void PedestrianHSFMPlugin::HandleObstacles() {
+  double minDist;
+  ignition::math::Vector2d closest_obs;
+  ignition::math::Vector2d closest_obs2;
+  this->hsfmActor.obstacles1.clear();
 
   for (unsigned int i = 0; i < this->world->ModelCount(); ++i) {
     physics::ModelPtr model = this->world->ModelByIndex(i); // GetModel(i);
     if (std::find(this->ignoreModels.begin(), this->ignoreModels.end(), model->GetName()) == this->ignoreModels.end()) {
       ignition::math::Vector3d actorPos = this->actor->WorldPose().Pos();
       ignition::math::Vector3d modelPos = model->WorldPose().Pos();
-      std::tuple<bool, double, ignition::math::Vector3d> intersect = model->BoundingBox().Intersect(modelPos, actorPos, 0.05, 8.0);
+      
+      ignition::math::Vector2d minBB(model->CollisionBoundingBox().Min().X(),model->CollisionBoundingBox().Min().Y());
+      ignition::math::Vector2d maxBB(model->CollisionBoundingBox().Max().X(),model->CollisionBoundingBox().Max().Y());
+      ignition::math::Vector2d thirdV(minBB.X(),maxBB.Y());
+      ignition::math::Vector2d fourthV(maxBB.X(),minBB.Y());
+      // std::cout<<"MinBB: ["<<minBB<<"]"<<std::endl;
+      // std::cout<<"MaxBB: ["<<maxBB<<"]"<<std::endl;
+      // std::cout<<"ThirdV: ["<<thirdV<<"]"<<std::endl;
+      // std::cout<<"FourthV: ["<<fourthV<<"]"<<std::endl;
 
-      if (std::get<0>(intersect) == true) {
+      std::vector<std::vector<ignition::math::Vector2d>> segments = {{minBB,fourthV},{fourthV,maxBB},{thirdV,maxBB},{minBB,thirdV}};
+      // std::cout<<"Segment0: ["<<segments[0][0]<<","<<segments[0][1]<<"]"<<std::endl;
+      // std::cout<<"Segment1: ["<<segments[1][0]<<","<<segments[1][1]<<"]"<<std::endl;
+      // std::cout<<"Segment2: ["<<segments[2][0]<<","<<segments[2][1]<<"]"<<std::endl;
+      // std::cout<<"Segment3: ["<<segments[3][0]<<","<<segments[3][1]<<"]"<<std::endl;
 
-        // ignition::math::Vector3d = model->BoundingBox().Center();
-        // double approximated_radius = std::max(model->BoundingBox().XLength(),
-        //                                      model->BoundingBox().YLength());
+      ignition::math::Vector2d a;
+      ignition::math::Vector2d b;
+      ignition::math::Vector2d h;
+      double dist;
 
-        // ignition::math::Vector3d offset1 = modelPos - actorPos;
-        // double modelDist1 = offset1.Length();
-        // double dist1 = actorPos.Distance(modelPos);
+      minDist = 10000;
 
-        ignition::math::Vector3d offset = std::get<2>(intersect) - actorPos;
-        double modelDist = offset.Length(); // - approximated_radius;
-        // double dist2 = actorPos.Distance(std::get<2>(intersect));
-
-        if (modelDist < minDist) {
-          minDist = modelDist;
-          // closest_obs = offset;
-          closest_obs = std::get<2>(intersect);
+      for(unsigned int i = 0; i < segments.size(); ++i) {
+        a = std::min(segments[i][0], segments[i][1]);
+        b = std::max(segments[i][0], segments[i][1]);
+        double t = ((actorPos.X() - a.X()) * (b.X() - a.X()) + (actorPos.Y() - a.Y()) * (b.Y() - a.Y())) / (std::pow(b.X() - a.X(), 2) + std::pow(b.Y() - a.Y(), 2));
+        double t_star = std::min(std::max(0.0,t),1.0);
+        h = a + t_star * (b - a);
+        dist = std::sqrt(std::pow(h.X() - actorPos.X(), 2) + std::pow(h.Y() - actorPos.Y(),2));
+        if (dist < minDist) {
+          minDist = dist;
+          closest_obs = h;
+        }
+        // At the last segment,the closest point of the obstacle is passed to the lightSFM library if its distance is lower than 2 meters
+        if (i == segments.size() - 1 && minDist < 2) {
+          utils::Vector2d ob(closest_obs.X(), closest_obs.Y());
+          this->hsfmActor.obstacles1.push_back(ob);
         }
       }
     }
   }
-
-  // printf("Actor %s x: %.2f y: %.2f\n", this->actor->GetName().c_str(),
-  //        this->actor->WorldPose().Pos().X(),
-  //        this->actor->WorldPose().Pos().Y());
-  // printf("Model offset x: %.2f y: %.2f\n", closest_obs.X(), closest_obs.Y());
-  // printf("Model intersec x: %.2f y: %.2f\n\n", closest_obs2.X(),
-  //        closest_obs2.Y());
-  if (minDist <= 10.0) {
-    utils::Vector2d ob(closest_obs.X(), closest_obs.Y());
-    this->sfmActor.obstacles1.push_back(ob);
-  }
 }
 
 /////////////////////////////////////////////////
-void PedestrianSFMPlugin::HandlePedestrians() {
+void PedestrianHSFMPlugin::HandlePedestrians() {
   this->otherActors.clear();
 
   for (unsigned int i = 0; i < this->world->ModelCount(); ++i) {
@@ -224,13 +231,13 @@ void PedestrianSFMPlugin::HandlePedestrians() {
       ignition::math::Vector3d pos =
           modelPose.Pos() - this->actor->WorldPose().Pos();
       if (pos.Length() < this->peopleDistance) {
-        sfm::Agent ped;
+        hsfm::Agent ped;
         ped.id = model->GetId();
         ped.position.set(modelPose.Pos().X(), modelPose.Pos().Y());
         ignition::math::Vector3d rpy = modelPose.Rot().Euler();
         ped.yaw = utils::Angle::fromRadian(rpy.Z());
 
-        ped.radius = this->sfmActor.radius;
+        ped.radius = this->hsfmActor.radius;
         ignition::math::Vector3d linvel = model->WorldLinearVel();
         ped.velocity.set(linvel.X(), linvel.Y());
         ped.linearVelocity = linvel.Length();
@@ -238,11 +245,11 @@ void PedestrianSFMPlugin::HandlePedestrians() {
         ped.angularVelocity = angvel.Z(); // Length()
 
         // check if the ped belongs to my group
-        if (this->sfmActor.groupId != -1) {
+        if (this->hsfmActor.groupId != -1) {
           std::vector<std::string>::iterator it;
           it = find(groupNames.begin(), groupNames.end(), model->GetName());
           if (it != groupNames.end())
-            ped.groupId = this->sfmActor.groupId;
+            ped.groupId = this->hsfmActor.groupId;
           else
             ped.groupId = -1;
         }
@@ -256,7 +263,7 @@ void PedestrianSFMPlugin::HandlePedestrians() {
 }
 
 /////////////////////////////////////////////////
-void PedestrianSFMPlugin::OnUpdate(const common::UpdateInfo &_info) {
+void PedestrianHSFMPlugin::OnUpdate(const common::UpdateInfo &_info) {
   // Time delta
   double dt = (_info.simTime - this->lastUpdate).Double();
 
@@ -269,16 +276,16 @@ void PedestrianSFMPlugin::OnUpdate(const common::UpdateInfo &_info) {
   HandlePedestrians();
 
   // Compute Social Forces
-  sfm::SFM.computeForces(this->sfmActor, this->otherActors);
+  hsfm::HSFM.computeForces(this->hsfmActor, this->otherActors);
 
   // Update model
-  sfm::SFM.updatePosition(this->sfmActor, dt);
+  hsfm::HSFM.updatePosition(this->hsfmActor, dt);
 
-  utils::Angle h = this->sfmActor.yaw;
+  utils::Angle h = this->hsfmActor.yaw;
   utils::Angle add = utils::Angle::fromRadian(1.5707);
   h = h + add;
   double yaw = h.toRadian();
-  // double yaw = this->sfmActor.yaw.toRadian();
+  // double yaw = this->hsfmActor.yaw.toRadian();
   // Rotate in place, instead of jumping.
   // if (std::abs(yaw.Radian()) > IGN_DTOR(10))
   //{
@@ -294,8 +301,8 @@ void PedestrianSFMPlugin::OnUpdate(const common::UpdateInfo &_info) {
     current = current + utils::Angle::fromRadian(diff * 0.005);
     yaw = current.toRadian();
   }
-  actorPose.Pos().X(this->sfmActor.position.getX());
-  actorPose.Pos().Y(this->sfmActor.position.getY());
+  actorPose.Pos().X(this->hsfmActor.position.getX());
+  actorPose.Pos().Y(this->hsfmActor.position.getY());
   actorPose.Rot() = ignition::math::Quaterniond(1.5707, 0, yaw); // rpy.Z()+yaw.Radian());
   //}
 

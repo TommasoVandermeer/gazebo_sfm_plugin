@@ -60,12 +60,58 @@ void PedestrianHSFMPlugin::Load(physics::ModelPtr _model, sdf::ElementPtr _sdf) 
     this->hsfmActor.desiredVelocity = 0.8;
 
   // Read in the target actor radius
-  if (_sdf->HasElement("actor_radius"))
-    this->hsfmActor.radius = _sdf->Get<double>("actor_radius");
+  if (_sdf->HasElement("radius"))
+    this->hsfmActor.radius = _sdf->Get<double>("radius");
   // Read in the target actor mass
-  if (_sdf->HasElement("actor_mass"))
-    this->hsfmActor.mass = _sdf->Get<double>("actor_mass");
+  if (_sdf->HasElement("mass"))
+    this->hsfmActor.mass = _sdf->Get<double>("mass");
 
+  // Read in the relaxation time
+  if (_sdf->HasElement("relaxation_time"))
+    this->hsfmActor.params.relaxationTime = _sdf->Get<double>("relaxation_time");
+  // Read in the k orthogonal
+  if (_sdf->HasElement("k_orthogonal"))
+    this->hsfmActor.params.kOrthogonal =_sdf->Get<double>("k_orthogonal");
+  // Read in the k damping
+  if (_sdf->HasElement("k_damping"))
+    this->hsfmActor.params.kDamping = _sdf->Get<double>("k_damping");
+  // Read in the k lambda
+  if (_sdf->HasElement("k_lambda"))
+    this->hsfmActor.params.kLambda = _sdf->Get<double>("k_lambda");
+  // Read in the alpha
+  if (_sdf->HasElement("alpha"))
+    this->hsfmActor.params.alpha = _sdf->Get<double>("alpha");
+  // Read in the group distance forward
+  if (_sdf->HasElement("group_distance_forward"))
+    this->hsfmActor.params.groupDistanceForward = _sdf->Get<double>("group_distance_forward");
+  // Read in the group distance othogonal
+  if (_sdf->HasElement("group_distance_orthogonal"))
+    this->hsfmActor.params.groupDistanceOrthogonal = _sdf->Get<double>("group_distance_orthogonal");
+  // Read in the k1g
+  if (_sdf->HasElement("k1g"))
+    this->hsfmActor.params.k1g = _sdf->Get<double>("k1g");
+  // Read in the k2g
+  if (_sdf->HasElement("k2g"))
+    this->hsfmActor.params.k2g = _sdf->Get<double>("k2g");
+  // Read in the Ai
+  if (_sdf->HasElement("Ai"))
+    this->hsfmActor.params.Ai = _sdf->Get<double>("Ai");
+  // Read in the Aw
+  if (_sdf->HasElement("Aw"))
+    this->hsfmActor.params.Aw = _sdf->Get<double>("Aw");
+  // Read in the Bi
+  if (_sdf->HasElement("Bi"))
+    this->hsfmActor.params.Bi = _sdf->Get<double>("Bi");
+  // Read in the Bw
+  if (_sdf->HasElement("Bw"))
+    this->hsfmActor.params.Bw = _sdf->Get<double>("Bw");
+  // Read in the k1
+  if (_sdf->HasElement("k1"))
+    this->hsfmActor.params.k1 = _sdf->Get<double>("k1");
+  // Read in the k2
+  if (_sdf->HasElement("k2"))
+    this->hsfmActor.params.k2 = _sdf->Get<double>("k2");
+  
   // Read in the animation factor (applied in the OnUpdate function).
   if (_sdf->HasElement("animation_factor"))
     this->animationFactor = _sdf->Get<double>("animation_factor");

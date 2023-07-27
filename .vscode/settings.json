@@ -85,6 +85,8 @@
         "forward_list": "cpp",
         "numbers": "cpp",
         "semaphore": "cpp",
-        "stop_token": "cpp"
+        "stop_token": "cpp",
+        "coroutine": "cpp",
+        "source_location": "cpp"
     }
 }

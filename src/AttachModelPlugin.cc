@@ -23,7 +23,7 @@
 #include <gazebo/physics/Link.hh>
 #include <gazebo/physics/Model.hh>
 #include <gazebo/physics/World.hh>
-#include "AttachModelPlugin.hh"
+#include <gazebo_sfm_plugin/AttachModelPlugin.hh>
 
 
 namespace servicesim

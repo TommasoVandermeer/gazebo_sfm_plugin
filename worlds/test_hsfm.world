@@ -139,6 +139,9 @@
       </animation>
       <!-- SFM Plugin -->
       <plugin name="actor1_plugin" filename="libPedestrianHSFMPlugin.so">
+        <publish_forces>true</publish_forces> <!-- If true, computed forces are published in a ROS topic -->
+        <node_name>Actor1Node</node_name> <!-- The name of the node publishing the forces -->
+        <topic_name>/forces/actor1</topic_name> <!-- The name of the topic where the forces are published -->
         <velocity>0.9</velocity> <!-- 0.6 -->
         <radius>0.35</radius> <!-- 0.35 -->
         <mass>75</mass> <!-- 75 -->

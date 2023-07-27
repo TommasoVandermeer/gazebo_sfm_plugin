@@ -22,8 +22,6 @@
 #include <stdio.h>
 #include <string>
 
-//#include <ignition/math.hh>
-//#include <ignition/math/gzmath.hh>
 #include <gazebo_sfm_plugin/PedestrianHSFMPlugin.h>
 
 using namespace gazebo;
@@ -65,6 +63,22 @@ void PedestrianHSFMPlugin::Load(physics::ModelPtr _model, sdf::ElementPtr _sdf) 
   // Read in the target actor mass
   if (_sdf->HasElement("mass"))
     this->hsfmActor.mass = _sdf->Get<double>("mass");
+
+  // Read in the publish forces boolean variable
+  if (_sdf->HasElement("publish_forces"))
+    this->publishForces = _sdf->Get<bool>("publish_forces");
+  else
+    this->publishForces = false;
+
+  // Read in the node name
+  if (_sdf->HasElement("node_name")) {
+    this->nodeName = _sdf->Get<std::string>("node_name");
+  }
+  
+  // Read in the actor name
+  if (_sdf->HasElement("topic_name")) {
+    this->topicName = _sdf->Get<std::string>("topic_name");
+  }
 
   // Read in the relaxation time
   if (_sdf->HasElement("relaxation_time"))
@@ -161,6 +175,12 @@ void PedestrianHSFMPlugin::Load(physics::ModelPtr _model, sdf::ElementPtr _sdf) 
     }
   }
 
+  // Create the node to publish Forces
+  if (this->publishForces == true) {
+    this->forcesNode = std::make_shared<rclcpp::Node>(this->nodeName);
+    this->forcesPub = this->forcesNode->create_publisher<gazebo_sfm_plugin::msg::Forces>(this->topicName, 10);
+  }
+
   this->connections.push_back(event::Events::ConnectWorldUpdateBegin(
       std::bind(&PedestrianHSFMPlugin::OnUpdate, this, std::placeholders::_1)));
 
@@ -169,7 +189,6 @@ void PedestrianHSFMPlugin::Load(physics::ModelPtr _model, sdf::ElementPtr _sdf) 
 
 /////////////////////////////////////////////////
 void PedestrianHSFMPlugin::Reset() {
-  // this->velocity = 0.8;
   this->lastUpdate = 0;
 
   // Read in the goals to reach
@@ -252,7 +271,7 @@ void PedestrianHSFMPlugin::HandleObstacles() {
           closest_obs = h;
         }
         // At the last segment,the closest point of the obstacle is passed to the lightSFM library if its distance is lower than 2 meters
-        if (i == segments.size() - 1 && minDist < 2) {
+        if (i == segments.size() - 1 && minDist < 20) {
           utils::Vector2d ob(closest_obs.X(), closest_obs.Y());
           this->hsfmActor.obstacles1.push_back(ob);
         }
@@ -312,6 +331,7 @@ void PedestrianHSFMPlugin::HandlePedestrians() {
 void PedestrianHSFMPlugin::OnUpdate(const common::UpdateInfo &_info) {
   // Time delta
   double dt = (_info.simTime - this->lastUpdate).Double();
+  // std::cout<<"Sampling time: "<<dt<<std::endl; //Default is 0.001
 
   ignition::math::Pose3d actorPose = this->actor->WorldPose();
 
@@ -326,6 +346,11 @@ void PedestrianHSFMPlugin::OnUpdate(const common::UpdateInfo &_info) {
 
   // Update model
   hsfm::HSFM.updatePosition(this->hsfmActor, dt);
+
+  // Publish computed forces
+  if (this->publishForces == true) {
+    PublishForces();
+  }
 
   utils::Angle h = this->hsfmActor.yaw;
   utils::Angle add = utils::Angle::fromRadian(1.5707);
@@ -363,4 +388,39 @@ void PedestrianHSFMPlugin::OnUpdate(const common::UpdateInfo &_info) {
   this->actor->SetWorldPose(actorPose, false, false);
   this->actor->SetScriptTime(this->actor->ScriptTime() + (distanceTraveled * this->animationFactor));
   this->lastUpdate = _info.simTime;
+}
+
+/////////////////////////////////////////////////
+void PedestrianHSFMPlugin::PublishForces() {
+  // std::cout<<"Start of Publish Forces method"<<std::endl;
+  gazebo_sfm_plugin::msg::Forces msg = gazebo_sfm_plugin::msg::Forces();
+  // Global force
+  msg.global_force.x = this->hsfmActor.forces.globalForce.getX();
+  msg.global_force.y = this->hsfmActor.forces.globalForce.getY();
+  // Desired force
+  msg.desired_force.x = this->hsfmActor.forces.desiredForce.getX();
+  msg.desired_force.y = this->hsfmActor.forces.desiredForce.getY();
+  // Obstacle force
+  msg.obstacle_force.x = this->hsfmActor.forces.obstacleForce.getX();
+  msg.obstacle_force.y = this->hsfmActor.forces.obstacleForce.getY();
+  // Social force
+  msg.social_force.x = this->hsfmActor.forces.socialForce.getX();
+  msg.social_force.y = this->hsfmActor.forces.socialForce.getY();
+  // Group force
+  msg.group_force.x = this->hsfmActor.forces.groupForce.getX();
+  msg.group_force.y = this->hsfmActor.forces.groupForce.getY();
+  // Torque force
+  msg.torque_force = this->hsfmActor.forces.torqueForce;
+  // Linear velocity
+  msg.linear_velocity.x = this->hsfmActor.velocity.getX();
+  msg.linear_velocity.y = this->hsfmActor.velocity.getY();
+  // Angular velocity
+  msg.angular_velocity = this->hsfmActor.angularVelocity;
+  // Pose
+  msg.pose.x = this->hsfmActor.position.getX();
+  msg.pose.y = this->hsfmActor.position.getY();
+  msg.pose.theta = this->hsfmActor.yaw.toDegree();
+
+  this->forcesPub->publish(msg);
+  // std::cout<<"End of Publish Forces method"<<std::endl;
 }

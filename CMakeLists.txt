@@ -10,6 +10,7 @@ find_package(rclcpp REQUIRED)
 find_package(gazebo_ros REQUIRED)
 find_package(Boost REQUIRED COMPONENTS thread)
 find_package(gazebo REQUIRED)
+find_package(rosidl_default_generators REQUIRED)
 
 
 include_directories(include)
@@ -46,6 +47,22 @@ ament_target_dependencies(PedestrianHSFMPlugin
 ament_export_libraries(PedestrianHSFMPlugin)
 target_link_libraries(PedestrianHSFMPlugin ${GAZEBO_LIBRARIES}) #${Boost_LIBRARIES
 
+set(msg_files
+  "msg/Vector2.msg"
+  "msg/Pose2.msg"
+  "msg/Forces.msg"
+)
+
+rosidl_generate_interfaces(${PROJECT_NAME}
+  ${msg_files}
+)
+
+ament_export_dependencies(rosidl_default_runtime)
+
+rosidl_get_typesupport_target(cpp_typesupport_target
+  ${PROJECT_NAME} rosidl_typesupport_cpp)
+
+target_link_libraries(PedestrianHSFMPlugin "${cpp_typesupport_target}")
 
 install(TARGETS PedestrianSFMPlugin
   ARCHIVE DESTINATION lib
@@ -80,9 +97,7 @@ add_library(${attach_model_plugin_name} SHARED
 target_link_libraries(${attach_model_plugin_name}
   ${GAZEBO_LIBRARIES}
 )
-#add_dependencies(${attach_model_plugin_name}
-#  ${PROJECT_NAME}_generate_messages_cpp
-#)
+
 install(TARGETS ${attach_model_plugin_name}
   ARCHIVE DESTINATION lib
   LIBRARY DESTINATION lib

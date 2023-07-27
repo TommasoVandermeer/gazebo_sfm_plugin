@@ -30,6 +30,13 @@
 #include "gazebo/common/Plugin.hh"
 #include "gazebo/physics/physics.hh"
 #include "gazebo/util/system.hh"
+#include "gazebo/transport/transport.hh"
+#include <rclcpp/rclcpp.hpp>
+
+// Msgs
+#include "gazebo_sfm_plugin/msg/forces.hpp"
+#include "gazebo_sfm_plugin/msg/vector2.hpp"
+#include "gazebo_sfm_plugin/msg/pose2.hpp"
 
 // Social Force Model
 #include <lightsfm/hsfm.hpp>
@@ -64,6 +71,10 @@ private:
   /// \brief Helper function to detect the nearby pedestrians (other actors).
 private:
   void HandlePedestrians();
+
+  /// \brief Helper function to publish the computed forces using the HSFM
+private:
+  void PublishForces();
 
   //-------------------------------------------------
 
@@ -123,6 +134,26 @@ private:
   /// \brief Custom trajectory info.
 private:
   physics::TrajectoryInfoPtr trajectoryInfo;
+
+  /// \brief Boolean to decide wether to publish forces or not
+private:
+  bool publishForces;
+
+  /// \brief Stores the topic name
+private:
+  std::string topicName;
+
+  /// \brief Stores the node name
+private:
+  std::string nodeName;
+
+  /// \brief Stores the node used to publish forces
+private:
+  rclcpp::Node::SharedPtr forcesNode;
+
+  /// \brief Stores the forces publisher
+private:
+  rclcpp::Publisher<gazebo_sfm_plugin::msg::Forces>::SharedPtr forcesPub;
 };
 } // namespace gazebo
 #endif

@@ -47,6 +47,16 @@ ament_target_dependencies(PedestrianHSFMPlugin
 ament_export_libraries(PedestrianHSFMPlugin)
 target_link_libraries(PedestrianHSFMPlugin ${GAZEBO_LIBRARIES}) #${Boost_LIBRARIES
 
+add_library(VisualizeForcesPlugin SHARED src/VisualizeForcesPlugin.cpp)
+target_include_directories(VisualizeForcesPlugin PUBLIC include)
+ament_target_dependencies(VisualizeForcesPlugin 
+  "rclcpp" 
+  "gazebo" 
+  "gazebo_ros"
+)
+ament_export_libraries(VisualizeForcesPlugin)
+target_link_libraries(VisualizeForcesPlugin ${GAZEBO_LIBRARIES}) #${Boost_LIBRARIES
+
 set(msg_files
   "msg/Vector2.msg"
   "msg/Pose2.msg"
@@ -63,6 +73,7 @@ rosidl_get_typesupport_target(cpp_typesupport_target
   ${PROJECT_NAME} rosidl_typesupport_cpp)
 
 target_link_libraries(PedestrianHSFMPlugin "${cpp_typesupport_target}")
+target_link_libraries(VisualizeForcesPlugin "${cpp_typesupport_target}")
 
 install(TARGETS PedestrianSFMPlugin
   ARCHIVE DESTINATION lib
@@ -71,6 +82,12 @@ install(TARGETS PedestrianSFMPlugin
 )
 
 install(TARGETS PedestrianHSFMPlugin
+  ARCHIVE DESTINATION lib
+  LIBRARY DESTINATION lib
+  RUNTIME DESTINATION bin
+)
+
+install(TARGETS VisualizeForcesPlugin
   ARCHIVE DESTINATION lib
   LIBRARY DESTINATION lib
   RUNTIME DESTINATION bin

@@ -417,9 +417,9 @@ void PedestrianHSFMPlugin::PublishForces() {
   // Angular velocity
   msg.angular_velocity = this->hsfmActor.angularVelocity;
   // Pose
-  msg.pose.x = this->hsfmActor.position.getX();
-  msg.pose.y = this->hsfmActor.position.getY();
-  msg.pose.theta = this->hsfmActor.yaw.toDegree();
+  msg.pose.x = this->hsfmActor.initPosition.getX();
+  msg.pose.y = this->hsfmActor.initPosition.getY();
+  msg.pose.theta = this->hsfmActor.initYaw.toDegree();
 
   this->forcesPub->publish(msg);
   // std::cout<<"End of Publish Forces method"<<std::endl;

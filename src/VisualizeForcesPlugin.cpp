@@ -79,13 +79,11 @@ void VisualizeForcesPlugin::VisualizeForces(const gazebo_sfm_plugin::msg::Forces
     
     // Now we create the new lines
     this->visual_pose = this->visual->WorldPose();
-    // Global force
+    // Global force - it is already in the bodyframe reference system
     double glo_force_length = std::sqrt(std::pow(msg.global_force.x, 2) + std::pow(msg.global_force.y, 2));
     if(glo_force_length > 5) {    
         this->global_force->AddPoint(0, 0, 0); // origin pose of the visual element (attached to the actor)
-        double glo_x = std::cos(-this->visual_pose.Yaw()) * (msg.global_force.x - this->visual_pose.X()) - std::sin(-this->visual_pose.Yaw()) * (msg.global_force.y - this->visual_pose.Y());
-        double glo_y = std::sin(-this->visual_pose.Yaw()) * (msg.global_force.x - this->visual_pose.X()) + std::cos(-this->visual_pose.Yaw()) * (msg.global_force.y - this->visual_pose.Y());
-        this->global_force->AddPoint(100 * glo_x / glo_force_length, 100 * glo_y / glo_force_length, 0); // force vector in the actor cartesian system
+        this->global_force->AddPoint(100 * msg.global_force.x / glo_force_length, 100 * msg.global_force.y / glo_force_length, 0); // force vector in the actor cartesian system
         // Debug prints
         // std::cout<<"Global Force: ["<<msg.global_force.x<<", "<<msg.global_force.y<<"]"<<std::endl;
         // std::cout<<"Global Force start point: "<<this->global_force->Point(0)<<std::endl;
@@ -155,13 +153,11 @@ void VisualizeForcesPlugin::VisualizeForces(const gazebo_sfm_plugin::msg::Forces
         this->social_force->AddPoint(0, 0, 0);
         this->social_force->AddPoint(0, 0, 0);
     }
-    // Group force
+    // Group force - it is already in the bodyframe reference system
     double gro_force_length = std::sqrt(std::pow(msg.group_force.x, 2) + std::pow(msg.group_force.y, 2));
     if(gro_force_length > 5) {    
         this->group_force->AddPoint(0, 0, 0); // origin pose of the visual element (attached to the actor)
-        double gro_x = std::cos(-this->visual_pose.Yaw()) * (msg.group_force.x - this->visual_pose.X()) - std::sin(-this->visual_pose.Yaw()) * (msg.group_force.y - this->visual_pose.Y());
-        double gro_y = std::sin(-this->visual_pose.Yaw()) * (msg.group_force.x - this->visual_pose.X()) + std::cos(-this->visual_pose.Yaw()) * (msg.group_force.y - this->visual_pose.Y());
-        this->group_force->AddPoint(100 * gro_x / gro_force_length, 100 * gro_y / gro_force_length, 0); // force vector in the actor cartesian system
+        this->group_force->AddPoint(100 * msg.group_force.x / gro_force_length, 100 * msg.group_force.y / gro_force_length, 0); // force vector in the actor cartesian system
         // Debug prints
         // std::cout<<"Group Force: ["<<msg.group_force.x<<", "<<msg.group_force.y<<"]"<<std::endl;
         // std::cout<<"Group Force start point: "<<this->group_force->Point(0)<<std::endl;

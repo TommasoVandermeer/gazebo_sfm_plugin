@@ -136,7 +136,7 @@
       </link>
     </model> 
 
-    <!-- <model name="actor2_collision_model">
+    <model name="actor2_collision_model">
     <allow_auto_disable>false</allow_auto_disable>
       <pose>0 0 -101 0 0 0</pose>
       <static>true</static>
@@ -162,7 +162,7 @@
           </plugin>
         </visual>
       </link>
-    </model>  -->
+    </model> 
 
     <!-- ACTORS -->
     <!-- actor1 -->
@@ -245,7 +245,7 @@
       </plugin>
     </actor>
 
-    <!-- <actor name="actor2">
+    <actor name="actor2">
       <pose>-0.2 -5 1.25 0 0 0</pose>
       <skin>
         <filename>walk.dae</filename>
@@ -317,7 +317,7 @@
           </model>
         </link>
       </plugin>
-    </actor> -->
+    </actor>
 
     <!-- WAYPOINTS VISUAL -->
     <model name="waypoint1">

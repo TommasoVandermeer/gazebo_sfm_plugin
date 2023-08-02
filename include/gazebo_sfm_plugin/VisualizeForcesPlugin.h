@@ -46,10 +46,15 @@ namespace gazebo {
         private:
         void OnUpdate();
 
-        /// \brief Function that is called whenever the Forces subscriber receives a new message
+        /// \brief Function that is called whenever the Forces subscriber receives a new message - HSFM
         /// \param[in] msg Message containing the forces data
         private:
-        void VisualizeForces(const gazebo_sfm_plugin::msg::Forces &msg);
+        void VisualizeForcesHSFM(const gazebo_sfm_plugin::msg::Forces &msg);
+
+        /// \brief Function that is called whenever the Forces subscriber receives a new message - SFM
+        /// \param[in] msg Message containing the forces data
+        private:
+        void VisualizeForcesSFM(const gazebo_sfm_plugin::msg::Forces &msg);
         //-------------------------------------------------
         /// \brief Pointer to the sdf element.
         private:
@@ -78,6 +83,10 @@ namespace gazebo {
         /// \brief stores the topic name where forces are published
         private:
         std::string topicName;
+
+        /// \brief boolean value to account for headed social force model
+        private:
+        bool headed;
 
         /// \brief line to visualize the global force
         private:

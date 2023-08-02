@@ -83,6 +83,22 @@ void PedestrianSFMPlugin::Load(physics::ModelPtr _model, sdf::ElementPtr _sdf) {
     this->sfmActor.params.forceFactorGroupRepulsion =
         _sdf->Get<double>("group_rep_weight");
 
+  // Read in the publish forces boolean variable
+  if (_sdf->HasElement("publish_forces"))
+    this->publishForces = _sdf->Get<bool>("publish_forces");
+  else
+    this->publishForces = false;
+
+  // Read in the node name
+  if (_sdf->HasElement("node_name")) {
+    this->nodeName = _sdf->Get<std::string>("node_name");
+  }
+  
+  // Read in the actor name
+  if (_sdf->HasElement("topic_name")) {
+    this->topicName = _sdf->Get<std::string>("topic_name");
+  }
+
   // Read in the animation factor (applied in the OnUpdate function).
   if (_sdf->HasElement("animation_factor"))
     this->animationFactor = _sdf->Get<double>("animation_factor");
@@ -130,6 +146,12 @@ void PedestrianSFMPlugin::Load(physics::ModelPtr _model, sdf::ElementPtr _sdf) {
         ((int)model->GetType() == (int)this->actor->GetType())) {
       this->ignoreModels.push_back(model->GetName());
     }
+  }
+
+  // Create the node to publish Forces
+  if (this->publishForces == true) {
+    this->forcesNode = std::make_shared<rclcpp::Node>(this->nodeName);
+    this->forcesPub = this->forcesNode->create_publisher<gazebo_sfm_plugin::msg::Forces>(this->topicName, 10);
   }
 
   this->connections.push_back(event::Events::ConnectWorldUpdateBegin(
@@ -298,6 +320,11 @@ void PedestrianSFMPlugin::OnUpdate(const common::UpdateInfo &_info) {
   // Update model
   sfm::SFM.updatePosition(this->sfmActor, dt);
 
+  // Publish computed forces
+  if (this->publishForces == true) {
+    PublishForces();
+  }
+
   utils::Angle h = this->sfmActor.yaw;
   utils::Angle add = utils::Angle::fromRadian(1.5707);
   h = h + add;
@@ -337,4 +364,39 @@ void PedestrianSFMPlugin::OnUpdate(const common::UpdateInfo &_info) {
   this->actor->SetScriptTime(this->actor->ScriptTime() +
                              (distanceTraveled * this->animationFactor));
   this->lastUpdate = _info.simTime;
+}
+
+/////////////////////////////////////////////////
+void PedestrianSFMPlugin::PublishForces() {
+  // std::cout<<"Start of Publish Forces method"<<std::endl;
+  gazebo_sfm_plugin::msg::Forces msg = gazebo_sfm_plugin::msg::Forces();
+  // Global force
+  msg.global_force.x = this->sfmActor.forces.globalForce.getX();
+  msg.global_force.y = this->sfmActor.forces.globalForce.getY();
+  // Desired force
+  msg.desired_force.x = this->sfmActor.forces.desiredForce.getX();
+  msg.desired_force.y = this->sfmActor.forces.desiredForce.getY();
+  // Obstacle force
+  msg.obstacle_force.x = this->sfmActor.forces.obstacleForce.getX();
+  msg.obstacle_force.y = this->sfmActor.forces.obstacleForce.getY();
+  // Social force
+  msg.social_force.x = this->sfmActor.forces.socialForce.getX();
+  msg.social_force.y = this->sfmActor.forces.socialForce.getY();
+  // Group force
+  msg.group_force.x = this->sfmActor.forces.groupForce.getX();
+  msg.group_force.y = this->sfmActor.forces.groupForce.getY();
+  // // Torque force - not implemented
+  // msg.torque_force = 0.0;
+  // Linear velocity
+  msg.linear_velocity.x = this->sfmActor.velocity.getX();
+  msg.linear_velocity.y = this->sfmActor.velocity.getY();
+  // // Angular velocity - not implemented
+  // msg.angular_velocity = 0.0;
+  // Pose
+  msg.pose.x = this->sfmActor.initPosition.getX();
+  msg.pose.y = this->sfmActor.initPosition.getY();
+  msg.pose.theta = this->sfmActor.initYaw.toDegree();
+
+  this->forcesPub->publish(msg);
+  // std::cout<<"End of Publish Forces method"<<std::endl;
 }

@@ -131,7 +131,7 @@
           <plugin name="actor1_forces_visualization" filename="libVisualizeForcesPlugin.so">
             <node_name>Actor1Node_Visual</node_name> 
             <topic_name>/forces/actor1</topic_name>
-            <headed>true</headed>
+            <headed>false</headed>
           </plugin>
         </visual>
       </link>
@@ -160,7 +160,7 @@
           <plugin name="actor2_forces_visualization" filename="libVisualizeForcesPlugin.so">
             <node_name>Actor2Node_Visual</node_name> 
             <topic_name>/forces/actor2</topic_name> 
-            <headed>true</headed>
+            <headed>false</headed>
           </plugin>
         </visual>
       </link>
@@ -180,28 +180,18 @@
         <interpolate_x>true</interpolate_x>
       </animation>
       <!-- SFM Plugin -->
-      <plugin name="actor1_plugin" filename="libPedestrianHSFMPlugin.so">
+      <plugin name="actor1_plugin" filename="libPedestrianSFMPlugin.so">
         <publish_forces>true</publish_forces> <!-- If true, computed forces are published in a ROS topic -->
         <node_name>Actor1Node</node_name> <!-- The name of the node publishing the forces -->
         <topic_name>/forces/actor1</topic_name> <!-- The name of the topic where the forces are published -->
-        <velocity>0.9</velocity> <!-- 0.6 -->
-        <radius>0.35</radius> <!-- 0.35 -->
-        <mass>75</mass> <!-- 75 -->
-        <relaxation_time>0.5</relaxation_time> <!-- 0.5 -->
-        <k_orthogonal>1</k_orthogonal> <!-- 1 -->
-        <k_damping>500</k_damping> <!-- 500 -->
-        <k_lambda>0.3</k_lambda> <!-- 0.3 -->
-        <alpha>3</alpha> <!-- 3 -->
-        <group_distance_forward>2</group_distance_forward> <!-- 2 -->
-        <group_distance_orthogonal>1</group_distance_orthogonal> <!-- 1 -->
-        <k1g>200</k1g> <!-- 200 -->
-        <k2g>200</k2g> <!-- 200 -->
-        <Ai>2000</Ai> <!-- 2000 -->
-        <Aw>2000</Aw> <!-- 2000 -->
-        <Bi>0.08</Bi> <!-- 0.08 -->
-        <Bw>0.08</Bw> <!-- 0.08 -->
-        <k1>120000</k1> <!-- 120000 -->
-        <k2>240000</k2> <!-- 240000 -->
+        <goal_weight>2.0</goal_weight>
+        <obstacle_weight>10.0</obstacle_weight> <!--Original: 80.0, Modified 20.0, Farina: 10.0-->
+        <social_weight>15</social_weight> <!--2.1-->
+        <group_gaze_weight>0.0</group_gaze_weight>
+        <group_coh_weight>0.0</group_coh_weight>
+        <group_rep_weight>0.0</group_rep_weight>
+        <velocity>0.9</velocity>
+        <radius>0.4</radius> <!-- 0.4 -->
         <animation_factor>5.1</animation_factor>
         <animation_name>walking</animation_name>
         <people_distance>6.0</people_distance>
@@ -258,28 +248,18 @@
         <scale>1.000000</scale>
         <interpolate_x>true</interpolate_x>
       </animation>
-      <plugin name="actor2_plugin" filename="libPedestrianHSFMPlugin.so">
+      <plugin name="actor2_plugin" filename="libPedestrianSFMPlugin.so">
         <publish_forces>true</publish_forces>
         <node_name>Actor2Node</node_name>
         <topic_name>/forces/actor2</topic_name> 
-        <velocity>0.9</velocity> 
-        <radius>0.35</radius>
-        <mass>75</mass> 
-        <relaxation_time>0.5</relaxation_time> 
-        <k_orthogonal>1</k_orthogonal> 
-        <k_damping>500</k_damping> 
-        <k_lambda>0.3</k_lambda> 
-        <alpha>3</alpha>
-        <group_distance_forward>2</group_distance_forward> 
-        <group_distance_orthogonal>1</group_distance_orthogonal>
-        <k1g>200</k1g> 
-        <k2g>200</k2g> 
-        <Ai>2000</Ai> 
-        <Aw>2000</Aw> 
-        <Bi>0.08</Bi> 
-        <Bw>0.08</Bw>
-        <k1>120000</k1> 
-        <k2>240000</k2>
+        <goal_weight>2.0</goal_weight>
+        <obstacle_weight>10.0</obstacle_weight>
+        <social_weight>15</social_weight> 
+        <group_gaze_weight>0.0</group_gaze_weight>
+        <group_coh_weight>0.0</group_coh_weight>
+        <group_rep_weight>0.0</group_rep_weight>
+        <velocity>0.9</velocity>
+        <radius>0.4</radius> 
         <animation_factor>5.1</animation_factor>
         <animation_name>walking</animation_name>
         <people_distance>6.0</people_distance>

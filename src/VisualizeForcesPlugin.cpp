@@ -91,14 +91,6 @@ void VisualizeForcesPlugin::VisualizeForcesHSFM(const gazebo_sfm_plugin::msg::Fo
     if(glo_force_length > 5) {    
         this->global_force->AddPoint(0, 0, 0); // origin pose of the visual element (attached to the actor)
         this->global_force->AddPoint(100 * msg.global_force.x / glo_force_length, 100 * msg.global_force.y / glo_force_length, 0); // force vector in the actor cartesian system
-        // Debug prints
-        // std::cout<<"Global Force: ["<<msg.global_force.x<<", "<<msg.global_force.y<<"]"<<std::endl;
-        // std::cout<<"Global Force start point: "<<this->global_force->Point(0)<<std::endl;
-        // std::cout<<"Global Force end point: "<<this->global_force->Point(1)<<std::endl;
-        // std::cout<<"Global Force point count: "<<this->global_force->GetPointCount()<<std::endl;
-        // std::cout<<"Visual rotation: ["<<this->visual->WorldPose().Roll()<<", "<<this->visual->WorldPose().Pitch()<<", "<<this->visual->WorldPose().Yaw()<<"]"<<std::endl;
-        // std::cout<<"Global force length: "<<std::sqrt(std::pow(100 * msg.global_force.x / glo_force_length, 2) + std::pow(100 * msg.global_force.y / glo_force_length, 2))<<std::endl;
-        // std::cout<<std::endl;
     }
     else {
         this->global_force->AddPoint(0, 0, 0);
@@ -110,15 +102,7 @@ void VisualizeForcesPlugin::VisualizeForcesHSFM(const gazebo_sfm_plugin::msg::Fo
         this->obstacle_force->AddPoint(0, 0, 0); // origin pose of the visual element (attached to the actor)
         double obs_x = std::cos(-this->visual_pose.Yaw()) * (msg.obstacle_force.x) - std::sin(-this->visual_pose.Yaw()) * (msg.obstacle_force.y);
         double obs_y = std::sin(-this->visual_pose.Yaw()) * (msg.obstacle_force.x) + std::cos(-this->visual_pose.Yaw()) * (msg.obstacle_force.y);
-        double new_obs_length = std::sqrt(std::pow(obs_x, 2) + std::pow(obs_y, 2));
-        this->obstacle_force->AddPoint(100 * obs_x / new_obs_length, 100 * obs_y / new_obs_length, 0); // force vector in the actor cartesian system
-        // Debug prints
-        // std::cout<<"Obstacle Force: ["<<msg.obstacle_force.x<<", "<<msg.obstacle_force.y<<"]"<<std::endl;
-        // std::cout<<"Obstacle Force start point: "<<this->obstacle_force->Point(0)<<std::endl;
-        // std::cout<<"Obstacle Force end point: "<<this->obstacle_force->Point(1)<<std::endl;
-        // std::cout<<"Obstacle Force point count: "<<this->obstacle_force->GetPointCount()<<std::endl;
-        // std::cout<<"Visual rotation: ["<<this->visual->WorldPose().Roll()<<", "<<this->visual->WorldPose().Pitch()<<", "<<this->visual->WorldPose().Yaw()<<"]"<<std::endl;
-        // std::cout<<std::endl;
+        this->obstacle_force->AddPoint(100 * obs_x / obs_force_length, 100 * obs_y / obs_force_length, 0); // force vector in the actor cartesian system
     }
     else {
         this->obstacle_force->AddPoint(0, 0, 0);
@@ -130,19 +114,7 @@ void VisualizeForcesPlugin::VisualizeForcesHSFM(const gazebo_sfm_plugin::msg::Fo
         this->desired_force->AddPoint(0, 0, 0); // origin pose of the visual element (attached to the actor)
         double des_x = std::cos(-this->visual_pose.Yaw()) * (msg.desired_force.x) - std::sin(-this->visual_pose.Yaw()) * (msg.desired_force.y);
         double des_y = std::sin(-this->visual_pose.Yaw()) * (msg.desired_force.x) + std::cos(-this->visual_pose.Yaw()) * (msg.desired_force.y);
-        double new_des_length = std::sqrt(std::pow(des_x, 2) + std::pow(des_y, 2));
-        this->desired_force->AddPoint(100 * des_x / new_des_length, 100 * des_y / new_des_length, 0); // force vector in the actor cartesian system
-        // Debug prints
-        // std::cout<<"Desired Force: ["<<msg.desired_force.x<<", "<<msg.desired_force.y<<"]"<<std::endl;
-        // std::cout<<"Desired Force start point: "<<this->desired_force->Point(0)<<std::endl;
-        // std::cout<<"Desired Force end point: "<<this->desired_force->Point(1)<<std::endl;
-        // std::cout<<"Desired Force point count: "<<this->desired_force->GetPointCount()<<std::endl;
-        // std::cout<<"Visual rotation: ["<<this->visual->WorldPose().Roll()<<", "<<this->visual->WorldPose().Pitch()<<", "<<this->visual->WorldPose().Yaw()<<"]"<<std::endl;        std::cout<<"Length of Desired Force: "<<std::sqrt(std::pow(100 * des_x / des_force_length, 2) + std::pow(100 * des_y / des_force_length, 2))<<std::endl;
-        // std::cout<<"Converted force length: "<<std::sqrt(std::pow(100 * des_x / new_des_length, 2) + std::pow(100 * des_y / new_des_length, 2))<<std::endl;
-        // std::cout<<"X component: "<<des_x<<std::endl;
-        // std::cout<<"Y component: "<<des_y<<std::endl;
-        // std::cout<<"Actor position: ["<<this->visual_pose.X()<<", "<<this->visual_pose.Y()<<"]"<<std::endl;
-        // std::cout<<std::endl;
+        this->desired_force->AddPoint(100 * des_x / des_force_length, 100 * des_y / des_force_length, 0); // force vector in the actor cartesian system
     }
     else {
         this->desired_force->AddPoint(0, 0, 0);
@@ -154,15 +126,7 @@ void VisualizeForcesPlugin::VisualizeForcesHSFM(const gazebo_sfm_plugin::msg::Fo
         this->social_force->AddPoint(0, 0, 0); // origin pose of the visual element (attached to the actor)
         double soc_x = std::cos(-this->visual_pose.Yaw()) * (msg.social_force.x) - std::sin(-this->visual_pose.Yaw()) * (msg.social_force.y);
         double soc_y = std::sin(-this->visual_pose.Yaw()) * (msg.social_force.x) + std::cos(-this->visual_pose.Yaw()) * (msg.social_force.y);
-        double new_soc_length = std::sqrt(std::pow(soc_x, 2) + std::pow(soc_y, 2));
-        this->social_force->AddPoint(100 * soc_x / new_soc_length, 100 * soc_y / new_soc_length, 0); // force vector in the actor cartesian system
-        // Debug prints
-        // std::cout<<"Social Force: ["<<msg.social_force.x<<", "<<msg.social_force.y<<"]"<<std::endl;
-        // std::cout<<"Social Force start point: "<<this->social_force->Point(0)<<std::endl;
-        // std::cout<<"Social Force end point: "<<this->social_force->Point(1)<<std::endl;
-        // std::cout<<"Social Force point count: "<<this->social_force->GetPointCount()<<std::endl;
-        // std::cout<<"Visual rotation: ["<<this->visual->WorldPose().Roll()<<", "<<this->visual->WorldPose().Pitch()<<", "<<this->visual->WorldPose().Yaw()<<"]"<<std::endl;
-        // std::cout<<std::endl;
+        this->social_force->AddPoint(100 * soc_x / soc_force_length, 100 * soc_y / soc_force_length, 0); // force vector in the actor cartesian system
     }
     else {
         this->social_force->AddPoint(0, 0, 0);
@@ -173,13 +137,6 @@ void VisualizeForcesPlugin::VisualizeForcesHSFM(const gazebo_sfm_plugin::msg::Fo
     if(gro_force_length > 5) {    
         this->group_force->AddPoint(0, 0, 0); // origin pose of the visual element (attached to the actor)
         this->group_force->AddPoint(100 * msg.group_force.x / gro_force_length, 100 * msg.group_force.y / gro_force_length, 0); // force vector in the actor cartesian system
-        // Debug prints
-        // std::cout<<"Group Force: ["<<msg.group_force.x<<", "<<msg.group_force.y<<"]"<<std::endl;
-        // std::cout<<"Group Force start point: "<<this->group_force->Point(0)<<std::endl;
-        // std::cout<<"Group Force end point: "<<this->group_force->Point(1)<<std::endl;
-        // std::cout<<"Group Force point count: "<<this->group_force->GetPointCount()<<std::endl;
-        // std::cout<<"Visual rotation: ["<<this->visual->WorldPose().Roll()<<", "<<this->visual->WorldPose().Pitch()<<", "<<this->visual->WorldPose().Yaw()<<"]"<<std::endl;
-        // std::cout<<std::endl;
     }
     else {
         this->group_force->AddPoint(0, 0, 0);
@@ -191,15 +148,7 @@ void VisualizeForcesPlugin::VisualizeForcesHSFM(const gazebo_sfm_plugin::msg::Fo
         this->linear_velocity->AddPoint(0, 0, 0); // origin pose of the visual element (attached to the actor)
         double vel_x = std::cos(-this->visual_pose.Yaw()) * (msg.linear_velocity.x) - std::sin(-this->visual_pose.Yaw()) * (msg.linear_velocity.y);
         double vel_y = std::sin(-this->visual_pose.Yaw()) * (msg.linear_velocity.x) + std::cos(-this->visual_pose.Yaw()) * (msg.linear_velocity.y);
-        double new_vel_length = std::sqrt(std::pow(vel_x, 2) + std::pow(vel_y, 2));
-        this->linear_velocity->AddPoint(100 * vel_x / new_vel_length, 100 * vel_y / new_vel_length, 0); // force vector in the actor cartesian system
-        // Debug prints
-        // std::cout<<"Linear Velocity: ["<<msg.linear_velocity.x<<", "<<msg.linear_velocity.y<<"]"<<std::endl;
-        // std::cout<<"Linear Velocity start point: "<<this->linear_velocity->Point(0)<<std::endl;
-        // std::cout<<"Linear Velocity end point: "<<this->linear_velocity->Point(1)<<std::endl;
-        // std::cout<<"Linear Velocity point count: "<<this->linear_velocity->GetPointCount()<<std::endl;
-        // std::cout<<"Visual rotation: ["<<this->visual->WorldPose().Roll()<<", "<<this->visual->WorldPose().Pitch()<<", "<<this->visual->WorldPose().Yaw()<<"]"<<std::endl;
-        // std::cout<<std::endl;
+        this->linear_velocity->AddPoint(100 * vel_x / vel_force_length, 100 * vel_y / vel_force_length, 0); // force vector in the actor cartesian system
     }
     else {
         this->linear_velocity->AddPoint(0, 0, 0);
@@ -215,7 +164,7 @@ void VisualizeForcesPlugin::VisualizeForcesSFM(const gazebo_sfm_plugin::msg::For
     this->social_force->Clear();
     this->desired_force->Clear();
     this->group_force->Clear();
-    this->linear_velocity->Clear(); // Not implemented
+    this->linear_velocity->Clear();
     
     // Now we create the new lines
     this->visual_pose = this->visual->WorldPose();
@@ -225,16 +174,7 @@ void VisualizeForcesPlugin::VisualizeForcesSFM(const gazebo_sfm_plugin::msg::For
         this->global_force->AddPoint(0, 0, 0); // origin pose of the visual element (attached to the actor)
         double glo_x = std::cos(-this->visual_pose.Yaw()) * (msg.global_force.x) - std::sin(-this->visual_pose.Yaw()) * (msg.global_force.y);
         double glo_y = std::sin(-this->visual_pose.Yaw()) * (msg.global_force.x) + std::cos(-this->visual_pose.Yaw()) * (msg.global_force.y);
-        double new_glo_length = std::sqrt(std::pow(glo_x, 2) + std::pow(glo_y, 2));
-        this->global_force->AddPoint(100 * glo_x / new_glo_length, 100 * glo_y / new_glo_length, 0); // force vector in the actor cartesian system
-        // Debug prints
-        // std::cout<<"Global Force: ["<<msg.global_force.x<<", "<<msg.global_force.y<<"]"<<std::endl;
-        // std::cout<<"Global Force start point: "<<this->global_force->Point(0)<<std::endl;
-        // std::cout<<"Global Force end point: "<<this->global_force->Point(1)<<std::endl;
-        // std::cout<<"Global Force point count: "<<this->global_force->GetPointCount()<<std::endl;
-        // std::cout<<"Visual rotation: ["<<this->visual->WorldPose().Roll()<<", "<<this->visual->WorldPose().Pitch()<<", "<<this->visual->WorldPose().Yaw()<<"]"<<std::endl;
-        // std::cout<<"Global force length: "<<std::sqrt(std::pow(100 * msg.global_force.x / glo_force_length, 2) + std::pow(100 * msg.global_force.y / glo_force_length, 2))<<std::endl;
-        // std::cout<<std::endl;
+        this->global_force->AddPoint(100 * glo_x / glo_force_length, 100 * glo_y / glo_force_length, 0); // force vector in the actor cartesian system
     }
     else {
         this->global_force->AddPoint(0, 0, 0);
@@ -246,18 +186,7 @@ void VisualizeForcesPlugin::VisualizeForcesSFM(const gazebo_sfm_plugin::msg::For
         this->obstacle_force->AddPoint(0, 0, 0); // origin pose of the visual element (attached to the actor)
         double obs_x = std::cos(-this->visual_pose.Yaw()) * (msg.obstacle_force.x) - std::sin(-this->visual_pose.Yaw()) * (msg.obstacle_force.y);
         double obs_y = std::sin(-this->visual_pose.Yaw()) * (msg.obstacle_force.x) + std::cos(-this->visual_pose.Yaw()) * (msg.obstacle_force.y);
-        double new_obs_length = std::sqrt(std::pow(obs_x, 2) + std::pow(obs_y, 2));
-        this->obstacle_force->AddPoint(100 * obs_x / new_obs_length, 100 * obs_y / new_obs_length, 0); // force vector in the actor cartesian system
-        // Debug prints
-        // std::cout<<"Obstacle Force: ["<<msg.obstacle_force.x<<", "<<msg.obstacle_force.y<<"]"<<std::endl;
-        // std::cout<<"Obs x: "<<obs_x<<std::endl;
-        // std::cout<<"Obs y: "<<obs_y<<std::endl;
-        // std::cout<<"Obstacle Force start point: "<<this->obstacle_force->Point(0)<<std::endl;
-        // std::cout<<"Obstacle Force end point: "<<this->obstacle_force->Point(1)<<std::endl;
-        // std::cout<<"Obstacle Force point count: "<<this->obstacle_force->GetPointCount()<<std::endl;
-        // std::cout<<"Visual rotation: ["<<this->visual->WorldPose().Roll()<<", "<<this->visual->WorldPose().Pitch()<<", "<<this->visual->WorldPose().Yaw()<<"]"<<std::endl;
-        // std::cout<<"Visual position: ["<<this->visual->WorldPose().X()<<", "<<this->visual->WorldPose().Y()<<", "<<this->visual->WorldPose().Z()<<"]"<<std::endl;
-        // std::cout<<std::endl;
+        this->obstacle_force->AddPoint(100 * obs_x / obs_force_length, 100 * obs_y / obs_force_length, 0); // force vector in the actor cartesian system
     }
     else {
         this->obstacle_force->AddPoint(0, 0, 0);
@@ -269,19 +198,7 @@ void VisualizeForcesPlugin::VisualizeForcesSFM(const gazebo_sfm_plugin::msg::For
         this->desired_force->AddPoint(0, 0, 0); // origin pose of the visual element (attached to the actor)
         double des_x = std::cos(-this->visual_pose.Yaw()) * (msg.desired_force.x) - std::sin(-this->visual_pose.Yaw()) * (msg.desired_force.y);
         double des_y = std::sin(-this->visual_pose.Yaw()) * (msg.desired_force.x) + std::cos(-this->visual_pose.Yaw()) * (msg.desired_force.y);
-        double new_des_length = std::sqrt(std::pow(des_x, 2) + std::pow(des_y, 2));
-        this->desired_force->AddPoint(100 * des_x / new_des_length, 100 * des_y / new_des_length, 0); // force vector in the actor cartesian system
-        // Debug prints
-        // std::cout<<"Desired Force: ["<<msg.desired_force.x<<", "<<msg.desired_force.y<<"]"<<std::endl;
-        // std::cout<<"Desired Force start point: "<<this->desired_force->Point(0)<<std::endl;
-        // std::cout<<"Desired Force end point: "<<this->desired_force->Point(1)<<std::endl;
-        // std::cout<<"Desired Force point count: "<<this->desired_force->GetPointCount()<<std::endl;
-        // std::cout<<"Visual rotation: ["<<this->visual->WorldPose().Roll()<<", "<<this->visual->WorldPose().Pitch()<<", "<<this->visual->WorldPose().Yaw()<<"]"<<std::endl;        std::cout<<"Length of Desired Force: "<<std::sqrt(std::pow(100 * des_x / des_force_length, 2) + std::pow(100 * des_y / des_force_length, 2))<<std::endl;
-        // std::cout<<"Converted force length: "<<std::sqrt(std::pow(100 * des_x / new_des_length, 2) + std::pow(100 * des_y / new_des_length, 2))<<std::endl;
-        // std::cout<<"X component: "<<des_x<<std::endl;
-        // std::cout<<"Y component: "<<des_y<<std::endl;
-        // std::cout<<"Actor position: ["<<this->visual_pose.X()<<", "<<this->visual_pose.Y()<<"]"<<std::endl;
-        // std::cout<<std::endl;
+        this->desired_force->AddPoint(100 * des_x / des_force_length, 100 * des_y / des_force_length, 0); // force vector in the actor cartesian system
     }
     else {
         this->desired_force->AddPoint(0, 0, 0);
@@ -293,15 +210,7 @@ void VisualizeForcesPlugin::VisualizeForcesSFM(const gazebo_sfm_plugin::msg::For
         this->social_force->AddPoint(0, 0, 0); // origin pose of the visual element (attached to the actor)
         double soc_x = std::cos(-this->visual_pose.Yaw()) * (msg.social_force.x) - std::sin(-this->visual_pose.Yaw()) * (msg.social_force.y);
         double soc_y = std::sin(-this->visual_pose.Yaw()) * (msg.social_force.x) + std::cos(-this->visual_pose.Yaw()) * (msg.social_force.y);
-        double new_soc_length = std::sqrt(std::pow(soc_x, 2) + std::pow(soc_y, 2));
-        this->social_force->AddPoint(100 * soc_x / new_soc_length, 100 * soc_y / new_soc_length, 0); // force vector in the actor cartesian system
-        // Debug prints
-        // std::cout<<"Social Force: ["<<msg.social_force.x<<", "<<msg.social_force.y<<"]"<<std::endl;
-        // std::cout<<"Social Force start point: "<<this->social_force->Point(0)<<std::endl;
-        // std::cout<<"Social Force end point: "<<this->social_force->Point(1)<<std::endl;
-        // std::cout<<"Social Force point count: "<<this->social_force->GetPointCount()<<std::endl;
-        // std::cout<<"Visual rotation: ["<<this->visual->WorldPose().Roll()<<", "<<this->visual->WorldPose().Pitch()<<", "<<this->visual->WorldPose().Yaw()<<"]"<<std::endl;
-        // std::cout<<std::endl;
+        this->social_force->AddPoint(100 * soc_x / soc_force_length, 100 * soc_y / soc_force_length, 0); // force vector in the actor cartesian system
     }
     else {
         this->social_force->AddPoint(0, 0, 0);
@@ -313,15 +222,7 @@ void VisualizeForcesPlugin::VisualizeForcesSFM(const gazebo_sfm_plugin::msg::For
         this->group_force->AddPoint(0, 0, 0); // origin pose of the visual element (attached to the actor)
         double gro_x = std::cos(-this->visual_pose.Yaw()) * (msg.group_force.x) - std::sin(-this->visual_pose.Yaw()) * (msg.group_force.y);
         double gro_y = std::sin(-this->visual_pose.Yaw()) * (msg.group_force.x) + std::cos(-this->visual_pose.Yaw()) * (msg.group_force.y);
-        double new_gro_length = std::sqrt(std::pow(gro_x, 2) + std::pow(gro_y, 2));
-        this->group_force->AddPoint(100 * gro_x / new_gro_length, 100 * gro_y / new_gro_length, 0); // force vector in the actor cartesian system
-        // Debug prints
-        // std::cout<<"Group Force: ["<<msg.group_force.x<<", "<<msg.group_force.y<<"]"<<std::endl;
-        // std::cout<<"Group Force start point: "<<this->group_force->Point(0)<<std::endl;
-        // std::cout<<"Group Force end point: "<<this->group_force->Point(1)<<std::endl;
-        // std::cout<<"Group Force point count: "<<this->group_force->GetPointCount()<<std::endl;
-        // std::cout<<"Visual rotation: ["<<this->visual->WorldPose().Roll()<<", "<<this->visual->WorldPose().Pitch()<<", "<<this->visual->WorldPose().Yaw()<<"]"<<std::endl;
-        // std::cout<<std::endl;
+        this->group_force->AddPoint(100 * gro_x / gro_force_length, 100 * gro_y / gro_force_length, 0); // force vector in the actor cartesian system
     }
     else {
         this->group_force->AddPoint(0, 0, 0);
@@ -333,15 +234,7 @@ void VisualizeForcesPlugin::VisualizeForcesSFM(const gazebo_sfm_plugin::msg::For
         this->linear_velocity->AddPoint(0, 0, 0); // origin pose of the visual element (attached to the actor)
         double vel_x = std::cos(-this->visual_pose.Yaw()) * (msg.linear_velocity.x) - std::sin(-this->visual_pose.Yaw()) * (msg.linear_velocity.y);
         double vel_y = std::sin(-this->visual_pose.Yaw()) * (msg.linear_velocity.x) + std::cos(-this->visual_pose.Yaw()) * (msg.linear_velocity.y);
-        double new_vel_length = std::sqrt(std::pow(vel_x, 2) + std::pow(vel_y, 2));
-        this->linear_velocity->AddPoint(100 * vel_x / new_vel_length, 100 * vel_y / new_vel_length, 0); // force vector in the actor cartesian system
-        // Debug prints
-        // std::cout<<"Linear Velocity: ["<<msg.linear_velocity.x<<", "<<msg.linear_velocity.y<<"]"<<std::endl;
-        // std::cout<<"Linear Velocity start point: "<<this->linear_velocity->Point(0)<<std::endl;
-        // std::cout<<"Linear Velocity end point: "<<this->linear_velocity->Point(1)<<std::endl;
-        // std::cout<<"Linear Velocity point count: "<<this->linear_velocity->GetPointCount()<<std::endl;
-        // std::cout<<"Visual rotation: ["<<this->visual->WorldPose().Roll()<<", "<<this->visual->WorldPose().Pitch()<<", "<<this->visual->WorldPose().Yaw()<<"]"<<std::endl;
-        // std::cout<<std::endl;
+        this->linear_velocity->AddPoint(100 * vel_x / vel_force_length, 100 * vel_y / vel_force_length, 0); // force vector in the actor cartesian system
     }
     else {
         this->linear_velocity->AddPoint(0, 0, 0);

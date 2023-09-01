@@ -22,6 +22,13 @@ class SaveForcesNode(Node):
         self.obs_force_magnitude = []
         self.obs_force_phase = []
 
+        # Lists to store additional data for HSFM
+        self.velocity_x = []
+        self.velocity_y = []
+        self.theta = []
+        self.forward_velocity = []
+        self.orthogonal_velocity = []
+
         # Data counter
         self.count = 0
 
@@ -39,6 +46,13 @@ class SaveForcesNode(Node):
         self.des_force_phase.append(math.degrees(math.atan2(msg.desired_force.y, msg.desired_force.x)))
         self.obs_force_magnitude.append(math.sqrt(msg.obstacle_force.x**2 + msg.obstacle_force.y**2))
         self.obs_force_phase.append(math.degrees(math.atan2(msg.obstacle_force.y, msg.obstacle_force.x)))
+
+        # Save additional data 
+        self.theta.append(msg.pose.theta)
+        self.velocity_x.append(msg.linear_velocity.x)
+        self.velocity_y.append(msg.linear_velocity.y)
+        self.forward_velocity.append(msg.linear_velocity.x * math.cos(math.radians(msg.pose.theta)) + msg.linear_velocity.y * math.sin(math.radians(msg.pose.theta)))
+        self.orthogonal_velocity.append(msg.linear_velocity.x * -math.sin(math.radians(msg.pose.theta)) + msg.linear_velocity.y * math.cos(math.radians(msg.pose.theta)))
 
         # Increment data counter
         self.count += 1
@@ -59,7 +73,7 @@ def main(args=None):
 
     # Print results
     fig, axs = plt.subplots(2, 2)
-    fig.suptitle('SFM2 forces analysis (HSFM without heading)')
+    fig.suptitle('HSFM forces analysis')
     axs[0, 0].plot(t, node.des_force_magnitude, color='tab:red')
     axs[0, 0].set_title('Desired Force Magnitude')
     axs[0, 0].grid()
@@ -72,6 +86,29 @@ def main(args=None):
     axs[1, 1].plot(t, node.obs_force_phase, color='tab:green')
     axs[1, 1].set_title('Obstacle Force Phase')
     axs[1, 1].grid()
+    plt.show()
+
+    # Print additional results 
+    fig2, axs2 = plt.subplots(2, 3)
+    fig2.suptitle('HSFM results analysis')
+    axs2[0, 0].plot(t, node.theta, color='tab:orange')
+    axs2[0, 0].set_title('Theta')
+    axs2[0, 0].grid()
+    axs2[1, 0].plot(t, node.des_force_phase, color='tab:red')
+    axs2[1, 0].set_title('Theta Des (desired force phase)')
+    axs2[1, 0].grid()
+    axs2[0, 1].plot(t, node.forward_velocity, color='tab:green')
+    axs2[0, 1].set_title('Forward velocity')
+    axs2[0, 1].grid()
+    axs2[1, 1].plot(t, node.orthogonal_velocity, color='tab:blue')
+    axs2[1, 1].set_title('Orthogonal velocity')
+    axs2[1, 1].grid()
+    axs2[0, 2].plot(t, node.velocity_x, color='tab:gray')
+    axs2[0, 2].set_title('Velocity X')
+    axs2[0, 2].grid()
+    axs2[1, 2].plot(t, node.velocity_y, color='tab:brown')
+    axs2[1, 2].set_title('Velocity Y')
+    axs2[1, 2].grid()
     plt.show()
 
 if __name__ == "__main__":

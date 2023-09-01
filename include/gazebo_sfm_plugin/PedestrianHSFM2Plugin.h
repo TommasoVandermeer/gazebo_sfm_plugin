@@ -1,6 +1,6 @@
 /***********************************************************************/
 /**                                                                    */
-/** PedestrianSFMPlugin.h                                              */
+/** PedestrianHSFM2Plugin.h                                              */
 /**                                                                    */
 /** Copyright (c) 2022, Service Robotics Lab (SRL).                    */
 /**                     http://robotics.upo.es                         */
@@ -18,8 +18,8 @@
 /**                                                                    */
 /***********************************************************************/
 
-#ifndef GAZEBO_PLUGINS_PEDESTRIANSFMPLUGIN_HH_
-#define GAZEBO_PLUGINS_PEDESTRIANSFMPLUGIN_HH_
+#ifndef GAZEBO_PLUGINS_PEDESTRIANHSFM2PLUGIN_HH_
+#define GAZEBO_PLUGINS_PEDESTRIANHSFM2PLUGIN_HH_
 
 // C++
 #include <algorithm>
@@ -30,7 +30,7 @@
 #include "gazebo/common/Plugin.hh"
 #include "gazebo/physics/physics.hh"
 #include "gazebo/util/system.hh"
-#include "gazebo/sensors/sensors.hh"
+#include "gazebo/transport/transport.hh"
 #include <rclcpp/rclcpp.hpp>
 
 // Msgs
@@ -39,13 +39,13 @@
 #include "gazebo_sfm_plugin/msg/pose2.hpp"
 
 // Social Force Model
-#include <gazebo_sfm_plugin/sfm.hpp>
+#include <gazebo_sfm_plugin/hsfm2.hpp>
 
 namespace gazebo {
-class GZ_PLUGIN_VISIBLE PedestrianSFMPlugin : public ModelPlugin {
+class GZ_PLUGIN_VISIBLE PedestrianHSFM2Plugin : public ModelPlugin {
   /// \brief Constructor
 public:
-  PedestrianSFMPlugin();
+  PedestrianHSFM2Plugin();
 
   /// \brief Load the actor plugin.
   /// \param[in] _model Pointer to the parent model.
@@ -72,7 +72,7 @@ private:
 private:
   void HandlePedestrians();
 
-  /// \brief Helper function to publish the computed forces using the SFM
+  /// \brief Helper function to publish the computed forces using the HSFM2
 private:
   void PublishForces();
 
@@ -80,7 +80,7 @@ private:
 
   /// \brief this actor as a SFM agent
 private:
-  sfm::Agent sfmActor;
+  hsfm2::Agent hsfm2Actor;
 
   /// \brief names of the other models in my walking group.
 private:
@@ -88,7 +88,7 @@ private:
 
   /// \brief vector of pedestrians detected.
 private:
-  std::vector<sfm::Agent> otherActors;
+  std::vector<hsfm2::Agent> otherActors;
 
   /// \brief Maximum distance to detect nearby pedestrians.
 private:

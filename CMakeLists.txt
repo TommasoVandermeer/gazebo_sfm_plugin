@@ -17,7 +17,7 @@ find_package(rosidl_default_generators REQUIRED)
 
 include_directories(include)
 include_directories(SYSTEM
-  /usr/local/include  #to find lightsfm
+  # /usr/local/include  #to find lightsfm
   ${Boost_INCLUDE_DIRS}
   ${catkin_INCLUDE_DIRS}
   ${GAZEBO_INCLUDE_DIRS}
@@ -59,6 +59,16 @@ ament_target_dependencies(PedestrianHSFMPlugin
 ament_export_libraries(PedestrianHSFMPlugin)
 target_link_libraries(PedestrianHSFMPlugin ${GAZEBO_LIBRARIES}) #${Boost_LIBRARIES
 
+add_library(PedestrianHSFM2Plugin SHARED src/PedestrianHSFM2Plugin.cpp)
+target_include_directories(PedestrianHSFM2Plugin PUBLIC include)
+ament_target_dependencies(PedestrianHSFM2Plugin 
+  "rclcpp" 
+  "gazebo" 
+  "gazebo_ros"
+)
+ament_export_libraries(PedestrianHSFM2Plugin)
+target_link_libraries(PedestrianHSFM2Plugin ${GAZEBO_LIBRARIES}) #${Boost_LIBRARIES
+
 add_library(VisualizeForcesPlugin SHARED src/VisualizeForcesPlugin.cpp)
 target_include_directories(VisualizeForcesPlugin PUBLIC include)
 ament_target_dependencies(VisualizeForcesPlugin 
@@ -84,6 +94,7 @@ ament_export_dependencies(rosidl_default_runtime)
 rosidl_get_typesupport_target(cpp_typesupport_target
   ${PROJECT_NAME} rosidl_typesupport_cpp)
 
+target_link_libraries(PedestrianHSFM2Plugin "${cpp_typesupport_target}")
 target_link_libraries(PedestrianHSFMPlugin "${cpp_typesupport_target}")
 target_link_libraries(PedestrianSFMPlugin "${cpp_typesupport_target}")
 target_link_libraries(PedestrianSFM2Plugin "${cpp_typesupport_target}")
@@ -102,6 +113,12 @@ install(TARGETS PedestrianSFM2Plugin
 )
 
 install(TARGETS PedestrianHSFMPlugin
+  ARCHIVE DESTINATION lib
+  LIBRARY DESTINATION lib
+  RUNTIME DESTINATION bin
+)
+
+install(TARGETS PedestrianHSFM2Plugin
   ARCHIVE DESTINATION lib
   LIBRARY DESTINATION lib
   RUNTIME DESTINATION bin

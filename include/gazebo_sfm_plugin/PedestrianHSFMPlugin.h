@@ -39,7 +39,7 @@
 #include "gazebo_sfm_plugin/msg/pose2.hpp"
 
 // Social Force Model
-#include <lightsfm/hsfm.hpp>
+#include <gazebo_sfm_plugin/hsfm.hpp>
 
 namespace gazebo {
 class GZ_PLUGIN_VISIBLE PedestrianHSFMPlugin : public ModelPlugin {

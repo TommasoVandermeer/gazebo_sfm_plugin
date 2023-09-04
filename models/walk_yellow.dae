@@ -109,7 +109,7 @@
         </technique>
       </profile_COMMON>
     </effect>
-    <effect id="sweater-green-effect">
+    <effect id="sweater-yellow-effect">
       <profile_COMMON>
         <technique sid="common">
           <phong>
@@ -117,10 +117,10 @@
               <color sid="emission">0 0 0 1</color>
             </emission>
             <ambient>
-              <color sid="ambient">0 1 0 1</color>
+              <color sid="ambient">1 1 0.5 1</color>
             </ambient>
             <diffuse>
-              <color sid="diffuse">0 1 0 1</color>
+              <color sid="diffuse">1 1 0.5 1</color>
             </diffuse>
             <specular>
               <color sid="specular">0.05319149 0.05319149 0.05319149 1</color>
@@ -176,7 +176,7 @@
       <instance_effect url="#skin-mat-effect"/>
     </material>
     <material id="sweater-green-material" name="sweater-green-material">
-      <instance_effect url="#sweater-green-effect"/>
+      <instance_effect url="#sweater-yellow-effect"/>
     </material>
     <material id="jeans-blue-material" name="jeans-blue-material">
       <instance_effect url="#jeans-blue-effect"/>

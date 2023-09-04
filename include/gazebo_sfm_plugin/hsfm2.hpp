@@ -316,14 +316,22 @@ inline std::vector<Agent> &SocialForceModel::computeForces(std::vector<Agent> &a
     std::vector<double> rotationalMatrixForward {agents[i].yaw.cos(), agents[i].yaw.sin()}; // r_i^f
     std::vector<double> rotationalMatrixOrthogonal {-agents[i].yaw.sin(), agents[i].yaw.cos()}; // r_i^o
 
-    // Forward global force
+    // Global force
     agents[i].forces.globalForce.setX((agents[i].forces.desiredForce + agents[i].forces.interactionForce) * rotationalMatrixForward + agents[i].forces.groupForce.getX()); // u_i^f
     agents[i].forces.globalForce.setY(agents[i].params.kOrthogonal * (agents[i].forces.interactionForce) * rotationalMatrixOrthogonal - agents[i].params.kDamping * agents[i].body_velocity.getY() + agents[i].forces.groupForce.getY()); //u_i^o
-    // Torque parameters
-    agents[i].kTheta = agents[i].inertia * agents[i].params.kLambda * agents[i].forces.desiredForce.norm();
-    agents[i].kOmega = agents[i].inertia * (1 + agents[i].params.alpha) * sqrt((agents[i].params.kLambda * agents[i].forces.desiredForce.norm()) / agents[i].params.alpha);
+    
+    // Global force in the World reference frame
+    // utils::Vector2d globalForceWorld;
+    // globalForceWorld.setX(agents[i].yaw.cos() * agents[i].forces.globalForce.getX() - agents[i].yaw.sin() * agents[i].forces.globalForce.getY());
+    // globalForceWorld.setY(agents[i].yaw.sin() * agents[i].forces.globalForce.getX() + agents[i].yaw.cos() * agents[i].forces.globalForce.getY());
+
     // Torque force
-    agents[i].forces.torqueForce = -agents[i].kTheta * (agents[i].yaw - agents[i].forces.desiredForce.angle()).toRadian() - (agents[i].kOmega * agents[i].angularVelocity);
+    // agents[i].kTheta = agents[i].inertia * agents[i].params.kLambda * globalForceWorld.norm();
+    // agents[i].kOmega = agents[i].inertia * (1 + agents[i].params.alpha) * sqrt((agents[i].params.kLambda * globalForceWorld.norm()) / agents[i].params.alpha);
+    // agents[i].forces.torqueForce = -agents[i].kTheta * (agents[i].yaw - globalForceWorld.angle()).toRadian() - (agents[i].kOmega * agents[i].angularVelocity);
+    agents[i].kTheta = agents[i].inertia * agents[i].params.kLambda * (agents[i].forces.desiredForce + agents[i].forces.interactionForce).norm();
+    agents[i].kOmega = agents[i].inertia * (1 + agents[i].params.alpha) * sqrt((agents[i].params.kLambda * (agents[i].forces.desiredForce + agents[i].forces.interactionForce).norm()) / agents[i].params.alpha);
+    agents[i].forces.torqueForce = -agents[i].kTheta * (agents[i].yaw - (agents[i].forces.desiredForce + agents[i].forces.interactionForce).angle()).toRadian() - (agents[i].kOmega * agents[i].angularVelocity);
   }
   return agents;
 }
@@ -359,14 +367,14 @@ inline void SocialForceModel::computeForces(Agent &me, std::vector<Agent> &agent
   // std::vector<double> rotationalMatrixForward {std::cos(me.yaw.negative()), std::sin(me.yaw.negative())}; // r_i^f
   // std::vector<double> rotationalMatrixOrthogonal {-std::sin(me.yaw.negative()), std::cos(me.yaw.negative())}; // r_i^o
 
-  // Forward global force
+  // Global force
   me.forces.globalForce.setX((me.forces.desiredForce + me.forces.interactionForce) * rotationalMatrixForward + me.forces.groupForce.getX()); // u_i^f
-  me.forces.globalForce.setY(me.params.kOrthogonal * (me.forces.interactionForce) * rotationalMatrixOrthogonal - me.params.kDamping * me.body_velocity.getY() + me.forces.groupForce.getY()); //u_i^o
-  
-  // Torque parameters
+  me.forces.globalForce.setY(- me.params.kDamping * me.body_velocity.getY() + me.forces.groupForce.getY()); //u_i^o
+  // me.forces.globalForce.setY(me.params.kOrthogonal * (me.forces.interactionForce) * rotationalMatrixOrthogonal - me.params.kDamping * me.body_velocity.getY() + me.forces.groupForce.getY()); //u_i^o
+
+  // Torque force
   me.kTheta = me.inertia * me.params.kLambda * (me.forces.desiredForce + me.forces.interactionForce).norm();
   me.kOmega = me.inertia * (1 + me.params.alpha) * sqrt((me.params.kLambda * (me.forces.desiredForce + me.forces.interactionForce).norm()) / me.params.alpha);
-  // Torque force
   me.forces.torqueForce = -me.kTheta * (me.yaw - (me.forces.desiredForce + me.forces.interactionForce).angle()).toRadian() - (me.kOmega * me.angularVelocity);
 }
 

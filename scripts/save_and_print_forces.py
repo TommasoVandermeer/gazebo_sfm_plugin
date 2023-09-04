@@ -12,17 +12,13 @@ class SaveForcesNode(Node):
     def __init__(self):
         super().__init__("saveforces_node")
 
-        # Lists to store the forces
-        # self.desired_force = []
-        # self.obstacle_force = []
-
-        # Lists to store magnitude and phase of each force
+        # Lists to store data
         self.des_force_magnitude = []
         self.des_force_phase = []
         self.obs_force_magnitude = []
         self.obs_force_phase = []
-
-        # Lists to store additional data for HSFM
+        self.glo_force_magnitude = []
+        self.glo_force_phase = []
         self.velocity_x = []
         self.velocity_y = []
         self.theta = []
@@ -35,19 +31,14 @@ class SaveForcesNode(Node):
         # Forces subscriber
         self.forces_sub = self.create_subscription(Forces, '/forces/actor1', self.forces_callback, 1)
 
-    # Forces callback
     def forces_callback(self, msg: Forces):
-        # Store forces
-        # self.desired_force.append([msg.desired_force.x,msg.desired_force.y])
-        # self.obstacle_force.append([msg.obstacle_force.x,msg.obstacle_force.y])
-
         # Compute magnitude and phase of each force
         self.des_force_magnitude.append(math.sqrt(msg.desired_force.x**2 + msg.desired_force.y**2))
         self.des_force_phase.append(math.degrees(math.atan2(msg.desired_force.y, msg.desired_force.x)))
         self.obs_force_magnitude.append(math.sqrt(msg.obstacle_force.x**2 + msg.obstacle_force.y**2))
         self.obs_force_phase.append(math.degrees(math.atan2(msg.obstacle_force.y, msg.obstacle_force.x)))
-
-        # Save additional data 
+        self.glo_force_magnitude.append(math.sqrt(msg.global_force.x**2 + msg.global_force.y**2))
+        self.glo_force_phase.append(math.degrees(math.atan2(math.sin(math.radians(msg.pose.theta)) * msg.global_force.x + math.cos(math.radians(msg.pose.theta)) * msg.global_force.y, math.cos(math.radians(msg.pose.theta)) * msg.global_force.x - math.sin(math.radians(msg.pose.theta)) * msg.global_force.y)))
         self.theta.append(msg.pose.theta)
         self.velocity_x.append(msg.linear_velocity.x)
         self.velocity_y.append(msg.linear_velocity.y)
@@ -72,8 +63,8 @@ def main(args=None):
     t = np.arange(0,7.001,0.001)
 
     # Print results
-    fig, axs = plt.subplots(2, 2)
-    fig.suptitle('HSFM forces analysis')
+    fig, axs = plt.subplots(2, 3)
+    #fig.suptitle('HSFM forces analysis')
     axs[0, 0].plot(t, node.des_force_magnitude, color='tab:red')
     axs[0, 0].set_title('Desired Force Magnitude')
     axs[0, 0].grid()
@@ -86,11 +77,17 @@ def main(args=None):
     axs[1, 1].plot(t, node.obs_force_phase, color='tab:green')
     axs[1, 1].set_title('Obstacle Force Phase')
     axs[1, 1].grid()
+    axs[0, 2].plot(t, node.glo_force_magnitude, color='tab:gray')
+    axs[0, 2].set_title('Global Force Magnitude')
+    axs[0, 2].grid()
+    axs[1, 2].plot(t, node.glo_force_phase, color='tab:brown')
+    axs[1, 2].set_title('Global Force Phase')
+    axs[1, 2].grid()
     plt.show()
 
     # Print additional results 
     fig2, axs2 = plt.subplots(2, 3)
-    fig2.suptitle('HSFM results analysis')
+    #fig2.suptitle('HSFM results analysis')
     axs2[0, 0].plot(t, node.theta, color='tab:orange')
     axs2[0, 0].set_title('Theta')
     axs2[0, 0].grid()

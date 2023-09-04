@@ -175,16 +175,11 @@
         <people_distance>6.0</people_distance>
         <ignore_obstacles>
           <model>ground_plane</model>
-          <model>aws_robomaker_hospital_floor_01_floor_1</model>
-          <model>aws_robomaker_residential_Carpet_01_1</model>
-          <model>aws_robomaker_hospital_ramp_01_1</model>
           <model>actor1_collision_model</model>
           <model>waypoint1</model>
           <model>waypoint2</model>
           <model>waypoint3</model>
           <model>waypoint4</model>
-          <model>waypoint5</model>
-          <model>waypoint6</model>
         </ignore_obstacles>
         <trajectory>
           <cyclic>true</cyclic>
@@ -271,16 +266,11 @@
         <people_distance>6.0</people_distance>
         <ignore_obstacles>
           <model>ground_plane</model>
-          <model>aws_robomaker_hospital_floor_01_floor_1</model>
-          <model>aws_robomaker_residential_Carpet_01_1</model>
-          <model>aws_robomaker_hospital_ramp_01_1</model>
           <model>actor1_collision_model</model>
           <model>waypoint1</model>
           <model>waypoint2</model>
           <model>waypoint3</model>
           <model>waypoint4</model>
-          <model>waypoint5</model>
-          <model>waypoint6</model>
         </ignore_obstacles>
         <trajectory>
           <cyclic>true</cyclic>
@@ -357,16 +347,11 @@
         <people_distance>6.0</people_distance>
         <ignore_obstacles>
           <model>ground_plane</model>
-          <model>aws_robomaker_hospital_floor_01_floor_1</model>
-          <model>aws_robomaker_residential_Carpet_01_1</model>
-          <model>aws_robomaker_hospital_ramp_01_1</model>
           <model>actor1_collision_model</model>
           <model>waypoint1</model>
           <model>waypoint2</model>
           <model>waypoint3</model>
           <model>waypoint4</model>
-          <model>waypoint5</model>
-          <model>waypoint6</model>
         </ignore_obstacles>
         <trajectory>
           <cyclic>true</cyclic>
@@ -447,16 +432,11 @@
         <people_distance>6.0</people_distance>
         <ignore_obstacles>
           <model>ground_plane</model>
-          <model>aws_robomaker_hospital_floor_01_floor_1</model>
-          <model>aws_robomaker_residential_Carpet_01_1</model>
-          <model>aws_robomaker_hospital_ramp_01_1</model>
           <model>actor1_collision_model</model>
           <model>waypoint1</model>
           <model>waypoint2</model>
           <model>waypoint3</model>
           <model>waypoint4</model>
-          <model>waypoint5</model>
-          <model>waypoint6</model>
         </ignore_obstacles>
         <trajectory>
           <cyclic>true</cyclic>
@@ -502,10 +482,35 @@
         </visual>
       </link>
     </model>
-    <model name="waypoint3">
+    <model name="waypoint2">
       <allow_auto_disable>false</allow_auto_disable>
       <static>true</static>
       <pose>-2 -1.25 0.05 0 0 0</pose>
+      <static>true</static>
+      <link name="waypoint2_link">
+        <collision name="waypoint2_collision">
+          <geometry>
+            <sphere><radius>0.01</radius></sphere>
+          </geometry>
+        </collision>
+        <visual name="waypoint2_visual">
+          <pose>0 0 0 0 0 0</pose>
+          <geometry>
+            <sphere>
+              <radius>0.2</radius>
+            </sphere>
+          </geometry>
+          <material>
+          <diffuse>1 0 0 1</diffuse>
+          <ambient>1 0 0 1</ambient>
+        </material>
+        </visual>
+      </link>
+    </model>
+    <model name="waypoint3">
+      <allow_auto_disable>false</allow_auto_disable>
+      <static>true</static>
+      <pose>-2 1.25 0.05 0 0 0</pose>
       <static>true</static>
       <link name="waypoint3_link">
         <collision name="waypoint3_collision">
@@ -530,7 +535,7 @@
     <model name="waypoint4">
       <allow_auto_disable>false</allow_auto_disable>
       <static>true</static>
-      <pose>-2 1.25 0.05 0 0 0</pose>
+      <pose>-0.2 5 0.05 0 0 0</pose>
       <static>true</static>
       <link name="waypoint4_link">
         <collision name="waypoint4_collision">
@@ -539,31 +544,6 @@
           </geometry>
         </collision>
         <visual name="waypoint4_visual">
-          <pose>0 0 0 0 0 0</pose>
-          <geometry>
-            <sphere>
-              <radius>0.2</radius>
-            </sphere>
-          </geometry>
-          <material>
-          <diffuse>1 0 0 1</diffuse>
-          <ambient>1 0 0 1</ambient>
-        </material>
-        </visual>
-      </link>
-    </model>
-    <model name="waypoint6">
-      <allow_auto_disable>false</allow_auto_disable>
-      <static>true</static>
-      <pose>-0.2 5 0.05 0 0 0</pose>
-      <static>true</static>
-      <link name="waypoint6_link">
-        <collision name="waypoint6_collision">
-          <geometry>
-            <sphere><radius>0.01</radius></sphere>
-          </geometry>
-        </collision>
-        <visual name="waypoint6_visual">
           <pose>0 0 0 0 0 0</pose>
           <geometry>
             <sphere>

@@ -271,7 +271,7 @@ void PedestrianHSFM2Plugin::HandleObstacles() {
           closest_obs = h;
         }
         // At the last segment,the closest point of the obstacle is passed to the lightSFM library if its distance is lower than 2 meters
-        if (i == segments.size() - 1 && minDist < 20) {
+        if (i == segments.size() - 1 && minDist < 2) {
           utils::Vector2d ob(closest_obs.X(), closest_obs.Y());
           this->hsfm2Actor.obstacles1.push_back(ob);
         }

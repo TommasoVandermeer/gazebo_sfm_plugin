@@ -109,7 +109,7 @@
 
     <!-- ACTORS ////////////////////////////////////////////////////////////////////////////////////// -->
     <!-- Actor1 HSFM -->
-    <model name="actor1_collision_model">
+    <!-- <model name="actor1_collision_model">
     <allow_auto_disable>false</allow_auto_disable>
       <pose>0 0 -100 0 0 0</pose>
       <static>true</static>
@@ -183,9 +183,9 @@
         </ignore_obstacles>
         <trajectory>
           <cyclic>true</cyclic>
-          <waypoint>-2 1.25 0</waypoint>
-          <waypoint>-2 -1.25 0</waypoint>
           <waypoint>-0.2 -5 0</waypoint>
+          <waypoint>-2 -1.25 0</waypoint>
+          <waypoint>-2 1.25 0</waypoint>
           <waypoint>-0.2 5 0</waypoint>
         </trajectory>
       </plugin>
@@ -197,10 +197,10 @@
           </model>
         </link>
       </plugin>
-    </actor>
+    </actor> -->
 
     <!-- Actor1 HSFM2 -->
-    <!-- <model name="actor1_collision_model">
+    <model name="actor1_collision_model">
     <allow_auto_disable>false</allow_auto_disable>
       <pose>0 0 -100 0 0 0</pose>
       <static>true</static>
@@ -274,9 +274,9 @@
         </ignore_obstacles>
         <trajectory>
           <cyclic>true</cyclic>
-          <waypoint>-2 1.25 0</waypoint>
-          <waypoint>-2 -1.25 0</waypoint>
           <waypoint>-0.2 -5 0</waypoint>
+          <waypoint>-2 -1.25 0</waypoint>
+          <waypoint>-2 1.25 0</waypoint>
           <waypoint>-0.2 5 0</waypoint>
         </trajectory>
       </plugin>
@@ -288,7 +288,7 @@
           </model>
         </link>
       </plugin>
-    </actor> -->
+    </actor>
 
     <!-- Actor1 SFM -->
     <!-- <model name="actor1_collision_model">
@@ -355,9 +355,9 @@
         </ignore_obstacles>
         <trajectory>
           <cyclic>true</cyclic>
-          <waypoint>-2 1.25 0</waypoint>
-          <waypoint>-2 -1.25 0</waypoint>
           <waypoint>-0.2 -5 0</waypoint>
+          <waypoint>-2 -1.25 0</waypoint>
+          <waypoint>-2 1.25 0</waypoint>
           <waypoint>-0.2 5 0</waypoint>
         </trajectory>
       </plugin>
@@ -440,9 +440,9 @@
         </ignore_obstacles>
         <trajectory>
           <cyclic>true</cyclic>
-          <waypoint>-2 1.25 0</waypoint>
-          <waypoint>-2 -1.25 0</waypoint>
           <waypoint>-0.2 -5 0</waypoint>
+          <waypoint>-2 -1.25 0</waypoint>
+          <waypoint>-2 1.25 0</waypoint>
           <waypoint>-0.2 5 0</waypoint>
         </trajectory>
       </plugin>

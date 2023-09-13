@@ -309,6 +309,7 @@
       </animation>
       <!-- SFM Plugin -->
       <plugin name="actor1_plugin" filename="libPedestrianSFMPlugin.so">
+        <sampling_time>0.001</sampling_time> <!-- This MUST be equal for all actors -->
         <goal_weight>2.0</goal_weight>
         <obstacle_weight>10.0</obstacle_weight> <!--Original: 80.0, Modified 20.0, Farina: 10.0-->
         <social_weight>15</social_weight> <!--2.1-->
@@ -529,6 +530,7 @@
         <interpolate_x>true</interpolate_x>
       </animation>
       <plugin name="actor2_plugin" filename="libPedestrianSFMPlugin.so">
+        <sampling_time>0.001</sampling_time> 
         <goal_weight>2.0</goal_weight>
         <obstacle_weight>80.0</obstacle_weight> 
         <social_weight>15</social_weight> 
@@ -582,6 +584,7 @@
         <interpolate_x>true</interpolate_x>
       </animation>
       <plugin name="actor3_plugin" filename="libPedestrianSFMPlugin.so">
+        <sampling_time>0.001</sampling_time> 
         <goal_weight>2.0</goal_weight>
         <obstacle_weight>80.0</obstacle_weight>
         <social_weight>15</social_weight> 
@@ -636,6 +639,7 @@
         <interpolate_x>true</interpolate_x>
       </animation>
       <plugin name="actor4_plugin" filename="libPedestrianSFMPlugin.so">
+        <sampling_time>0.001</sampling_time> 
         <goal_weight>2.0</goal_weight>
         <obstacle_weight>80.0</obstacle_weight>
         <social_weight>15</social_weight>
@@ -689,6 +693,7 @@
         <interpolate_x>true</interpolate_x>
       </animation>
       <plugin name="actor5_plugin" filename="libPedestrianSFMPlugin.so">
+        <sampling_time>0.001</sampling_time>
         <goal_weight>2.0</goal_weight>
         <obstacle_weight>80.0</obstacle_weight>
         <social_weight>15</social_weight>
@@ -742,6 +747,7 @@
         <interpolate_x>true</interpolate_x>
       </animation>
       <plugin name="actor6_plugin" filename="libPedestrianSFMPlugin.so">
+        <sampling_time>0.001</sampling_time> 
         <goal_weight>2.0</goal_weight>
         <obstacle_weight>80.0</obstacle_weight> 
         <social_weight>15</social_weight> 
@@ -795,6 +801,7 @@
         <interpolate_x>true</interpolate_x>
       </animation>
       <plugin name="actor7_plugin" filename="libPedestrianSFMPlugin.so">
+        <sampling_time>0.001</sampling_time>
         <goal_weight>2.0</goal_weight>
         <obstacle_weight>80.0</obstacle_weight> 
         <social_weight>15</social_weight> 
@@ -848,6 +855,7 @@
         <interpolate_x>true</interpolate_x>
       </animation>
       <plugin name="actor8_plugin" filename="libPedestrianSFMPlugin.so">
+        <sampling_time>0.001</sampling_time> 
         <goal_weight>2.0</goal_weight>
         <obstacle_weight>80.0</obstacle_weight>
         <social_weight>15</social_weight> 

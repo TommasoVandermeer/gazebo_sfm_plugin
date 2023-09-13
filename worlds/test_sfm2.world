@@ -139,6 +139,7 @@
       </animation>
       <!-- SFM Plugin -->
       <plugin name="actor1_plugin" filename="libPedestrianSFM2Plugin.so">
+        <sampling_time>0.001</sampling_time> <!-- This MUST be equal for all actors -->
         <publish_forces>true</publish_forces> <!-- If true, computed forces are published in a ROS topic -->
         <node_name>Actor1Node</node_name> <!-- The name of the node publishing the forces -->
         <topic_name>/forces/actor1</topic_name> <!-- The name of the topic where the forces are published -->

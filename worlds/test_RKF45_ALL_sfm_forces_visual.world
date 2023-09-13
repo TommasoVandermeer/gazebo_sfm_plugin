@@ -704,7 +704,8 @@
         <interpolate_x>true</interpolate_x>
       </animation>
       <plugin name="actor1_plugin" filename="libPedestrianSFMPlugin.so">
-        <sampling_time>0.001</sampling_time> 
+        <runge_kutta_45>true</runge_kutta_45>
+        <sampling_time>0.05</sampling_time> 
         <publish_forces>true</publish_forces>
         <node_name>Actor1Node</node_name> 
         <topic_name>/forces/actor1</topic_name> 
@@ -789,7 +790,8 @@
         <interpolate_x>true</interpolate_x>
       </animation>
       <plugin name="actor2_plugin" filename="libPedestrianSFM2Plugin.so">
-        <sampling_time>0.001</sampling_time> 
+        <runge_kutta_45>true</runge_kutta_45>
+        <sampling_time>0.05</sampling_time>
         <publish_forces>true</publish_forces>
         <node_name>Actor2Node</node_name>
         <topic_name>/forces/actor2</topic_name> 
@@ -878,7 +880,8 @@
         <interpolate_x>true</interpolate_x>
       </animation>
       <plugin name="actor3_plugin" filename="libPedestrianHSFM2Plugin.so">
-        <sampling_time>0.001</sampling_time> 
+        <runge_kutta_45>true</runge_kutta_45>
+        <sampling_time>0.05</sampling_time>
         <publish_forces>true</publish_forces> 
         <node_name>Actor3Node</node_name> 
         <topic_name>/forces/actor3</topic_name>
@@ -973,7 +976,8 @@
         <interpolate_x>true</interpolate_x>
       </animation>
       <plugin name="actor4_plugin" filename="libPedestrianHSFMPlugin.so">
-        <sampling_time>0.001</sampling_time> 
+        <runge_kutta_45>true</runge_kutta_45>
+        <sampling_time>0.05</sampling_time> 
         <publish_forces>true</publish_forces> 
         <node_name>Actor4Node</node_name> 
         <topic_name>/forces/actor4</topic_name>

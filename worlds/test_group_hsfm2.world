@@ -300,6 +300,8 @@
         <interpolate_x>true</interpolate_x>
       </animation>
       <plugin name="actor1_plugin" filename="libPedestrianHSFM2Plugin.so">
+        <runge_kutta_45>true</runge_kutta_45>
+        <sampling_time>0.033</sampling_time>
         <publish_forces>true</publish_forces>
         <topic_name>forces/actor1</topic_name>
         <node_name>Actor1</node_name>
@@ -361,6 +363,8 @@
         <interpolate_x>true</interpolate_x>
       </animation>
       <plugin name="actor2_plugin" filename="libPedestrianHSFM2Plugin.so">
+        <runge_kutta_45>true</runge_kutta_45>
+        <sampling_time>0.033</sampling_time>
         <publish_forces>true</publish_forces>
         <topic_name>forces/actor2</topic_name>
         <node_name>Actor2</node_name>
@@ -422,6 +426,8 @@
         <interpolate_x>true</interpolate_x>
       </animation>
       <plugin name="actor3_plugin" filename="libPedestrianHSFM2Plugin.so">
+        <runge_kutta_45>true</runge_kutta_45>
+        <sampling_time>0.033</sampling_time>
         <publish_forces>true</publish_forces>
         <topic_name>forces/actor3</topic_name>
         <node_name>Actor3</node_name>
@@ -483,6 +489,8 @@
         <interpolate_x>true</interpolate_x>
       </animation>
       <plugin name="actor4_plugin" filename="libPedestrianHSFM2Plugin.so">
+        <runge_kutta_45>true</runge_kutta_45>
+        <sampling_time>0.033</sampling_time>
         <publish_forces>true</publish_forces>
         <topic_name>forces/actor4</topic_name>
         <node_name>Actor4</node_name>
@@ -544,6 +552,8 @@
         <interpolate_x>true</interpolate_x>
       </animation>
       <plugin name="actor5_plugin" filename="libPedestrianHSFM2Plugin.so">
+        <runge_kutta_45>true</runge_kutta_45>
+        <sampling_time>0.033</sampling_time>
         <publish_forces>true</publish_forces>
         <topic_name>forces/actor5</topic_name>
         <node_name>Actor5</node_name>
@@ -605,6 +615,8 @@
         <interpolate_x>true</interpolate_x>
       </animation>
       <plugin name="actor6_plugin" filename="libPedestrianHSFM2Plugin.so">
+        <runge_kutta_45>true</runge_kutta_45>
+        <sampling_time>0.033</sampling_time>
         <publish_forces>true</publish_forces>
         <topic_name>forces/actor6</topic_name>
         <node_name>Actor6</node_name>
@@ -668,6 +680,8 @@
         <interpolate_x>true</interpolate_x>
       </animation>
       <plugin name="actor7_plugin" filename="libPedestrianHSFM2Plugin.so">
+        <runge_kutta_45>true</runge_kutta_45>
+        <sampling_time>0.033</sampling_time>
         <publish_forces>true</publish_forces>
         <topic_name>forces/actor7</topic_name>
         <node_name>Actor7</node_name>
@@ -692,13 +706,6 @@
         <animation_factor>5.1</animation_factor>
         <animation_name>walking</animation_name>
         <people_distance>6.0</people_distance>
-        <group>
-            <model>actor8</model>
-            <model>actor9</model>
-            <model>actor10</model>
-            <model>actor11</model>
-            <model>actor12</model>
-        </group>
         <ignore_obstacles>
           <model>ground_plane</model>
           <model>architrave_south</model>
@@ -729,6 +736,8 @@
         <interpolate_x>true</interpolate_x>
       </animation>
       <plugin name="actor8_plugin" filename="libPedestrianHSFM2Plugin.so">
+        <runge_kutta_45>true</runge_kutta_45>
+        <sampling_time>0.033</sampling_time>
         <publish_forces>true</publish_forces>
         <topic_name>forces/actor8</topic_name>
         <node_name>Actor8</node_name>
@@ -753,13 +762,6 @@
         <animation_factor>5.1</animation_factor>
         <animation_name>walking</animation_name>
         <people_distance>6.0</people_distance>
-        <group>
-            <model>actor7</model>
-            <model>actor9</model>
-            <model>actor10</model>
-            <model>actor11</model>
-            <model>actor12</model>
-        </group>
         <ignore_obstacles>
           <model>ground_plane</model>
           <model>architrave_south</model>
@@ -790,6 +792,8 @@
         <interpolate_x>true</interpolate_x>
       </animation>
       <plugin name="actor9_plugin" filename="libPedestrianHSFM2Plugin.so">
+        <runge_kutta_45>true</runge_kutta_45>
+        <sampling_time>0.033</sampling_time>
         <publish_forces>true</publish_forces>
         <topic_name>forces/actor9</topic_name>
         <node_name>Actor9</node_name>
@@ -814,13 +818,6 @@
         <animation_factor>5.1</animation_factor>
         <animation_name>walking</animation_name>
         <people_distance>6.0</people_distance>
-        <group>
-            <model>actor8</model>
-            <model>actor7</model>
-            <model>actor10</model>
-            <model>actor11</model>
-            <model>actor12</model>
-        </group>
         <ignore_obstacles>
           <model>ground_plane</model>
           <model>architrave_south</model>
@@ -851,6 +848,8 @@
         <interpolate_x>true</interpolate_x>
       </animation>
       <plugin name="actor10_plugin" filename="libPedestrianHSFM2Plugin.so">
+        <runge_kutta_45>true</runge_kutta_45>
+        <sampling_time>0.033</sampling_time>
         <publish_forces>true</publish_forces>
         <topic_name>forces/actor10</topic_name>
         <node_name>Actor10</node_name>
@@ -875,13 +874,6 @@
         <animation_factor>5.1</animation_factor>
         <animation_name>walking</animation_name>
         <people_distance>6.0</people_distance>
-        <group>
-            <model>actor8</model>
-            <model>actor9</model>
-            <model>actor7</model>
-            <model>actor11</model>
-            <model>actor12</model>
-        </group>
         <ignore_obstacles>
           <model>ground_plane</model>
           <model>architrave_south</model>
@@ -912,6 +904,8 @@
         <interpolate_x>true</interpolate_x>
       </animation>
       <plugin name="actor11_plugin" filename="libPedestrianHSFM2Plugin.so">
+        <runge_kutta_45>true</runge_kutta_45>
+        <sampling_time>0.033</sampling_time>
         <publish_forces>true</publish_forces>
         <topic_name>forces/actor11</topic_name>
         <node_name>Actor11</node_name>
@@ -936,13 +930,6 @@
         <animation_factor>5.1</animation_factor>
         <animation_name>walking</animation_name>
         <people_distance>6.0</people_distance>
-        <group>
-            <model>actor8</model>
-            <model>actor9</model>
-            <model>actor10</model>
-            <model>actor7</model>
-            <model>actor12</model>
-        </group>
         <ignore_obstacles>
           <model>ground_plane</model>
           <model>architrave_south</model>
@@ -973,6 +960,8 @@
         <interpolate_x>true</interpolate_x>
       </animation>
       <plugin name="actor12_plugin" filename="libPedestrianHSFM2Plugin.so">
+        <runge_kutta_45>true</runge_kutta_45>
+        <sampling_time>0.033</sampling_time>
         <publish_forces>true</publish_forces>
         <topic_name>forces/actor12</topic_name>
         <node_name>Actor12</node_name>
@@ -997,13 +986,6 @@
         <animation_factor>5.1</animation_factor>
         <animation_name>walking</animation_name>
         <people_distance>6.0</people_distance>
-        <group>
-            <model>actor8</model>
-            <model>actor9</model>
-            <model>actor10</model>
-            <model>actor11</model>
-            <model>actor7</model>
-        </group>
         <ignore_obstacles>
           <model>ground_plane</model>
           <model>architrave_south</model>

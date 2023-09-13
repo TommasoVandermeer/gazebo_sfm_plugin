@@ -57,6 +57,14 @@ void PedestrianHSFM2Plugin::Load(physics::ModelPtr _model, sdf::ElementPtr _sdf)
   else
     this->hsfm2Actor.desiredVelocity = 0.8;
 
+  // Read in the sampling time
+  if (_sdf->HasElement("sampling_time"))
+    this->samplingTime = _sdf->Get<double>("sampling_time");
+
+  // Read in the sampling time
+  if (_sdf->HasElement("runge_kutta_45"))
+    this->rungeKutta45 = _sdf->Get<bool>("runge_kutta_45");
+
   // Read in the target actor radius
   if (_sdf->HasElement("radius"))
     this->hsfm2Actor.radius = _sdf->Get<double>("radius");
@@ -331,63 +339,61 @@ void PedestrianHSFM2Plugin::HandlePedestrians() {
 void PedestrianHSFM2Plugin::OnUpdate(const common::UpdateInfo &_info) {
   // Time delta
   double dt = (_info.simTime - this->lastUpdate).Double();
-  // std::cout<<"Sampling time: "<<dt<<std::endl; //Default is 0.001
+  
+  if (dt >= this->samplingTime){
+    // Get actor actual pose
+    ignition::math::Pose3d actorPose = this->actor->WorldPose();
 
-  ignition::math::Pose3d actorPose = this->actor->WorldPose();
+    // update closest obstacle
+    HandleObstacles();
 
-  // update closest obstacle
-  HandleObstacles();
+    // update pedestrian around
+    HandlePedestrians();
 
-  // update pedestrian around
-  HandlePedestrians();
+    // Compute Social Forces
+    hsfm2::HSFM2.computeForces(this->hsfm2Actor, this->otherActors);
 
-  // Compute Social Forces
-  hsfm2::HSFM2.computeForces(this->hsfm2Actor, this->otherActors);
+    // Update model
+    if (!this->rungeKutta45) {
+      hsfm2::HSFM2.updatePosition(this->hsfm2Actor, dt);
+    } else {
+      hsfm2::HSFM2.updatePositionRKF45(this->hsfm2Actor, _info.simTime.Double(), dt);
+    }
 
-  // Update model
-  hsfm2::HSFM2.updatePosition(this->hsfm2Actor, dt);
+    // Publish computed forces
+    if (this->publishForces == true) {
+      PublishForces();
+    }
 
-  // Publish computed forces
-  if (this->publishForces == true) {
-    PublishForces();
+    utils::Angle h = this->hsfm2Actor.yaw;
+    utils::Angle add = utils::Angle::fromRadian(1.5707);
+    h = h + add;
+    double yaw = h.toRadian();
+
+    // ignition::math::Vector3d rpy = actorPose.Rot().Euler();
+    // utils::Angle current = utils::Angle::fromRadian(rpy.Z());
+    // double diff = (h - current).toRadian();
+    // if (std::fabs(diff) > IGN_DTOR(10)) {
+    //   current = current + utils::Angle::fromRadian(diff * 0.005);
+    //   yaw = current.toRadian();
+    // }
+    actorPose.Pos().X(this->hsfm2Actor.position.getX());
+    actorPose.Pos().Y(this->hsfm2Actor.position.getY());
+    actorPose.Rot() = ignition::math::Quaterniond(1.5707, 0, yaw); // rpy.Z()+yaw.Radian());
+    //}
+
+    // Make sure the actor stays within bounds
+    // actorPose.Pos().X(std::max(-3.0, std::min(3.5, actorPose.Pos().X())));
+    // actorPose.Pos().Y(std::max(-10.0, std::min(2.0, actorPose.Pos().Y())));
+    actorPose.Pos().Z(1.01); //1.2138
+
+    // Distance traveled is used to coordinate motion with the walking animation
+    double distanceTraveled = (actorPose.Pos() - this->actor->WorldPose().Pos()).Length();
+
+    this->actor->SetWorldPose(actorPose, false, false);
+    this->actor->SetScriptTime(this->actor->ScriptTime() + (distanceTraveled * this->animationFactor));
+    this->lastUpdate = _info.simTime;
   }
-
-  utils::Angle h = this->hsfm2Actor.yaw;
-  utils::Angle add = utils::Angle::fromRadian(1.5707);
-  h = h + add;
-  double yaw = h.toRadian();
-  // double yaw = this->hsfm2Actor.yaw.toRadian();
-  // Rotate in place, instead of jumping.
-  // if (std::abs(yaw.Radian()) > IGN_DTOR(10))
-  //{
-  //  ActorPose.Rot() = ignition::math::Quaterniond(1.5707, 0, rpy.Z()+
-  //      yaw.Radian()*0.001);
-  //}
-  // else
-  //{
-  ignition::math::Vector3d rpy = actorPose.Rot().Euler();
-  utils::Angle current = utils::Angle::fromRadian(rpy.Z());
-  double diff = (h - current).toRadian();
-  if (std::fabs(diff) > IGN_DTOR(10)) {
-    current = current + utils::Angle::fromRadian(diff * 0.005);
-    yaw = current.toRadian();
-  }
-  actorPose.Pos().X(this->hsfm2Actor.position.getX());
-  actorPose.Pos().Y(this->hsfm2Actor.position.getY());
-  actorPose.Rot() = ignition::math::Quaterniond(1.5707, 0, yaw); // rpy.Z()+yaw.Radian());
-  //}
-
-  // Make sure the actor stays within bounds
-  // actorPose.Pos().X(std::max(-3.0, std::min(3.5, actorPose.Pos().X())));
-  // actorPose.Pos().Y(std::max(-10.0, std::min(2.0, actorPose.Pos().Y())));
-  actorPose.Pos().Z(1.01); //1.2138
-
-  // Distance traveled is used to coordinate motion with the walking animation
-  double distanceTraveled = (actorPose.Pos() - this->actor->WorldPose().Pos()).Length();
-
-  this->actor->SetWorldPose(actorPose, false, false);
-  this->actor->SetScriptTime(this->actor->ScriptTime() + (distanceTraveled * this->animationFactor));
-  this->lastUpdate = _info.simTime;
 }
 
 /////////////////////////////////////////////////

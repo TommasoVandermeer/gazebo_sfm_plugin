@@ -154,6 +154,14 @@ private:
   /// \brief Stores the forces publisher
 private:
   rclcpp::Publisher<gazebo_sfm_plugin::msg::Forces>::SharedPtr forcesPub;
+
+  /// \brief The sampling time of the plugin
+private:
+  double samplingTime = 0.001;
+
+  /// \brief The integration method, if true RKF45 is used, otherwise, first order Euler is used
+private:
+  bool rungeKutta45 = false;
 };
 } // namespace gazebo
 #endif

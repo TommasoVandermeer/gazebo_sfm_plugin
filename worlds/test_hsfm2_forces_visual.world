@@ -181,6 +181,7 @@
       </animation>
       <!-- HSFM2 Plugin -->
       <plugin name="actor1_plugin" filename="libPedestrianHSFM2Plugin.so">
+        <sampling_time>0.001</sampling_time> <!-- This MUST be equal for all actors -->
         <publish_forces>true</publish_forces> <!-- If true, computed forces are published in a ROS topic -->
         <node_name>Actor1Node</node_name> <!-- The name of the node publishing the forces -->
         <topic_name>/forces/actor1</topic_name> <!-- The name of the topic where the forces are published -->
@@ -244,6 +245,7 @@
         <interpolate_x>true</interpolate_x>
       </animation>
       <plugin name="actor2_plugin" filename="libPedestrianHSFM2Plugin.so">
+        <sampling_time>0.001</sampling_time>
         <publish_forces>true</publish_forces>
         <node_name>Actor2Node</node_name>
         <topic_name>/forces/actor2</topic_name> 

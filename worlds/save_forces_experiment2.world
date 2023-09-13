@@ -149,6 +149,7 @@
         <interpolate_x>true</interpolate_x>
       </animation>
       <plugin name="actor1_plugin" filename="libPedestrianHSFMPlugin.so">
+        <sampling_time>0.001</sampling_time> 
         <publish_forces>true</publish_forces> 
         <node_name>Actor1Node</node_name> 
         <topic_name>/forces/actor1</topic_name>
@@ -240,6 +241,7 @@
         <interpolate_x>true</interpolate_x>
       </animation>
       <plugin name="actor1_plugin" filename="libPedestrianHSFM2Plugin.so">
+        <sampling_time>0.001</sampling_time> 
         <publish_forces>true</publish_forces> 
         <node_name>Actor1Node</node_name> 
         <topic_name>/forces/actor1</topic_name>
@@ -331,6 +333,7 @@
         <interpolate_x>true</interpolate_x>
       </animation>
       <plugin name="actor1_plugin" filename="libPedestrianSFMPlugin.so">
+        <sampling_time>0.001</sampling_time> 
         <publish_forces>true</publish_forces> 
         <node_name>Actor1Node</node_name> 
         <topic_name>/forces/actor1</topic_name> 
@@ -412,6 +415,7 @@
         <interpolate_x>true</interpolate_x>
       </animation>
       <plugin name="actor1_plugin" filename="libPedestrianSFM2Plugin.so">
+        <sampling_time>0.001</sampling_time> 
         <publish_forces>true</publish_forces> 
         <node_name>Actor1Node</node_name> 
         <topic_name>/forces/actor1</topic_name>

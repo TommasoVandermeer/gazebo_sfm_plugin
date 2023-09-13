@@ -28,6 +28,7 @@
 #include <cmath>
 #include <unordered_map>
 #include <vector>
+#include "rkf45.hpp"
 
 namespace sfm2 {
 struct Forces {
@@ -126,9 +127,10 @@ public:
 
   std::vector<Agent> &computeForces(std::vector<Agent> &agents, utils::Map *map = NULL) const;
   void computeForces(Agent &me, std::vector<Agent> &agents, utils::Map *map = NULL);
-  std::vector<Agent> &updatePosition(std::vector<Agent> &agents,
-                                     double dt) const;
+  std::vector<Agent> &updatePosition(std::vector<Agent> &agents, double dt) const;
   void updatePosition(Agent &me, double dt) const;
+  std::vector<Agent> &updatePositionRKF45(std::vector<Agent> &agents, double simTime, double dt) const;
+  void updatePositionRKF45(Agent &me, double simTime, double dt) const;
 
 private:
 #define PW(x) ((x) * (x))
@@ -425,20 +427,74 @@ inline void SocialForceModel::updatePosition(Agent &agent, double dt) const {
   agent.linearVelocity = agent.velocity.norm();
   agent.angularVelocity = (agent.yaw - agent.initYaw).toRadian() / dt;
 
-  // Debug prints
-  // std::cout<<"Desired force: "<<agent.forces.desiredForce<<std::endl;
-  // std::cout<<"Social force: "<<agent.forces.socialForce<<std::endl;
-  // std::cout<<"Obstacle force: "<<agent.forces.obstacleForce<<std::endl;
-  // std::cout<<"Interaction force (obstacle + social): "<<agent.forces.interactionForce<<std::endl;
-  // std::cout<<"Torque force: "<<agent.forces.torqueForce<<std::endl;
-  // std::cout<<"Group force: "<<agent.forces.groupForce<<std::endl;
-  // std::cout<<"Global force: "<<agent.forces.globalForce<<std::endl;
-  // std::cout<<"Agent translational velocity: "<<agent.velocity<<std::endl;
-  // std::cout<<"Agent angular velocity: "<<agent.angularVelocity<<std::endl;
-  // std::cout<<"Agent position: "<<agent.position<<std::endl;
-  // std::cout<<"Agent yaw: "<<agent.yaw<<std::endl;
-  // std::cout<<std::endl;
+  agent.movement = agent.position - agent.initPosition;
+  if (!agent.goals.empty() &&
+      (agent.goals.front().center - agent.position).norm() <=
+          agent.goals.front().radius) {
+    Goal g = agent.goals.front();
+    agent.goals.pop_front();
+    if (agent.cyclicGoals) {
+      agent.goals.push_back(g);
+    }
+  }
+}
 
+inline std::vector<Agent> &SocialForceModel::updatePositionRKF45(std::vector<Agent> &agents, double simTime, double dt) const {
+  for (unsigned i = 0; i < agents.size(); i++) {
+    agents[i].initPosition = agents[i].position;
+    agents[i].initYaw = agents[i].yaw;
+    if (agents[i].teleoperated) {
+      double imd = agents[i].linearVelocity * dt;
+      utils::Vector2d inc(imd * std::cos(agents[i].yaw.toRadian() +
+                                         agents[i].angularVelocity * dt * 0.5),
+                          imd * std::sin(agents[i].yaw.toRadian() +
+                                         agents[i].angularVelocity * dt * 0.5));
+      agents[i].yaw += utils::Angle::fromRadian(agents[i].angularVelocity * dt);
+      agents[i].position += inc;
+      agents[i].velocity.set(agents[i].linearVelocity * agents[i].yaw.cos(),
+                             agents[i].linearVelocity * agents[i].yaw.sin());
+    } else {
+      // Integrate
+      tuple<utils::Vector2d, utils::Vector2d> results = rkf45_sfm2(agents[i].forces.globalForce, agents[i].mass, 
+        agents[i].velocity, agents[i].position, agents[i].desiredVelocity, simTime, dt);
+
+      // Save results
+      agents[i].velocity = get<0>(results);
+      agents[i].position = get<1>(results);
+      agents[i].yaw = agents[i].velocity.angle();
+      
+      agents[i].angularVelocity = (agents[i].yaw - agents[i].initYaw).toRadian() / dt;
+    }
+    agents[i].movement = agents[i].position - agents[i].initPosition;
+    if (!agents[i].goals.empty() &&
+        (agents[i].goals.front().center - agents[i].position).norm() <=
+            agents[i].goals.front().radius) {
+      Goal g = agents[i].goals.front();
+      agents[i].goals.pop_front();
+      if (agents[i].cyclicGoals) {
+        agents[i].goals.push_back(g);
+      }
+    }
+  }
+  return agents;
+}
+
+inline void SocialForceModel::updatePositionRKF45(Agent &agent, double simTime, double dt) const {
+
+  agent.initPosition = agent.position;
+  agent.initYaw = agent.yaw;
+
+  // Integrate
+  tuple<utils::Vector2d, utils::Vector2d> results = rkf45_sfm2(agent.forces.globalForce, agent.mass, 
+    agent.velocity, agent.position, agent.desiredVelocity, simTime, dt);
+
+  // Save results
+  agent.velocity = get<0>(results);
+  agent.position = get<1>(results);
+  agent.yaw = agent.velocity.angle();
+  
+  agent.angularVelocity = (agent.yaw - agent.initYaw).toRadian() / dt;
+  
   agent.movement = agent.position - agent.initPosition;
   if (!agent.goals.empty() &&
       (agent.goals.front().center - agent.position).norm() <=

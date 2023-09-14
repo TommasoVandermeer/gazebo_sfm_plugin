@@ -403,7 +403,7 @@ void r8_fehl ( void f ( double t, double y[], double yp[] ), int neqn,
   return;
 }
 //****************************************************************************************************
-// Carries out the Runge-Kutta-Fehlberg method.
+// Carries out the Runge-Kutta-Fehlberg-45 method.
 //****************************************************************************************************
 int r8_rkf45 ( void f ( double t, double y[], double yp[] ), int neqn, 
   double y[], double yp[], double *t, double tout, double *relerr, 

@@ -284,8 +284,177 @@
       </link>
     </model>
 
-    <!-- ACTORS -->
+    <!-- ACTORS COLLISION MODELS /////////////////////////////////////////////////////////// -->
+    <model name="actor1_collision_model">
+    <allow_auto_disable>false</allow_auto_disable>
+      <pose>0 0 -100 0 0 0</pose>
+      <static>true</static>
+      <link name="link">
+        <collision name="link">
+          <pose>0 -0.18 0.05 0 0 0</pose> 
+          <geometry>
+            <box>
+              <size>0.60 1.40 0.44</size>
+            </box>
+          </geometry>
+        </collision>
+        <visual name="link_visual">
+          <pose>0 0 0 -1.5707 -1.5707 0</pose>
+          <geometry>
+            <box>
+              <size>0.01 0.01 0.01</size>
+            </box>
+          </geometry>
+          <plugin name="actor1_forces_visualization" filename="libVisualizeForcesPlugin.so">
+            <node_name>Actor1Node_Visual</node_name> 
+            <topic_name>/forces/actor1</topic_name>
+            <headed>true</headed>
+          </plugin>
+        </visual>
+      </link>
+    </model> 
+    <model name="actor2_collision_model">
+    <allow_auto_disable>false</allow_auto_disable>
+      <pose>0 0 -100 0 0 0</pose>
+      <static>true</static>
+      <link name="link">
+        <collision name="link">
+          <pose>0 -0.18 0.05 0 0 0</pose> 
+          <geometry>
+            <box>
+              <size>0.60 1.40 0.44</size>
+            </box>
+          </geometry>
+        </collision>
+        <visual name="link_visual">
+          <pose>0 0 0 -1.5707 -1.5707 0</pose>
+          <geometry>
+            <box>
+              <size>0.01 0.01 0.01</size>
+            </box>
+          </geometry>
+          <plugin name="actor2_forces_visualization" filename="libVisualizeForcesPlugin.so">
+            <node_name>Actor2Node_Visual</node_name> 
+            <topic_name>/forces/actor2</topic_name>
+            <headed>true</headed>
+          </plugin>
+        </visual>
+      </link>
+    </model> 
+    <model name="actor3_collision_model">
+    <allow_auto_disable>false</allow_auto_disable>
+      <pose>0 0 -100 0 0 0</pose>
+      <static>true</static>
+      <link name="link">
+        <collision name="link">
+          <pose>0 -0.18 0.05 0 0 0</pose> 
+          <geometry>
+            <box>
+              <size>0.60 1.40 0.44</size>
+            </box>
+          </geometry>
+        </collision>
+        <visual name="link_visual">
+          <pose>0 0 0 -1.5707 -1.5707 0</pose>
+          <geometry>
+            <box>
+              <size>0.01 0.01 0.01</size>
+            </box>
+          </geometry>
+          <plugin name="actor3_forces_visualization" filename="libVisualizeForcesPlugin.so">
+            <node_name>Actor3Node_Visual</node_name> 
+            <topic_name>/forces/actor3</topic_name>
+            <headed>true</headed>
+          </plugin>
+        </visual>
+      </link>
+    </model> 
+    <model name="actor4_collision_model">
+    <allow_auto_disable>false</allow_auto_disable>
+      <pose>0 0 -100 0 0 0</pose>
+      <static>true</static>
+      <link name="link">
+        <collision name="link">
+          <pose>0 -0.18 0.05 0 0 0</pose> 
+          <geometry>
+            <box>
+              <size>0.60 1.40 0.44</size>
+            </box>
+          </geometry>
+        </collision>
+        <visual name="link_visual">
+          <pose>0 0 0 -1.5707 -1.5707 0</pose>
+          <geometry>
+            <box>
+              <size>0.01 0.01 0.01</size>
+            </box>
+          </geometry>
+          <plugin name="actor4_forces_visualization" filename="libVisualizeForcesPlugin.so">
+            <node_name>Actor4Node_Visual</node_name> 
+            <topic_name>/forces/actor4</topic_name>
+            <headed>true</headed>
+          </plugin>
+        </visual>
+      </link>
+    </model> 
+    <model name="actor5_collision_model">
+    <allow_auto_disable>false</allow_auto_disable>
+      <pose>0 0 -100 0 0 0</pose>
+      <static>true</static>
+      <link name="link">
+        <collision name="link">
+          <pose>0 -0.18 0.05 0 0 0</pose> 
+          <geometry>
+            <box>
+              <size>0.60 1.40 0.44</size>
+            </box>
+          </geometry>
+        </collision>
+        <visual name="link_visual">
+          <pose>0 0 0 -1.5707 -1.5707 0</pose>
+          <geometry>
+            <box>
+              <size>0.01 0.01 0.01</size>
+            </box>
+          </geometry>
+          <plugin name="actor5_forces_visualization" filename="libVisualizeForcesPlugin.so">
+            <node_name>Actor5Node_Visual</node_name> 
+            <topic_name>/forces/actor5</topic_name>
+            <headed>true</headed>
+          </plugin>
+        </visual>
+      </link>
+    </model> 
+    <model name="actor6_collision_model">
+    <allow_auto_disable>false</allow_auto_disable>
+      <pose>0 0 -100 0 0 0</pose>
+      <static>true</static>
+      <link name="link">
+        <collision name="link">
+          <pose>0 -0.18 0.05 0 0 0</pose> 
+          <geometry>
+            <box>
+              <size>0.60 1.40 0.44</size>
+            </box>
+          </geometry>
+        </collision>
+        <visual name="link_visual">
+          <pose>0 0 0 -1.5707 -1.5707 0</pose>
+          <geometry>
+            <box>
+              <size>0.01 0.01 0.01</size>
+            </box>
+          </geometry>
+          <plugin name="actor6_forces_visualization" filename="libVisualizeForcesPlugin.so">
+            <node_name>Actor6Node_Visual</node_name> 
+            <topic_name>/forces/actor6</topic_name>
+            <headed>true</headed>
+          </plugin>
+        </visual>
+      </link>
+    </model> 
 
+    <!-- ACTORS -->
     <!-- GROUP1 /////////////////////////////////////////////////////////////////////////////////////////// -->
     <!-- actor1 -->
     <actor name="actor1">
@@ -337,6 +506,12 @@
           <model>ground_plane</model>
           <model>architrave_south</model>
           <model>architrave_north</model>
+          <model>actor1_collision_model</model>
+          <model>actor2_collision_model</model>
+          <model>actor3_collision_model</model>
+          <model>actor4_collision_model</model>
+          <model>actor5_collision_model</model>
+          <model>actor6_collision_model</model>
         </ignore_obstacles>
         <trajectory>
           <cyclic>true</cyclic>
@@ -348,6 +523,14 @@
           <waypoint>-9 -5.5 0</waypoint>
           <waypoint>-9 5.5 0</waypoint>
         </trajectory>
+      </plugin>
+      <plugin name="actor1_collision" filename="libAttachModelPlugin.so">
+        <link>
+          <link_name>actor1_pose</link_name>
+          <model>
+            <model_name>actor1_collision_model</model_name>
+          </model>
+        </link>
       </plugin>
     </actor>
     <!-- actor2 -->
@@ -400,6 +583,12 @@
           <model>ground_plane</model>
           <model>architrave_south</model>
           <model>architrave_north</model>
+          <model>actor1_collision_model</model>
+          <model>actor2_collision_model</model>
+          <model>actor3_collision_model</model>
+          <model>actor4_collision_model</model>
+          <model>actor5_collision_model</model>
+          <model>actor6_collision_model</model>
         </ignore_obstacles>
         <trajectory>
           <cyclic>true</cyclic>
@@ -411,6 +600,14 @@
           <waypoint>-9 -5.5 0</waypoint>
           <waypoint>-9 5.5 0</waypoint>
         </trajectory>
+      </plugin>
+      <plugin name="actor2_collision" filename="libAttachModelPlugin.so">
+        <link>
+          <link_name>actor2_pose</link_name>
+          <model>
+            <model_name>actor2_collision_model</model_name>
+          </model>
+        </link>
       </plugin>
     </actor>
     <!-- actor3 -->
@@ -463,6 +660,12 @@
           <model>ground_plane</model>
           <model>architrave_south</model>
           <model>architrave_north</model>
+          <model>actor1_collision_model</model>
+          <model>actor2_collision_model</model>
+          <model>actor3_collision_model</model>
+          <model>actor4_collision_model</model>
+          <model>actor5_collision_model</model>
+          <model>actor6_collision_model</model>
         </ignore_obstacles>
         <trajectory>
           <cyclic>true</cyclic>
@@ -474,6 +677,14 @@
           <waypoint>-9 -5.5 0</waypoint>
           <waypoint>-9 5.5 0</waypoint>
         </trajectory>
+      </plugin>
+      <plugin name="actor3_collision" filename="libAttachModelPlugin.so">
+        <link>
+          <link_name>actor3_pose</link_name>
+          <model>
+            <model_name>actor3_collision_model</model_name>
+          </model>
+        </link>
       </plugin>
     </actor>
     <!-- actor4 -->
@@ -526,6 +737,12 @@
           <model>ground_plane</model>
           <model>architrave_south</model>
           <model>architrave_north</model>
+          <model>actor1_collision_model</model>
+          <model>actor2_collision_model</model>
+          <model>actor3_collision_model</model>
+          <model>actor4_collision_model</model>
+          <model>actor5_collision_model</model>
+          <model>actor6_collision_model</model>
         </ignore_obstacles>
         <trajectory>
           <cyclic>true</cyclic>
@@ -537,6 +754,14 @@
           <waypoint>-9 -5.5 0</waypoint>
           <waypoint>-9 5.5 0</waypoint>
         </trajectory>
+      </plugin>
+      <plugin name="actor4_collision" filename="libAttachModelPlugin.so">
+        <link>
+          <link_name>actor4_pose</link_name>
+          <model>
+            <model_name>actor4_collision_model</model_name>
+          </model>
+        </link>
       </plugin>
     </actor>
     <!-- actor5 -->
@@ -589,6 +814,12 @@
           <model>ground_plane</model>
           <model>architrave_south</model>
           <model>architrave_north</model>
+          <model>actor1_collision_model</model>
+          <model>actor2_collision_model</model>
+          <model>actor3_collision_model</model>
+          <model>actor4_collision_model</model>
+          <model>actor5_collision_model</model>
+          <model>actor6_collision_model</model>
         </ignore_obstacles>
         <trajectory>
           <cyclic>true</cyclic>
@@ -600,6 +831,14 @@
           <waypoint>-9 -5.5 0</waypoint>
           <waypoint>-9 5.5 0</waypoint>
         </trajectory>
+      </plugin>
+      <plugin name="actor5_collision" filename="libAttachModelPlugin.so">
+        <link>
+          <link_name>actor5_pose</link_name>
+          <model>
+            <model_name>actor5_collision_model</model_name>
+          </model>
+        </link>
       </plugin>
     </actor>
     <!-- actor6 -->
@@ -652,6 +891,12 @@
           <model>ground_plane</model>
           <model>architrave_south</model>
           <model>architrave_north</model>
+          <model>actor1_collision_model</model>
+          <model>actor2_collision_model</model>
+          <model>actor3_collision_model</model>
+          <model>actor4_collision_model</model>
+          <model>actor5_collision_model</model>
+          <model>actor6_collision_model</model>
         </ignore_obstacles>
         <trajectory>
           <cyclic>true</cyclic>
@@ -663,6 +908,14 @@
           <waypoint>-9 -5.5 0</waypoint>
           <waypoint>-9 5.5 0</waypoint>
         </trajectory>
+      </plugin>
+      <plugin name="actor6_collision" filename="libAttachModelPlugin.so">
+        <link>
+          <link_name>actor6_pose</link_name>
+          <model>
+            <model_name>actor6_collision_model</model_name>
+          </model>
+        </link>
       </plugin>
     </actor>
 
@@ -710,6 +963,12 @@
           <model>ground_plane</model>
           <model>architrave_south</model>
           <model>architrave_north</model>
+          <model>actor1_collision_model</model>
+          <model>actor2_collision_model</model>
+          <model>actor3_collision_model</model>
+          <model>actor4_collision_model</model>
+          <model>actor5_collision_model</model>
+          <model>actor6_collision_model</model>
         </ignore_obstacles>
         <trajectory>
           <cyclic>true</cyclic>
@@ -766,6 +1025,12 @@
           <model>ground_plane</model>
           <model>architrave_south</model>
           <model>architrave_north</model>
+          <model>actor1_collision_model</model>
+          <model>actor2_collision_model</model>
+          <model>actor3_collision_model</model>
+          <model>actor4_collision_model</model>
+          <model>actor5_collision_model</model>
+          <model>actor6_collision_model</model>
         </ignore_obstacles>
         <trajectory>
           <cyclic>true</cyclic>
@@ -822,6 +1087,12 @@
           <model>ground_plane</model>
           <model>architrave_south</model>
           <model>architrave_north</model>
+          <model>actor1_collision_model</model>
+          <model>actor2_collision_model</model>
+          <model>actor3_collision_model</model>
+          <model>actor4_collision_model</model>
+          <model>actor5_collision_model</model>
+          <model>actor6_collision_model</model>
         </ignore_obstacles>
         <trajectory>
           <cyclic>true</cyclic>
@@ -878,6 +1149,12 @@
           <model>ground_plane</model>
           <model>architrave_south</model>
           <model>architrave_north</model>
+          <model>actor1_collision_model</model>
+          <model>actor2_collision_model</model>
+          <model>actor3_collision_model</model>
+          <model>actor4_collision_model</model>
+          <model>actor5_collision_model</model>
+          <model>actor6_collision_model</model>
         </ignore_obstacles>
         <trajectory>
           <cyclic>true</cyclic>
@@ -934,6 +1211,12 @@
           <model>ground_plane</model>
           <model>architrave_south</model>
           <model>architrave_north</model>
+          <model>actor1_collision_model</model>
+          <model>actor2_collision_model</model>
+          <model>actor3_collision_model</model>
+          <model>actor4_collision_model</model>
+          <model>actor5_collision_model</model>
+          <model>actor6_collision_model</model>
         </ignore_obstacles>
         <trajectory>
           <cyclic>true</cyclic>
@@ -990,6 +1273,12 @@
           <model>ground_plane</model>
           <model>architrave_south</model>
           <model>architrave_north</model>
+          <model>actor1_collision_model</model>
+          <model>actor2_collision_model</model>
+          <model>actor3_collision_model</model>
+          <model>actor4_collision_model</model>
+          <model>actor5_collision_model</model>
+          <model>actor6_collision_model</model>
         </ignore_obstacles>
         <trajectory>
           <cyclic>true</cyclic>

@@ -69,8 +69,8 @@ tuple<utils::Vector2d, utils::Vector2d> rkf45_sfm(utils::Vector2d globalForce,
     double t_out = t + dt;
     double t2_out = t2 + dt;
     int neqn = 2;
-    double yp[neqn];
-    double yp2[neqn];
+    double yp[2];
+    double yp2[2];
     int flag1 = 1;
     int flag2 = 1;
     double abserr = sqrt ( r8_epsilon ( ) );
@@ -80,7 +80,7 @@ tuple<utils::Vector2d, utils::Vector2d> rkf45_sfm(utils::Vector2d globalForce,
 
     /// FIRST INTEGRATION
     // Initial values
-    double y[neqn] = {init_velocity.getX(), init_velocity.getY()};
+    double y[2] = {init_velocity.getX(), init_velocity.getY()};
     first_diff_eq_sfm(t, y, yp);
     // Integrate
     flag1 = r8_rkf45(first_diff_eq_sfm, neqn, y, yp, &t, t_out, &relerr, abserr, flag1);
@@ -94,7 +94,7 @@ tuple<utils::Vector2d, utils::Vector2d> rkf45_sfm(utils::Vector2d globalForce,
 
     /// SECOND INTEGRATION
     // Initial values
-    double y2[neqn] = {init_position.getX(), init_position.getY()};
+    double y2[2] = {init_position.getX(), init_position.getY()};
     second_diff_eq_sfm(t2, y2, yp2);
     // Integrate
     flag2 = r8_rkf45(second_diff_eq_sfm, neqn, y2, yp2, &t2, t2_out, &relerr2, abserr2, flag2);
@@ -137,8 +137,8 @@ tuple<utils::Vector2d, utils::Vector2d> rkf45_sfm2(utils::Vector2d globalForce, 
     double t_out = t + dt;
     double t2_out = t2 + dt;
     int neqn = 2;
-    double yp[neqn];
-    double yp2[neqn];
+    double yp[2];
+    double yp2[2];
     int flag1 = 1;
     int flag2 = 1;
     double abserr = sqrt ( r8_epsilon ( ) );
@@ -148,7 +148,7 @@ tuple<utils::Vector2d, utils::Vector2d> rkf45_sfm2(utils::Vector2d globalForce, 
 
     /// FIRST INTEGRATION
     // Initial values
-    double y[neqn] = {init_velocity.getX(), init_velocity.getY()};
+    double y[2] = {init_velocity.getX(), init_velocity.getY()};
     first_diff_eq_sfm2(t, y, yp);
     // Integrate
     flag1 = r8_rkf45(first_diff_eq_sfm2, neqn, y, yp, &t, t_out, &relerr, abserr, flag1);
@@ -162,7 +162,7 @@ tuple<utils::Vector2d, utils::Vector2d> rkf45_sfm2(utils::Vector2d globalForce, 
 
     /// SECOND INTEGRATION
     // Initial values
-    double y2[neqn] = {init_position.getX(), init_position.getY()};
+    double y2[2] = {init_position.getX(), init_position.getY()};
     second_diff_eq_sfm2(t2, y2, yp2);
     // Integrate
     flag2 = r8_rkf45(second_diff_eq_sfm2, neqn, y2, yp2, &t2, t2_out, &relerr2, abserr2, flag2);
@@ -213,8 +213,8 @@ tuple<utils::Vector2d, utils::Vector2d, double, utils::Vector2d, utils::Angle> r
     double t_out = t + dt;
     double t2_out = t2 + dt;
     int neqn = 3;
-    double yp[neqn];
-    double yp2[neqn];
+    double yp[3];
+    double yp2[3];
     int flag1 = 1;
     int flag2 = 1;
     double abserr = sqrt ( r8_epsilon ( ) );

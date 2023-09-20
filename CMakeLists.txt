@@ -13,6 +13,7 @@ find_package(gazebo_ros REQUIRED)
 find_package(Boost REQUIRED COMPONENTS thread)
 find_package(gazebo REQUIRED)
 find_package(rosidl_default_generators REQUIRED)
+find_package(rcl_interfaces REQUIRED)
 
 
 include_directories(include)
@@ -79,6 +80,16 @@ ament_target_dependencies(VisualizeForcesPlugin
 ament_export_libraries(VisualizeForcesPlugin)
 target_link_libraries(VisualizeForcesPlugin ${GAZEBO_LIBRARIES}) #${Boost_LIBRARIES
 
+add_library(WorldSFMPlugin SHARED src/WorldSFMPlugin.cpp)
+target_include_directories(WorldSFMPlugin PUBLIC include)
+ament_target_dependencies(WorldSFMPlugin 
+  "rclcpp" 
+  "gazebo" 
+  "gazebo_ros"
+)
+ament_export_libraries(WorldSFMPlugin)
+target_link_libraries(WorldSFMPlugin ${GAZEBO_LIBRARIES}) #${Boost_LIBRARIES
+
 set(msg_files
   "msg/Vector2.msg"
   "msg/Pose2.msg"
@@ -99,6 +110,7 @@ target_link_libraries(PedestrianHSFMPlugin "${cpp_typesupport_target}")
 target_link_libraries(PedestrianSFMPlugin "${cpp_typesupport_target}")
 target_link_libraries(PedestrianSFM2Plugin "${cpp_typesupport_target}")
 target_link_libraries(VisualizeForcesPlugin "${cpp_typesupport_target}")
+target_link_libraries(WorldSFMPlugin "${cpp_typesupport_target}")
 
 install(TARGETS PedestrianSFMPlugin
   ARCHIVE DESTINATION lib
@@ -130,6 +142,12 @@ install(TARGETS VisualizeForcesPlugin
   RUNTIME DESTINATION bin
 )
 
+install(TARGETS WorldSFMPlugin
+  ARCHIVE DESTINATION lib
+  LIBRARY DESTINATION lib
+  RUNTIME DESTINATION bin
+)
+
 install(DIRECTORY include/
         DESTINATION include
 )
@@ -141,6 +159,9 @@ install(DIRECTORY worlds/
 )
 install(DIRECTORY models/
    DESTINATION share/${PROJECT_NAME}/models
+)
+install(DIRECTORY config/
+   DESTINATION share/${PROJECT_NAME}/config
 )
 
 # Create the libAttachModelPlugin.so library.
@@ -163,5 +184,12 @@ install(PROGRAMS
   scripts/save_and_print_forces.py
   DESTINATION lib/${PROJECT_NAME}
 )
+
+add_executable(load_agent_params scripts/load_agent_params.cpp)
+ament_target_dependencies(load_agent_params rclcpp rcl_interfaces)
+
+install(TARGETS
+  load_agent_params
+  DESTINATION lib/${PROJECT_NAME})
 
 ament_package()

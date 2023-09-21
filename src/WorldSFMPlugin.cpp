@@ -47,8 +47,8 @@ void WorldSFMPlugin::Load(gazebo::physics::WorldPtr _world, sdf::ElementPtr _sdf
 /////////////////////////////////////////////////
 void WorldSFMPlugin::Reset() {
   this->lastUpdate = 0;
-  
-  for (unsigned int i = 0; i < this->sfmActors.size(); ++i) {
+
+  for (unsigned int i = 0; i < this->actors.size(); ++i) {
     // Initialize Goals 
     for (unsigned int j = 0; j < this->agentGoals[i].size(); ++j) {
       sfm::Goal sfmGoal;
@@ -77,16 +77,62 @@ void WorldSFMPlugin::Reset() {
 
 /////////////////////////////////////////////////
 void WorldSFMPlugin::HandleObstacles() {
-  for (unsigned int k = 0; k < this->sfmActors.size(); ++k) {
+  // for (unsigned int k = 0; k < this->sfmActors.size(); ++k) {
+  //   double minDist;
+  //   ignition::math::Vector2d closest_obs;
+  //   ignition::math::Vector2d closest_obs2;
+  //   this->sfmActors[k].obstacles1.clear();
+
+  //   for (unsigned int i = 0; i < this->world->ModelCount(); ++i) {
+  //     physics::ModelPtr model = this->world->ModelByIndex(i);
+  //     if (std::find(this->agentIgnoreObs[k].begin(), this->agentIgnoreObs[k].end(), model->GetName()) == this->agentIgnoreObs[k].end()) {
+  //       ignition::math::Vector3d pose = this->actors[k]->WorldPose().Pos();
+  //       ignition::math::Vector3d modelPos = model->WorldPose().Pos();
+        
+  //       ignition::math::Vector2d minBB(model->CollisionBoundingBox().Min().X(),model->CollisionBoundingBox().Min().Y());
+  //       ignition::math::Vector2d maxBB(model->CollisionBoundingBox().Max().X(),model->CollisionBoundingBox().Max().Y());
+  //       ignition::math::Vector2d thirdV(minBB.X(),maxBB.Y());
+  //       ignition::math::Vector2d fourthV(maxBB.X(),minBB.Y());
+
+  //       std::vector<std::vector<ignition::math::Vector2d>> segments = {{minBB,fourthV},{fourthV,maxBB},{thirdV,maxBB},{minBB,thirdV}};
+
+  //       ignition::math::Vector2d a;
+  //       ignition::math::Vector2d b;
+  //       ignition::math::Vector2d h;
+  //       double dist;
+
+  //       minDist = 10000;
+
+  //       for(unsigned int j = 0; j < segments.size(); ++j) {
+  //         a = std::min(segments[j][0], segments[j][1]);
+  //         b = std::max(segments[j][0], segments[j][1]);
+  //         double t = ((pose.X() - a.X()) * (b.X() - a.X()) + (pose.Y() - a.Y()) * (b.Y() - a.Y())) / (std::pow(b.X() - a.X(), 2) + std::pow(b.Y() - a.Y(), 2));
+  //         double t_star = std::min(std::max(0.0,t),1.0);
+  //         h = a + t_star * (b - a);
+  //         dist = std::sqrt(std::pow(h.X() - pose.X(), 2) + std::pow(h.Y() - pose.Y(),2));
+  //         if (dist < minDist) {
+  //           minDist = dist;
+  //           closest_obs = h;
+  //         }
+  //         // At the last segment,the closest point of the obstacle is passed to the lightSFM library if its distance is lower than 2 meters
+  //         if (j == segments.size() - 1 && minDist < 2) {
+  //           utils::Vector2d ob(closest_obs.X(), closest_obs.Y());
+  //           this->sfmActors[k].obstacles1.push_back(ob);
+  //         }
+  //       }
+  //     }
+  //   }
+  // }
+  for (unsigned int k = 0; k < this->sfmEntities.size(); ++k) {
     double minDist;
     ignition::math::Vector2d closest_obs;
     ignition::math::Vector2d closest_obs2;
-    this->sfmActors[k].obstacles1.clear();
+    this->sfmEntities[k].obstacles1.clear();
 
     for (unsigned int i = 0; i < this->world->ModelCount(); ++i) {
       physics::ModelPtr model = this->world->ModelByIndex(i);
-      if (std::find(this->agentIgnoreObs[k].begin(), this->agentIgnoreObs[k].end(), model->GetName()) == this->agentIgnoreObs[k].end()) {
-        ignition::math::Vector3d actorPos = this->actors[k]->WorldPose().Pos();
+      if (std::find(this->entitiesIgnoreObs[k].begin(), this->entitiesIgnoreObs[k].end(), model->GetName()) == this->entitiesIgnoreObs[k].end()) {
+        ignition::math::Vector3d pose = this->entitiesModel[k]->WorldPose().Pos();
         ignition::math::Vector3d modelPos = model->WorldPose().Pos();
         
         ignition::math::Vector2d minBB(model->CollisionBoundingBox().Min().X(),model->CollisionBoundingBox().Min().Y());
@@ -106,10 +152,10 @@ void WorldSFMPlugin::HandleObstacles() {
         for(unsigned int j = 0; j < segments.size(); ++j) {
           a = std::min(segments[j][0], segments[j][1]);
           b = std::max(segments[j][0], segments[j][1]);
-          double t = ((actorPos.X() - a.X()) * (b.X() - a.X()) + (actorPos.Y() - a.Y()) * (b.Y() - a.Y())) / (std::pow(b.X() - a.X(), 2) + std::pow(b.Y() - a.Y(), 2));
+          double t = ((pose.X() - a.X()) * (b.X() - a.X()) + (pose.Y() - a.Y()) * (b.Y() - a.Y())) / (std::pow(b.X() - a.X(), 2) + std::pow(b.Y() - a.Y(), 2));
           double t_star = std::min(std::max(0.0,t),1.0);
           h = a + t_star * (b - a);
-          dist = std::sqrt(std::pow(h.X() - actorPos.X(), 2) + std::pow(h.Y() - actorPos.Y(),2));
+          dist = std::sqrt(std::pow(h.X() - pose.X(), 2) + std::pow(h.Y() - pose.Y(),2));
           if (dist < minDist) {
             minDist = dist;
             closest_obs = h;
@@ -117,7 +163,7 @@ void WorldSFMPlugin::HandleObstacles() {
           // At the last segment,the closest point of the obstacle is passed to the lightSFM library if its distance is lower than 2 meters
           if (j == segments.size() - 1 && minDist < 2) {
             utils::Vector2d ob(closest_obs.X(), closest_obs.Y());
-            this->sfmActors[k].obstacles1.push_back(ob);
+            this->sfmEntities[k].obstacles1.push_back(ob);
           }
         }
       }
@@ -127,44 +173,117 @@ void WorldSFMPlugin::HandleObstacles() {
 
 /////////////////////////////////////////////////
 void WorldSFMPlugin::OnUpdate(const common::UpdateInfo &_info) {
-  double dt = (_info.simTime - this->lastUpdate).Double();
-  // If sampling time is passed from last update
-  if (dt >= this->samplingTime){
-    // Update closest obstacle
-    HandleObstacles();
+  // // The robot is not spawned instantly, this has to be done to account for this delay
+  // if (this->robotLoaded == false) {
+  //   for (unsigned int i = 0; i < this->world->Models().size(); ++i) {
+  //     if (this->world->Models()[i]->GetName() == this->robotName) {
+  //       // Set the initial pose of the robot and load all params on the SFM plugin
+  //       this->InitializeRobot();
+  //       this->robotLoaded = true;
+  //     }
+  //   }
+  // } else {
+  //   double dt = (_info.simTime - this->lastUpdate).Double();
+  //   // If sampling time is passed from last update
+  //   if (dt >= this->samplingTime){
+  //     // Update closest obstacle
+  //     HandleObstacles();
 
-    this->sfmActors = sfm::SFM.computeForces(this->sfmActors);
+  //     this->sfmActors = sfm::SFM.computeForces(this->sfmActors);
 
-    // Update model
-    if (!this->rungeKutta45) {
-      this->sfmActors = sfm::SFM.updatePosition(this->sfmActors, dt);
-    } else {
-      this->sfmActors = sfm::SFM.updatePositionRKF45(this->sfmActors, _info.simTime.Double(), dt);
+  //     // Update model
+  //     if (!this->rungeKutta45) {
+  //       this->sfmActors = sfm::SFM.updatePosition(this->sfmActors, dt);
+  //     } else {
+  //       this->sfmActors = sfm::SFM.updatePositionRKF45(this->sfmActors, _info.simTime.Double(), dt);
+  //     }
+
+  //     // Publish forces
+  //     PublishForces();
+
+  //     for (unsigned int i = 0; i < this->sfmActors.size(); ++i) {
+  //       ignition::math::Pose3d actorPose = this->actors[i]->WorldPose();
+
+  //       utils::Angle h = this->sfmActors[i].yaw;
+  //       utils::Angle add = utils::Angle::fromRadian(1.5707);
+  //       h = h + add;
+  //       double yaw = h.toRadian();
+
+  //       actorPose.Pos().X(this->sfmActors[i].position.getX());
+  //       actorPose.Pos().Y(this->sfmActors[i].position.getY());
+  //       actorPose.Pos().Z(1.01);
+  //       actorPose.Rot() = ignition::math::Quaterniond(1.5707, 0, yaw);
+
+  //       double distanceTraveled = (actorPose.Pos() - this->actors[i]->WorldPose().Pos()).Length();
+
+  //       this->actors[i]->SetWorldPose(actorPose, false, false);
+  //       this->actors[i]->SetScriptTime(this->actors[i]->ScriptTime() + (distanceTraveled * this->agentAnimFact[i]));
+  //     }
+
+  //     this->lastUpdate = _info.simTime;
+  //   }
+  // }
+
+  // The robot is not spawned instantly, this has to be done to account for this delay
+  if (this->robotLoaded == false) {
+    for (unsigned int i = 0; i < this->world->Models().size(); ++i) {
+      if (this->world->Models()[i]->GetName() == this->robotName) {
+        // Set the initial pose of the robot and load all params on the SFM plugin
+        this->InitializeRobot();
+        this->robotLoaded = true;
+      }
     }
+  } else {
+    double dt = (_info.simTime - this->lastUpdate).Double();
+    // If sampling time is passed from last update
+    if (dt >= this->samplingTime){
+      // Update closest obstacle
+      HandleObstacles();
 
-    // Publish forces
-    PublishForces();
+      this->sfmEntities = sfm::SFM.computeForces(this->sfmEntities);
 
-    for (unsigned int i = 0; i < this->sfmActors.size(); ++i) {
-      ignition::math::Pose3d actorPose = this->actors[i]->WorldPose();
+      // Update model
+      if (!this->rungeKutta45) {
+        this->sfmEntities = sfm::SFM.updatePosition(this->sfmEntities, dt);
+      } else {
+        this->sfmEntities = sfm::SFM.updatePositionRKF45(this->sfmEntities, _info.simTime.Double(), dt);
+      }
 
-      utils::Angle h = this->sfmActors[i].yaw;
-      utils::Angle add = utils::Angle::fromRadian(1.5707);
-      h = h + add;
-      double yaw = h.toRadian();
+      // Publish forces
+      PublishForces();
 
-      actorPose.Pos().X(this->sfmActors[i].position.getX());
-      actorPose.Pos().Y(this->sfmActors[i].position.getY());
-      actorPose.Pos().Z(1.01);
-      actorPose.Rot() = ignition::math::Quaterniond(1.5707, 0, yaw);
+      for (unsigned int i = 0; i < this->sfmEntities.size(); ++i) {
+        ignition::math::Pose3d pose = this->entitiesModel[i]->WorldPose();
+        if (i < this->sfmEntities.size() - 1) {
+          utils::Angle h = this->sfmEntities[i].yaw;
+          utils::Angle add = utils::Angle::fromRadian(1.5707);
+          h = h + add;
+          double yaw = h.toRadian();
 
-      double distanceTraveled = (actorPose.Pos() - this->actors[i]->WorldPose().Pos()).Length();
+          pose.Pos().X(this->sfmEntities[i].position.getX());
+          pose.Pos().Y(this->sfmEntities[i].position.getY());
+          pose.Pos().Z(1.01);
+          pose.Rot() = ignition::math::Quaterniond(1.5707, 0, yaw);
 
-      this->actors[i]->SetWorldPose(actorPose, false, false);
-      this->actors[i]->SetScriptTime(this->actors[i]->ScriptTime() + (distanceTraveled * this->agentAnimFact[i]));
+          double distanceTraveled = (pose.Pos() - this->entitiesModel[i]->WorldPose().Pos()).Length();
+
+          this->entitiesModel[i]->SetWorldPose(pose, false, false);
+          this->actors[i]->SetScriptTime(this->actors[i]->ScriptTime() + (distanceTraveled * this->agentAnimFact[i]));
+        } else {
+          utils::Angle h = this->sfmEntities[i].yaw;
+          double yaw = h.toRadian();
+
+          pose.Pos().X(this->sfmEntities[i].position.getX());
+          pose.Pos().Y(this->sfmEntities[i].position.getY());
+          pose.Pos().Z(-0.1); // This must be exactly the position of the ground, otherwise gravity comes into play
+          pose.Rot() = ignition::math::Quaterniond(0, 0, yaw);
+
+          this->entitiesModel[i]->SetWorldPose(pose, true, false);
+        }
+      }
+
+      this->lastUpdate = _info.simTime;
     }
-
-    this->lastUpdate = _info.simTime;
   }
 }
 
@@ -172,7 +291,9 @@ void WorldSFMPlugin::OnUpdate(const common::UpdateInfo &_info) {
 void WorldSFMPlugin::LoadAgentsFromYaml() {
   // FIRST REQUEST to get the agents names and other global parameters
   auto request = std::make_shared<rcl_interfaces::srv::GetParameters::Request>();
-  request->names = {"agents","sampling_time","runge_kutta_45","robot_name"};
+  request->names = {"agents","sampling_time","runge_kutta_45","robot_name","robot_initial_orientation", \
+  "robot_waypoints","robot_initial_position","robot_radius","robot_mass","robot_goal_weight", \
+  "robot_obstacle_weight", "robot_social_weight", "robot_velocity", "robot_ignore_obstacles"};
   this->actorParamsClient->wait_for_service();
   auto future = this->actorParamsClient->async_send_request(request);
 
@@ -205,7 +326,80 @@ void WorldSFMPlugin::LoadAgentsFromYaml() {
       this->agentModel.push_back(this->world->ModelByName(this->agentNames[i]));
       this->actors.push_back(boost::dynamic_pointer_cast<physics::Actor>(this->agentModel[i]));
     }
-    // std::cout<<"Sampling time: "<<this->samplingTime<<" - Runge-Kutta-45: "<<this->rungeKutta45<<std::endl;
+    // Robot Waypoints - THESE MUST BE LOADED
+    for (unsigned int j = 0; j <results[5].double_array_value.size(); j+=2){
+      this->robotGoals.push_back(std::make_tuple(results[5].double_array_value[j],results[5].double_array_value[j+1]));
+    }
+    // Robot initial orientation
+    if (results[4].type == rclcpp::PARAMETER_NOT_SET) {
+      this->robotInitYaw = 0.0;
+      std::cout<<"Robot initial orientation not set, setting it to the default value: 0.0°"<<std::endl;
+    } else {
+      this->robotInitYaw = results[4].double_value * (M_PI_2 / 90.0);
+    }
+    // Robot initial position
+    if (results[6].type == rclcpp::PARAMETER_NOT_SET) {
+      this->robotInitPos = this->robotGoals[0];
+      std::cout<<"Robot initial position not set, setting it as the first robot goal: "<<std::get<0>(this->robotGoals[0])<<","<<std::get<1>(this->robotGoals[0])<<std::endl;
+    } else {
+      std::tuple<double,double> pos(results[6].double_array_value[0],results[6].double_array_value[1]);
+      this->robotInitPos = pos;
+    }
+    // Robot radius
+    if (results[7].type == rclcpp::PARAMETER_NOT_SET) {
+      this->robotRadius = 0.35;
+      std::cout<<"Radius for robot not set, setting it to the default value: 0.35"<<std::endl;
+    } else {
+      this->robotRadius = results[7].double_value;
+    }
+    // Robot mass
+    if (results[8].type == rclcpp::PARAMETER_NOT_SET) {
+      this->robotMass = 35;
+      std::cout<<"Mass for robot not set, setting it to the default value: 35"<<std::endl;
+    } else {
+      this->robotMass = results[8].integer_value;
+    }
+    // Robot goal weight
+    if (results[9].type == rclcpp::PARAMETER_NOT_SET) {
+      this->robotGoalWeight = 2.0;
+      std::cout<<"Goal weight for robot not set, setting it to the default value: 2.0"<<std::endl;
+    } else {
+      this->robotGoalWeight = results[9].double_value;
+    }
+    // Robot obstacle weight
+    if (results[10].type == rclcpp::PARAMETER_NOT_SET) {
+      this->robotObstacleWeight = 10.0;
+      std::cout<<"Obstacle weight for robot not set, setting it to the default value: 10.0"<<std::endl;
+    } else {
+      this->robotObstacleWeight = results[10].double_value;
+    }
+    // Robot social weight
+    if (results[11].type == rclcpp::PARAMETER_NOT_SET) {
+      this->robotSocialWeight = 15.0;
+      std::cout<<"Social weight for robot not set, setting it to the default value: 15.0"<<std::endl;
+    } else {
+      this->robotSocialWeight = results[11].double_value;
+    }
+    // Robot velocity 
+    if (results[12].type == rclcpp::PARAMETER_NOT_SET) {
+      this->robotVelocity = 1.0;
+      std::cout<<"Velocity for robot not set, setting it to the default value: 1.0"<<std::endl;
+    } else {
+      this->robotVelocity = results[12].double_value;
+    }
+    // Robot ingore obstacles
+    for (unsigned int j = 0; j < this->agentNames.size(); ++j){
+      this->robotIgnoreObs.push_back(this->agentNames[j]); // All the actor's models must be ignored
+    }
+    this->robotIgnoreObs.push_back(this->robotName); // Robot must ignore itself
+    if (results[13].type == rclcpp::PARAMETER_NOT_SET) {
+      std::cout<<"No obstacles to ignore for robot"<<std::endl;
+    } else {
+      for (unsigned int j = 0; j <results[13].string_array_value.size(); ++j){
+        this->robotIgnoreObs.push_back(results[13].string_array_value[j]);
+      }
+    }
+
   } else {
     RCLCPP_ERROR(rclcpp::get_logger("rclcpp"), "Failed to call service get_parameters()");
   }
@@ -322,6 +516,7 @@ void WorldSFMPlugin::LoadAgentsFromYaml() {
       for (unsigned int j = 0; j < this->agentNames.size(); ++j){
         obs.push_back(this->agentNames[j]); // All the actor's models must be ignored
       }
+      obs.push_back(this->robotName); // Robot must be ignored
       if (results[12].type == rclcpp::PARAMETER_NOT_SET) {
         std::cout<<"No obstacles to ignore for " + this->agentNames[i]<<std::endl;
         this->agentIgnoreObs.push_back(obs);
@@ -379,11 +574,11 @@ void WorldSFMPlugin::InitializeActors() {
     ignition::math::Pose3d actorPose = this->actors[i]->WorldPose();
 
     // TODO: REVIEW THIS PART - Set the initial pose of each actor
-    // actorPose.Pos().X(std::get<0>(this->agentInitPos[i]));
-    // actorPose.Pos().Y(std::get<1>(this->agentInitPos[i]));
-    // actorPose.Pos().Z(1.01);
-    // actorPose.Rot() = ignition::math::Quaterniond(1.5707, 0, this->agentInitYaw[i] + M_PI_2);
-    // this->actors[i]->SetWorldPose(actorPose, false, false);
+    actorPose.Pos().X(std::get<0>(this->agentInitPos[i]));
+    actorPose.Pos().Y(std::get<1>(this->agentInitPos[i]));
+    actorPose.Pos().Z(1.01);
+    actorPose.Rot() = ignition::math::Quaterniond(1.5707, 0, this->agentInitYaw[i] + M_PI_2);
+    this->actors[i]->SetWorldPose(actorPose, false, false);
 
     // Initialize the SFM actors
     ignition::math::Pose3d pose = this->actors[i]->WorldPose();
@@ -403,6 +598,7 @@ void WorldSFMPlugin::InitializeActors() {
     agent.params.forceFactorGroupGaze = this->agentGroupGaze[i];
     agent.params.forceFactorGroupCoherence = this->agentGroupCoh[i];
     agent.params.forceFactorGroupRepulsion = this->agentGroupRep[i];
+    agent.radius = this->agentRadius[i];
     if (this->agentGroup[i].size() > 0) {
       agent.groupId = agent.id;
     } else {
@@ -413,36 +609,130 @@ void WorldSFMPlugin::InitializeActors() {
 }
 
 ////////////////////////////////////////////////
+void WorldSFMPlugin::InitializeRobot() {
+  this->robotModel = this->world->ModelByName(this->robotName);
+  this->robotModel->SetWorld(this->world);
+  //std::cout<<"Robot name: "<<this->robotModel->GetName()<<std::endl;
+  //std::cout<<"robot_first_goal: "<<std::get<0>(this->robotGoals[0])<<","<<std::get<1>(this->robotGoals[0])<<", robot_initial_position: "<<std::get<0>(this->robotInitPos)<<","<<std::get<1>(this->robotInitPos)<<", robot_initial_yaw: "<<this->robotInitYaw<<", robot_mass: "<<this->robotMass<<", robot_radius: "<<this->robotRadius<<", robot_velocity: "<<this->robotVelocity<<", robot_goal_weight: "<<this->robotGoalWeight<<", robot_obstacle_weight: "<<this->robotObstacleWeight<<", robot_social_weight: "<<this->robotSocialWeight<<", first_ignored_obstacle: "<<this->robotIgnoreObs[0]<<std::endl;
+
+  ignition::math::Pose3d robotPose = this->robotModel->WorldPose();
+
+  // TODO: REVIEW THIS PART - Set the initial pose of each actor
+  robotPose.Pos().X(std::get<0>(this->robotInitPos));
+  robotPose.Pos().Y(std::get<1>(this->robotInitPos));
+  robotPose.Pos().Z(1.01);
+  robotPose.Rot() = ignition::math::Quaterniond(1.5707, 0, this->robotInitYaw + M_PI_2);
+  this->robotModel->SetWorldPose(robotPose, false, false);
+
+  // Initialize the robot as an SFM actor
+  ignition::math::Pose3d pose = this->robotModel->WorldPose();
+  ignition::math::Vector3d linvel = this->robotModel->WorldLinearVel();
+  ignition::math::Vector3d angvel = this->robotModel->WorldAngularVel();
+  sfm::Agent agent;
+  agent.id = this->robotModel->GetId();
+  agent.position.set(pose.Pos().X(),pose.Pos().Y());
+  agent.yaw = pose.Rot().Euler().Z();
+  agent.velocity.set(linvel.X(),linvel.Y());
+  agent.linearVelocity = linvel.Length();
+  agent.angularVelocity = angvel.Z();
+  agent.desiredVelocity = this->robotVelocity;
+  agent.params.forceFactorDesired = this->robotGoalWeight;
+  agent.params.forceFactorObstacle = this->robotObstacleWeight;
+  agent.params.forceFactorSocial = this->robotSocialWeight;
+  agent.params.forceFactorGroupGaze = 0.0;
+  agent.params.forceFactorGroupCoherence = 0.0;
+  agent.params.forceFactorGroupRepulsion = 0.0;
+  agent.radius = this->robotRadius;
+  agent.groupId = -1;
+  // Initialize Goals 
+  for (unsigned int j = 0; j < this->robotGoals.size(); ++j) {
+    sfm::Goal sfmGoal;
+    sfmGoal.center.set(std::get<0>(this->robotGoals[j]),std::get<1>(this->robotGoals[j]));
+    sfmGoal.radius = 0.3;
+    agent.cyclicGoals = true;
+    agent.goals.push_back(sfmGoal);
+  }
+  this->sfmRobot = agent;
+
+  // Generate SFM vector to use for algorithm
+  this->sfmEntities = this->sfmActors;
+  this->sfmEntities.push_back(this->sfmRobot);
+  // Generate models vector to use for algorithm
+  this->entitiesModel = this->agentModel;
+  this->entitiesModel.push_back(this->robotModel);
+  // Generate Ignored Obs vector to use for algorithm
+  this->entitiesIgnoreObs = this->agentIgnoreObs;
+  this->entitiesIgnoreObs.push_back(this->robotIgnoreObs);
+  // for (unsigned int i = 0; i < this->sfmEntities.size(); ++i) {
+  //   std::cout<<"SFM Entity ID: "<<this->sfmEntities[i].id<<std::endl;
+  //   std::cout<<"Model Entity name: "<<this->entitiesModel[i]->GetName()<<std::endl;
+  // }
+}
+
+////////////////////////////////////////////////
 void WorldSFMPlugin::PublishForces() {
+  // for (unsigned int i = 0; i < this->actors.size(); ++i) {
+  //   if (this->agentPubForces[i] == true) {
+  //     gazebo_sfm_plugin::msg::Forces msg = gazebo_sfm_plugin::msg::Forces();
+  //     // Global force
+  //     msg.global_force.x = this->sfmActors[i].forces.globalForce.getX();
+  //     msg.global_force.y = this->sfmActors[i].forces.globalForce.getY();
+  //     // Desired force
+  //     msg.desired_force.x = this->sfmActors[i].forces.desiredForce.getX();
+  //     msg.desired_force.y = this->sfmActors[i].forces.desiredForce.getY();
+  //     // Obstacle force
+  //     msg.obstacle_force.x = this->sfmActors[i].forces.obstacleForce.getX();
+  //     msg.obstacle_force.y = this->sfmActors[i].forces.obstacleForce.getY();
+  //     // Social force
+  //     msg.social_force.x = this->sfmActors[i].forces.socialForce.getX();
+  //     msg.social_force.y = this->sfmActors[i].forces.socialForce.getY();
+  //     // Group force
+  //     msg.group_force.x = this->sfmActors[i].forces.groupForce.getX();
+  //     msg.group_force.y = this->sfmActors[i].forces.groupForce.getY();
+  //     // // Torque force - not implemented
+  //     // msg.torque_force = 0.0;
+  //     // Linear velocity
+  //     msg.linear_velocity.x = this->sfmActors[i].velocity.getX();
+  //     msg.linear_velocity.y = this->sfmActors[i].velocity.getY();
+  //     // // Angular velocity - not implemented
+  //     // msg.angular_velocity = 0.0;
+  //     // Pose
+  //     msg.pose.x = this->sfmActors[i].initPosition.getX();
+  //     msg.pose.y = this->sfmActors[i].initPosition.getY();
+  //     msg.pose.theta = this->sfmActors[i].initYaw.toDegree();
+
+  //     this->actorForcesPub[i]->publish(msg);
+  //   }
+  // }
   for (unsigned int i = 0; i < this->actors.size(); ++i) {
     if (this->agentPubForces[i] == true) {
       gazebo_sfm_plugin::msg::Forces msg = gazebo_sfm_plugin::msg::Forces();
       // Global force
-      msg.global_force.x = this->sfmActors[i].forces.globalForce.getX();
-      msg.global_force.y = this->sfmActors[i].forces.globalForce.getY();
+      msg.global_force.x = this->sfmEntities[i].forces.globalForce.getX();
+      msg.global_force.y = this->sfmEntities[i].forces.globalForce.getY();
       // Desired force
-      msg.desired_force.x = this->sfmActors[i].forces.desiredForce.getX();
-      msg.desired_force.y = this->sfmActors[i].forces.desiredForce.getY();
+      msg.desired_force.x = this->sfmEntities[i].forces.desiredForce.getX();
+      msg.desired_force.y = this->sfmEntities[i].forces.desiredForce.getY();
       // Obstacle force
-      msg.obstacle_force.x = this->sfmActors[i].forces.obstacleForce.getX();
-      msg.obstacle_force.y = this->sfmActors[i].forces.obstacleForce.getY();
+      msg.obstacle_force.x = this->sfmEntities[i].forces.obstacleForce.getX();
+      msg.obstacle_force.y = this->sfmEntities[i].forces.obstacleForce.getY();
       // Social force
-      msg.social_force.x = this->sfmActors[i].forces.socialForce.getX();
-      msg.social_force.y = this->sfmActors[i].forces.socialForce.getY();
+      msg.social_force.x = this->sfmEntities[i].forces.socialForce.getX();
+      msg.social_force.y = this->sfmEntities[i].forces.socialForce.getY();
       // Group force
-      msg.group_force.x = this->sfmActors[i].forces.groupForce.getX();
-      msg.group_force.y = this->sfmActors[i].forces.groupForce.getY();
+      msg.group_force.x = this->sfmEntities[i].forces.groupForce.getX();
+      msg.group_force.y = this->sfmEntities[i].forces.groupForce.getY();
       // // Torque force - not implemented
       // msg.torque_force = 0.0;
       // Linear velocity
-      msg.linear_velocity.x = this->sfmActors[i].velocity.getX();
-      msg.linear_velocity.y = this->sfmActors[i].velocity.getY();
+      msg.linear_velocity.x = this->sfmEntities[i].velocity.getX();
+      msg.linear_velocity.y = this->sfmEntities[i].velocity.getY();
       // // Angular velocity - not implemented
       // msg.angular_velocity = 0.0;
       // Pose
-      msg.pose.x = this->sfmActors[i].initPosition.getX();
-      msg.pose.y = this->sfmActors[i].initPosition.getY();
-      msg.pose.theta = this->sfmActors[i].initYaw.toDegree();
+      msg.pose.x = this->sfmEntities[i].initPosition.getX();
+      msg.pose.y = this->sfmEntities[i].initPosition.getY();
+      msg.pose.theta = this->sfmEntities[i].initYaw.toDegree();
 
       this->actorForcesPub[i]->publish(msg);
     }

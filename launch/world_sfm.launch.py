@@ -22,12 +22,17 @@ def generate_launch_description():
         parameters = [config]
     )
 
+    spawn_entity = Node(package='gazebo_sfm_plugin', executable='spawn_robot.py',
+                        arguments=['pioneer3at', 'demo', '-0.2', '10.0', '0.0'],
+                        output='screen')
+
     gazebo = ExecuteProcess(
             cmd=['gazebo', '--verbose', world, '-s', 'libgazebo_ros_init.so',
-            '-s', 'libgazebo_ros_factory.so', '--pause'],
+            '-s', 'libgazebo_ros_factory.so'], #, '--pause'
             output='screen')
 
     return LaunchDescription([
+        spawn_entity,
         agents_loader,
         gazebo,
     ])

@@ -5,7 +5,17 @@ agent_params_loader:
     # GLOBAL PARAMETERS
     sampling_time: 0.001
     runge_kutta_45: False
-    robot_name: "robot"
+    robot_name: "pioneer3at"
+    robot_initial_orientation: -90.0
+    robot_waypoints: [-0.2,-10.0,-0.2,10.0]
+    robot_initial_position: [-0.2,10.0]
+    robot_radius: 0.35
+    robot_mass: 35
+    robot_goal_weight: 2.0
+    robot_obstacle_weight: 10.0
+    robot_social_weight: 15.0
+    robot_velocity: 1.0
+    robot_ignore_obstacles: ["actor1_collision_model","actor2_collision_model"]
     # NOTE: agent names must be the same listed in the world file
     agents: ["agent1","agent2"] # Strings must be in "", not ''
     # ACTORS PARAMETERS

@@ -59,6 +59,9 @@ private:
   /// \brief Initialize actors pose and params for SFM plugin
   void InitializeActors();
 
+  /// \brief Initialize robot pose and params for SFM plugin
+  void InitializeRobot();
+
   /// \brief Method used to publish forces
   void PublishForces();
 
@@ -172,8 +175,53 @@ private:
   /// \brief Vector of actors trajectories
   std::vector<physics::TrajectoryInfoPtr> trajectoryInfo;
 
-  /// \brief Saves sfmActors used for repulsive force from other pedestrians
-  std::vector<std::vector<sfm::Agent>> otherActors;
+  /// \brief Pointer to the robot model
+  physics::ModelPtr robotModel;
+
+  /// \brief Bool to check if first update
+  bool robotLoaded = false;
+  
+  /// \brief SFM entity of the robot;
+  sfm::Agent sfmRobot;
+
+  /// \brief Robot goal weight
+  double robotGoalWeight;
+
+  /// \brief Robot obstacle weight
+  double robotObstacleWeight;
+
+  /// \brief Robot social weight
+  double robotSocialWeight;
+
+  /// \brief Robot radius
+  double robotRadius;
+
+  /// \brief Robot mass
+  double robotMass;
+
+  /// \brief Robot desired velocity
+  double robotVelocity;
+
+  /// \brief Robot inital yaw
+  double robotInitYaw;
+
+  /// \brief Robot inital position
+  std::tuple<double,double> robotInitPos;
+
+  /// \brief Robot goals
+  std::vector<std::tuple<double,double>> robotGoals;
+
+  /// \brief Robot ignored obstacles
+  std::vector<std::string> robotIgnoreObs;
+
+  /// \brief Stores actors and robot SFM agents
+  std::vector<sfm::Agent> sfmEntities;
+
+  /// \brief Store robot's and actor's models
+  std::vector<physics::ModelPtr> entitiesModel;
+
+  /// \brief Variable to store entities ignored obstacles
+  std::vector<std::vector<std::string>> entitiesIgnoreObs;
 };
 } // namespace gazebo
 #endif

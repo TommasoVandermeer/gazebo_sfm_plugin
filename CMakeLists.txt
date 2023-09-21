@@ -182,6 +182,7 @@ install(TARGETS ${attach_model_plugin_name}
 # Install Python executables
 install(PROGRAMS
   scripts/save_and_print_forces.py
+  scripts/spawn_robot.py
   DESTINATION lib/${PROJECT_NAME}
 )
 

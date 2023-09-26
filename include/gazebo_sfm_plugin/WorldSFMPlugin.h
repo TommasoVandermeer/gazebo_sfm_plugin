@@ -19,6 +19,8 @@
 #include "gazebo/util/system.hh"
 #include "gazebo/sensors/sensors.hh"
 #include <gazebo/physics/World.hh>
+#include <gazebo/transport/transport.hh>
+#include <gazebo_ros/node.hpp>
 #include <rclcpp/rclcpp.hpp>
 
 // Msgs
@@ -49,6 +51,10 @@ public:
   /// \param[in] _info Timing information
   void OnUpdate(const common::UpdateInfo &_info);
 
+  /// \brief Function that is called every update cycle before loading all plugin components.
+  /// \param[in] _info Timing information
+  void Loading(const common::UpdateInfo &_info);
+
 private:
   /// \brief Helper function to detect the closest obstacles.
   void HandleObstacles();
@@ -64,6 +70,12 @@ private:
 
   /// \brief Method used to publish forces
   void PublishForces();
+
+  /// \brief Called whenever new laser data is available
+  void LaserCallback(ConstLaserScanStampedPtr &msg);
+
+  /// \brief Method used to create a model to attach to actors for laser detection
+  void CreateModelForActors();
 
   // ATTIRBUTES -------------------------------------------------
 private:
@@ -222,6 +234,37 @@ private:
 
   /// \brief Variable to store entities ignored obstacles
   std::vector<std::vector<std::string>> entitiesIgnoreObs;
+
+  /// \brief Name of the laser sensor
+  std::string laserName;
+
+  /// \brief Pointer to the laser sensor model
+  sensors::SensorPtr laserSensor;
+
+  /// \brief Node to get the laser data
+  gazebo::transport::NodePtr laserNode;
+
+  /// \brief Subscriber to the laser data
+  gazebo::transport::SubscriberPtr laserSub;
+
+  /// \brief Vector that stores laser ranges lower than 2m and 
+  // their angle (in radians) with respect to the robot expressed in the world frame
+  std::vector<std::tuple<double, double>> laserRanges;
+
+  /// \brief Stores points closest than 2m detected by the laser
+  std::vector<ignition::math::Vector2d> laserObs;
+
+  /// \brief Bool to decide wether to attach a collision model to actors for laser detection
+  bool attachCollisionToActors = true;
+
+  /// \brief Bool to check wether actors collision models were loaded
+  bool actorCollisionLoaded = false;
+
+  /// \brief Vector to save pointers to each Actor Collision model
+  std::vector<physics::ModelPtr> actorCollisionModel;
+
+  /// \brief Vector to store Actor Collision model names
+  std::vector<std::string> actorCollisionNames;
 };
 } // namespace gazebo
 #endif

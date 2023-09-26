@@ -3,11 +3,19 @@ agent_params_loader:
     # NOTE: All numerical parameters (except mass) 
     # must include at least one decimal or the code will not run
     # GLOBAL PARAMETERS
+    # ************** PARAMS TO ADD ***************
+    #robot: True #If false, just the pedestrian motion is simulated
+    #consider_robot: True #If false, just the pedestrian are considered in the SFM model
+    #robot_as_pedestrian: True #If true, the robot is considered ad a pedestrain by the model, laser readings are not considered
+    #ground_height: -0.1 #This is important to adjust the height of entities based on the ground level
+    #attach_cylinder_to_humans: True #If true, a cylinder of the chosen radius is attached to the actors for laser detection
+    # ********************************************
     sampling_time: 0.001
     runge_kutta_45: False
     robot_name: "pioneer3at"
+    laser_sensor_name: "laser" # Used to get the laser sensor and access its readings
     robot_initial_orientation: -90.0
-    robot_waypoints: [-0.2,-10.0,-0.2,10.0]
+    robot_waypoints: [-0.2,-7.5,-0.2,7.5]
     robot_initial_position: [-0.2,10.0]
     robot_radius: 0.35
     robot_mass: 35

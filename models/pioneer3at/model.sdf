@@ -696,7 +696,7 @@
       </inertial>
       <!-- Position is towards the front of the robot -->
       <!-- Laser finder is mounted on top -->
-      <pose>0.15 0 0.30 0 0 0</pose>
+      <pose>0 0 0.30 0 0 0</pose> <!-- 0.15 0 0.30 -->
       
       <!-- Add a mesh to make it more visually appealing -->
       <visual name="visual">
@@ -729,7 +729,7 @@
       
       <!-- Describes the type and properties of the sensor -->
       <sensor name="laser" type="ray">
-        <pose>0.01 0 0.0175 0 -0 0</pose>
+        <pose>0 0 0.0175 0 -0 0</pose> <!-- 0.01 0 0.0175 -->
               <ray>
                 <scan>
                   <horizontal>
@@ -748,14 +748,6 @@
               <always_on>1</always_on>
               <update_rate>10</update_rate>
               <visualize>true</visualize>
-
-              <plugin name='laser' filename='libgazebo_ros_ray_sensor.so'>
-                <ros>
-                  <namespace>/demo</namespace>
-                  <argument>--ros-args --remap ~/out:=scan</argument>
-                </ros>
-                <output_type>sensor_msgs/LaserScan</output_type>
-              </plugin>
       </sensor>
     </link>
 

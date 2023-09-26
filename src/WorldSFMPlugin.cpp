@@ -37,11 +37,46 @@ void WorldSFMPlugin::Load(gazebo::physics::WorldPtr _world, sdf::ElementPtr _sdf
   // Node to publish forces
   this->actorForcesNode = std::make_shared<rclcpp::Node>("publish_Forces_Node");
 
+  // this->connections.push_back(event::Events::ConnectWorldUpdateBegin(
+  //     std::bind(&WorldSFMPlugin::OnUpdate, this, std::placeholders::_1)));
   this->connections.push_back(event::Events::ConnectWorldUpdateBegin(
-      std::bind(&WorldSFMPlugin::OnUpdate, this, std::placeholders::_1)));
+    std::bind(&WorldSFMPlugin::Loading, this, std::placeholders::_1)));
 
   // Reset settings (goals and animations)
   this->Reset();
+}
+
+/////////////////////////////////////////////////
+void WorldSFMPlugin::Loading(const common::UpdateInfo &_info) {
+  if ((!this->robotLoaded) || (!this->actorCollisionLoaded)) {
+    // Check for actor collision models spawns
+    for (unsigned int i = 0; i < this->actorCollisionNames.size(); ++i) {
+      bool check = false;
+      for (unsigned int j = 0; j < this->world->Models().size(); ++j) {
+        if ((this->world->Models()[j]->GetName() == this->robotName) && (!this->robotLoaded)) {
+          // Set the initial pose of the robot and load all params on the SFM plugin
+          this->InitializeRobot();
+          this->robotLoaded = true;
+        }
+        if (this->actorCollisionNames[i] == this->world->Models()[j]->GetName()) check = true;
+      }
+      if (!check) break;
+      if ((check) && (i == this->actorCollisionNames.size()-1)) this->actorCollisionLoaded = true;
+    } 
+  } else {
+    // Add collision models to ignore obs and save Collision models
+    for (unsigned int i = 0; i < this->actorCollisionNames.size(); i++) {
+      this->actorCollisionModel.push_back(this->world->ModelByName(this->actorCollisionNames[i]));
+      for (unsigned int j = 0; j < this->entitiesIgnoreObs.size(); j++) {
+        this->entitiesIgnoreObs[j].push_back(this->actorCollisionNames[i]);
+        if (j < this->entitiesIgnoreObs.size()-1) this->agentIgnoreObs[j].push_back(this->actorCollisionNames[i]);
+        else this->robotIgnoreObs.push_back(this->actorCollisionNames[i]);
+      }
+    }
+    this->connections.pop_back();
+    this->connections.push_back(event::Events::ConnectWorldUpdateBegin(
+      std::bind(&WorldSFMPlugin::OnUpdate, this, std::placeholders::_1)));
+  }
 }
 
 /////////////////////////////////////////////////
@@ -124,46 +159,62 @@ void WorldSFMPlugin::HandleObstacles() {
   //   }
   // }
   for (unsigned int k = 0; k < this->sfmEntities.size(); ++k) {
-    double minDist;
-    ignition::math::Vector2d closest_obs;
-    ignition::math::Vector2d closest_obs2;
-    this->sfmEntities[k].obstacles1.clear();
+    if (this->entitiesModel[k]->GetId() == this->robotModel->GetId()) {
+      // If the robot is considered take the obs found by laser
+      this->sfmEntities[k].obstacles1.clear();
+      for (unsigned int i = 0; i < this->laserObs.size(); ++i) {
+        utils::Vector2d ob(this->laserObs[i].X(), this->laserObs[i].Y());
+        this->sfmEntities[k].obstacles1.push_back(ob);
+      }
+    } else {
+      double minDist;
+      ignition::math::Vector2d closest_obs;
+      ignition::math::Vector2d closest_obs2;
+      this->sfmEntities[k].obstacles1.clear();
 
-    for (unsigned int i = 0; i < this->world->ModelCount(); ++i) {
-      physics::ModelPtr model = this->world->ModelByIndex(i);
-      if (std::find(this->entitiesIgnoreObs[k].begin(), this->entitiesIgnoreObs[k].end(), model->GetName()) == this->entitiesIgnoreObs[k].end()) {
-        ignition::math::Vector3d pose = this->entitiesModel[k]->WorldPose().Pos();
-        ignition::math::Vector3d modelPos = model->WorldPose().Pos();
-        
-        ignition::math::Vector2d minBB(model->CollisionBoundingBox().Min().X(),model->CollisionBoundingBox().Min().Y());
-        ignition::math::Vector2d maxBB(model->CollisionBoundingBox().Max().X(),model->CollisionBoundingBox().Max().Y());
-        ignition::math::Vector2d thirdV(minBB.X(),maxBB.Y());
-        ignition::math::Vector2d fourthV(maxBB.X(),minBB.Y());
+      for (unsigned int i = 0; i < this->world->ModelCount(); ++i) {
+        physics::ModelPtr model = this->world->ModelByIndex(i);
+        // If the model lowest Z is greater than actor's highest Z, the model is added to Ignore Obs
+        // if (model->CollisionBoundingBox().Min().Z() > this->entitiesModel[k]->CollisionBoundingBox().Max().Z()) {
+        //   this->entitiesIgnoreObs[k].push_back(model->GetName());
+        //   ++i;
+        //   model = this->world->ModelByIndex(i);;
+        // }
+        // Check if obstacle is in Ignore Obs
+        if (std::find(this->entitiesIgnoreObs[k].begin(), this->entitiesIgnoreObs[k].end(), model->GetName()) == this->entitiesIgnoreObs[k].end()) {
+          ignition::math::Vector3d pose = this->entitiesModel[k]->WorldPose().Pos();
+          ignition::math::Vector3d modelPos = model->WorldPose().Pos();
+          
+          ignition::math::Vector2d minBB(model->CollisionBoundingBox().Min().X(),model->CollisionBoundingBox().Min().Y());
+          ignition::math::Vector2d maxBB(model->CollisionBoundingBox().Max().X(),model->CollisionBoundingBox().Max().Y());
+          ignition::math::Vector2d thirdV(minBB.X(),maxBB.Y());
+          ignition::math::Vector2d fourthV(maxBB.X(),minBB.Y());
 
-        std::vector<std::vector<ignition::math::Vector2d>> segments = {{minBB,fourthV},{fourthV,maxBB},{thirdV,maxBB},{minBB,thirdV}};
+          std::vector<std::vector<ignition::math::Vector2d>> segments = {{minBB,fourthV},{fourthV,maxBB},{thirdV,maxBB},{minBB,thirdV}};
 
-        ignition::math::Vector2d a;
-        ignition::math::Vector2d b;
-        ignition::math::Vector2d h;
-        double dist;
+          ignition::math::Vector2d a;
+          ignition::math::Vector2d b;
+          ignition::math::Vector2d h;
+          double dist;
 
-        minDist = 10000;
+          minDist = 10000;
 
-        for(unsigned int j = 0; j < segments.size(); ++j) {
-          a = std::min(segments[j][0], segments[j][1]);
-          b = std::max(segments[j][0], segments[j][1]);
-          double t = ((pose.X() - a.X()) * (b.X() - a.X()) + (pose.Y() - a.Y()) * (b.Y() - a.Y())) / (std::pow(b.X() - a.X(), 2) + std::pow(b.Y() - a.Y(), 2));
-          double t_star = std::min(std::max(0.0,t),1.0);
-          h = a + t_star * (b - a);
-          dist = std::sqrt(std::pow(h.X() - pose.X(), 2) + std::pow(h.Y() - pose.Y(),2));
-          if (dist < minDist) {
-            minDist = dist;
-            closest_obs = h;
-          }
-          // At the last segment,the closest point of the obstacle is passed to the lightSFM library if its distance is lower than 2 meters
-          if (j == segments.size() - 1 && minDist < 2) {
-            utils::Vector2d ob(closest_obs.X(), closest_obs.Y());
-            this->sfmEntities[k].obstacles1.push_back(ob);
+          for(unsigned int j = 0; j < segments.size(); ++j) {
+            a = std::min(segments[j][0], segments[j][1]);
+            b = std::max(segments[j][0], segments[j][1]);
+            double t = ((pose.X() - a.X()) * (b.X() - a.X()) + (pose.Y() - a.Y()) * (b.Y() - a.Y())) / (std::pow(b.X() - a.X(), 2) + std::pow(b.Y() - a.Y(), 2));
+            double t_star = std::min(std::max(0.0,t),1.0);
+            h = a + t_star * (b - a);
+            dist = std::sqrt(std::pow(h.X() - pose.X(), 2) + std::pow(h.Y() - pose.Y(),2));
+            if (dist < minDist) {
+              minDist = dist;
+              closest_obs = h;
+            }
+            // At the last segment,the closest point of the obstacle is passed to the lightSFM library if its distance is lower than 2 meters
+            if (j == segments.size() - 1 && minDist < 2) {
+              utils::Vector2d ob(closest_obs.X(), closest_obs.Y());
+              this->sfmEntities[k].obstacles1.push_back(ob);
+            }
           }
         }
       }
@@ -224,66 +275,60 @@ void WorldSFMPlugin::OnUpdate(const common::UpdateInfo &_info) {
   //   }
   // }
 
-  // The robot is not spawned instantly, this has to be done to account for this delay
-  if (this->robotLoaded == false) {
-    for (unsigned int i = 0; i < this->world->Models().size(); ++i) {
-      if (this->world->Models()[i]->GetName() == this->robotName) {
-        // Set the initial pose of the robot and load all params on the SFM plugin
-        this->InitializeRobot();
-        this->robotLoaded = true;
-      }
+  double dt = (_info.simTime - this->lastUpdate).Double();
+  // If sampling time is passed from last update
+  if (dt >= this->samplingTime){
+    // Update closest obstacle
+    HandleObstacles();
+
+    this->sfmEntities = sfm::SFM.computeForces(this->sfmEntities);
+
+    // We erase the social forces for the robot, in this way, it only relies on laser data
+    this->sfmEntities.back().forces.globalForce -= this->sfmEntities.back().forces.socialForce;
+
+    // Update model
+    if (!this->rungeKutta45) {
+      this->sfmEntities = sfm::SFM.updatePosition(this->sfmEntities, dt);
+    } else {
+      this->sfmEntities = sfm::SFM.updatePositionRKF45(this->sfmEntities, _info.simTime.Double(), dt);
     }
-  } else {
-    double dt = (_info.simTime - this->lastUpdate).Double();
-    // If sampling time is passed from last update
-    if (dt >= this->samplingTime){
-      // Update closest obstacle
-      HandleObstacles();
 
-      this->sfmEntities = sfm::SFM.computeForces(this->sfmEntities);
+    // Publish forces
+    PublishForces();
 
-      // Update model
-      if (!this->rungeKutta45) {
-        this->sfmEntities = sfm::SFM.updatePosition(this->sfmEntities, dt);
+    for (unsigned int i = 0; i < this->sfmEntities.size(); ++i) {
+      ignition::math::Pose3d pose = this->entitiesModel[i]->WorldPose();
+      if (this->entitiesModel[i]->GetId() != this->robotModel->GetId()) {
+        utils::Angle h = this->sfmEntities[i].yaw;
+        utils::Angle add = utils::Angle::fromRadian(1.5707);
+        h = h + add;
+        double yaw = h.toRadian();
+
+        pose.Pos().X(this->sfmEntities[i].position.getX());
+        pose.Pos().Y(this->sfmEntities[i].position.getY());
+        pose.Pos().Z(1.01);
+        pose.Rot() = ignition::math::Quaterniond(1.5707, 0, yaw);
+
+        double distanceTraveled = (pose.Pos() - this->entitiesModel[i]->WorldPose().Pos()).Length();
+
+        this->entitiesModel[i]->SetWorldPose(pose, false, false);
+        this->actors[i]->SetScriptTime(this->actors[i]->ScriptTime() + (distanceTraveled * this->agentAnimFact[i]));
+      
+        this->actorCollisionModel[i]->SetWorldPose(this->entitiesModel[i]->WorldPose());
       } else {
-        this->sfmEntities = sfm::SFM.updatePositionRKF45(this->sfmEntities, _info.simTime.Double(), dt);
+        utils::Angle h = this->sfmEntities[i].yaw;
+        double yaw = h.toRadian();
+
+        pose.Pos().X(this->sfmEntities[i].position.getX());
+        pose.Pos().Y(this->sfmEntities[i].position.getY());
+        pose.Pos().Z(-0.1); // This must be exactly the position of the ground, otherwise gravity comes into play
+        pose.Rot() = ignition::math::Quaterniond(0, 0, yaw);
+
+        this->entitiesModel[i]->SetWorldPose(pose, true, false);
       }
-
-      // Publish forces
-      PublishForces();
-
-      for (unsigned int i = 0; i < this->sfmEntities.size(); ++i) {
-        ignition::math::Pose3d pose = this->entitiesModel[i]->WorldPose();
-        if (i < this->sfmEntities.size() - 1) {
-          utils::Angle h = this->sfmEntities[i].yaw;
-          utils::Angle add = utils::Angle::fromRadian(1.5707);
-          h = h + add;
-          double yaw = h.toRadian();
-
-          pose.Pos().X(this->sfmEntities[i].position.getX());
-          pose.Pos().Y(this->sfmEntities[i].position.getY());
-          pose.Pos().Z(1.01);
-          pose.Rot() = ignition::math::Quaterniond(1.5707, 0, yaw);
-
-          double distanceTraveled = (pose.Pos() - this->entitiesModel[i]->WorldPose().Pos()).Length();
-
-          this->entitiesModel[i]->SetWorldPose(pose, false, false);
-          this->actors[i]->SetScriptTime(this->actors[i]->ScriptTime() + (distanceTraveled * this->agentAnimFact[i]));
-        } else {
-          utils::Angle h = this->sfmEntities[i].yaw;
-          double yaw = h.toRadian();
-
-          pose.Pos().X(this->sfmEntities[i].position.getX());
-          pose.Pos().Y(this->sfmEntities[i].position.getY());
-          pose.Pos().Z(-0.1); // This must be exactly the position of the ground, otherwise gravity comes into play
-          pose.Rot() = ignition::math::Quaterniond(0, 0, yaw);
-
-          this->entitiesModel[i]->SetWorldPose(pose, true, false);
-        }
-      }
-
-      this->lastUpdate = _info.simTime;
     }
+
+    this->lastUpdate = _info.simTime;
   }
 }
 
@@ -293,7 +338,7 @@ void WorldSFMPlugin::LoadAgentsFromYaml() {
   auto request = std::make_shared<rcl_interfaces::srv::GetParameters::Request>();
   request->names = {"agents","sampling_time","runge_kutta_45","robot_name","robot_initial_orientation", \
   "robot_waypoints","robot_initial_position","robot_radius","robot_mass","robot_goal_weight", \
-  "robot_obstacle_weight", "robot_social_weight", "robot_velocity", "robot_ignore_obstacles"};
+  "robot_obstacle_weight", "robot_social_weight", "robot_velocity", "robot_ignore_obstacles", "laser_sensor_name"};
   this->actorParamsClient->wait_for_service();
   auto future = this->actorParamsClient->async_send_request(request);
 
@@ -398,6 +443,13 @@ void WorldSFMPlugin::LoadAgentsFromYaml() {
       for (unsigned int j = 0; j <results[13].string_array_value.size(); ++j){
         this->robotIgnoreObs.push_back(results[13].string_array_value[j]);
       }
+    }
+    // Laser name
+    if (results[14].type == rclcpp::PARAMETER_NOT_SET) {
+      this->laserName = "laser";
+      std::cout<<"Laser name not set, setting it to the default value: laser"<<std::endl;
+    } else {
+      this->laserName = results[14].string_value;
     }
 
   } else {
@@ -606,6 +658,41 @@ void WorldSFMPlugin::InitializeActors() {
     }
     this->sfmActors.push_back(agent);
   }
+  // Attach a static cylinder for Laser detection (same size as actor radius)
+  if (this->attachCollisionToActors) {
+    CreateModelForActors();
+  }
+}
+
+////////////////////////////////////////////////
+void WorldSFMPlugin::CreateModelForActors() {
+  for (unsigned int i = 0; i < this->agentModel.size(); ++i) {
+
+    std::string modelName = this->agentNames[i] + "_collision_model";
+    this->actorCollisionNames.push_back(modelName);
+
+    std::string modelString(
+      "<sdf version ='1.6'>\
+        <model name='" + modelName + "'>\
+        <allow_auto_disable>false</allow_auto_disable>\
+          <pose>0 0 -100 0 0 0</pose>\
+          <static>true</static>\
+          <link name='link'>\
+            <collision name='link'>\
+              <pose>0 0 0 -1.5708 0 0</pose>\
+              <geometry>\
+                <cylinder>\
+                  <radius>" + std::to_string(this->agentRadius[i]) + "</radius>\
+                  <length>1.8</length>\
+                </cylinder>\
+              </geometry>\
+            </collision>\
+          </link>\
+        </model>\
+      </sdf>");
+
+    this->world->InsertModelString(modelString);
+  }
 }
 
 ////////////////////////////////////////////////
@@ -620,9 +707,9 @@ void WorldSFMPlugin::InitializeRobot() {
   // TODO: REVIEW THIS PART - Set the initial pose of each actor
   robotPose.Pos().X(std::get<0>(this->robotInitPos));
   robotPose.Pos().Y(std::get<1>(this->robotInitPos));
-  robotPose.Pos().Z(1.01);
-  robotPose.Rot() = ignition::math::Quaterniond(1.5707, 0, this->robotInitYaw + M_PI_2);
-  this->robotModel->SetWorldPose(robotPose, false, false);
+  robotPose.Pos().Z(-0.1);
+  robotPose.Rot() = ignition::math::Quaterniond(1.5707, 0, this->robotInitYaw);
+  this->robotModel->SetWorldPose(robotPose, true, false);
 
   // Initialize the robot as an SFM actor
   ignition::math::Pose3d pose = this->robotModel->WorldPose();
@@ -663,9 +750,68 @@ void WorldSFMPlugin::InitializeRobot() {
   // Generate Ignored Obs vector to use for algorithm
   this->entitiesIgnoreObs = this->agentIgnoreObs;
   this->entitiesIgnoreObs.push_back(this->robotIgnoreObs);
+
   // for (unsigned int i = 0; i < this->sfmEntities.size(); ++i) {
   //   std::cout<<"SFM Entity ID: "<<this->sfmEntities[i].id<<std::endl;
   //   std::cout<<"Model Entity name: "<<this->entitiesModel[i]->GetName()<<std::endl;
+  // }
+
+  // Get the robot laser
+  this->laserSensor = sensors::SensorManager::Instance()->GetSensor(this->laserName);
+  this->laserNode = boost::make_shared<gazebo::transport::Node>();
+  this->laserNode->Init(this->world->Name());
+  this->laserSub = this->laserNode->Subscribe(this->laserSensor->Topic(), &WorldSFMPlugin::LaserCallback, this);
+  //std::cout<<"Laser sensor name: "<<this->laserSensor->Name()<<", Laser sensor type: "<<this->laserSensor->Type()<<", Laser topic: "<<this->laserSensor->Topic()<<std::endl;
+}
+
+////////////////////////////////////////////////
+void WorldSFMPlugin::LaserCallback(ConstLaserScanStampedPtr &msg) {
+  // Erase previous scans
+  this->laserRanges.clear();
+  this->laserObs.clear();
+  // Save laser scans below 2m and their angle
+  auto ls = msg->scan();
+  double min_angle = ls.angle_min();
+  double step = ls.angle_step();
+  for (int i = 0; i < ls.ranges().size(); ++i) {
+    if (ls.ranges(i) < 2.0) {    
+      double range_angle = min_angle + i * step;
+      double yaw = this->robotModel->WorldPose().Rot().Euler().Z();
+
+      double angle = yaw + range_angle;
+      if (angle > M_PI) {
+        angle -= (2 * M_PI);
+      }
+      if (angle < -M_PI) {
+        angle += (2 * M_PI);
+      }
+      // angle = angle * (180 / M_PI);
+      // std::cout<<"Angle of laser"<<i<<": "<<angle<<std::endl;
+      // std::cout<<"Distance of laser"<<i<<": "<<ls.ranges(i)<<std::endl;
+
+      std::tuple<double,double> range(ls.ranges(i), angle); // Polar coordinates
+      // TODO: Compute obstacle based on the position of the laser with respect to the pose of the robot
+      ignition::math::Vector2d obs(ls.ranges(i) * std::cos(angle) + this->robotModel->WorldPose().Pos().X(), ls.ranges(i) * std::sin(angle) + this->robotModel->WorldPose().Pos().Y()); // Cartesian coordinates
+
+      this->laserRanges.push_back(range); 
+      this->laserObs.push_back(obs);
+    }
+  }
+  // // Print closest obstacle based on Laser ranges
+  // ignition::math::Vector2d min_obs;
+  // double min_dist = 2;
+  // double angle;
+  // for (unsigned int i = 0; i < this->laserObs.size(); ++i) {
+  //   if (std::get<0>(this->laserRanges[i]) < min_dist) {
+  //     min_obs = this->laserObs[i];
+  //     min_dist = std::get<0>(this->laserRanges[i]);
+  //     angle = std::get<1>(this->laserRanges[i]);
+  //   }
+  //   if (i == this->laserObs.size() - 1) {
+  //     std::cout<<"Closest obs : "<<min_obs.X()<<","<<min_obs.Y()<<std::endl;
+  //     std::cout<<"Min dist: "<<min_dist<<std::endl;
+  //     std::cout<<"Angle with respect to robot: "<<angle<<std::endl;
+  //   }
   // }
 }
 

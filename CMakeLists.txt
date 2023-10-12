@@ -74,6 +74,15 @@ ament_target_dependencies(VisualizeForcesPlugin
   "gazebo" 
   "gazebo_ros"
 )
+add_library(PedestrianMHSFMPlugin SHARED src/PedestrianMHSFMPlugin.cpp)
+target_include_directories(PedestrianMHSFMPlugin PUBLIC include)
+ament_target_dependencies(PedestrianMHSFMPlugin 
+  "rclcpp" 
+  "gazebo" 
+  "gazebo_ros"
+)
+ament_export_libraries(PedestrianMHSFMPlugin)
+target_link_libraries(PedestrianMHSFMPlugin ${GAZEBO_LIBRARIES}) #${Boost_LIBRARIES
 ament_export_libraries(VisualizeForcesPlugin)
 target_link_libraries(VisualizeForcesPlugin ${GAZEBO_LIBRARIES}) #${Boost_LIBRARIES
 
@@ -92,6 +101,7 @@ ament_export_dependencies(rosidl_default_runtime)
 rosidl_get_typesupport_target(cpp_typesupport_target
   ${PROJECT_NAME} rosidl_typesupport_cpp)
 
+  target_link_libraries(PedestrianMHSFMPlugin "${cpp_typesupport_target}")
 target_link_libraries(PedestrianHSFM2Plugin "${cpp_typesupport_target}")
 target_link_libraries(PedestrianHSFMPlugin "${cpp_typesupport_target}")
 target_link_libraries(PedestrianSFMPlugin "${cpp_typesupport_target}")
@@ -117,6 +127,12 @@ install(TARGETS PedestrianHSFMPlugin
 )
 
 install(TARGETS PedestrianHSFM2Plugin
+  ARCHIVE DESTINATION lib
+  LIBRARY DESTINATION lib
+  RUNTIME DESTINATION bin
+)
+
+install(TARGETS PedestrianMHSFMPlugin
   ARCHIVE DESTINATION lib
   LIBRARY DESTINATION lib
   RUNTIME DESTINATION bin

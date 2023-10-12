@@ -1,0 +1,1774 @@
+<?xml version='1.0' encoding='utf-8'?>
+<sdf version="1.6">
+  <world name="world">
+    <plugin name="gazebo_ros_state" filename="libgazebo_ros_state.so">
+      <ros>
+        <namespace>/demo</namespace>
+        <remapping>model_states:=model_states_demo</remapping>
+        <remapping>link_states:=link_states_demo</remapping>
+      </ros>
+      <update_rate>1.0</update_rate>
+    </plugin>
+    <gui>
+      <camera name='gzclient_camera'>
+        <pose>-4.70385 10.895 16.2659 -0 0.921795 -1.12701</pose>
+      </camera>
+    </gui>
+    <gravity>0 0 -9.8</gravity>
+    <physics default="0" name="default_physics" type="ode">
+      <max_step_size>0.001</max_step_size> <!-- Default: 0.001 -->
+      <real_time_factor>1</real_time_factor>
+      <real_time_update_rate>1000</real_time_update_rate> <!-- Default: 1000 -->
+    </physics>
+    <scene>
+      <ambient>0.6 0.6 0.6 1</ambient>
+      <background>0.4 0.4 0.4 1</background>
+      <shadows>false</shadows>
+    </scene>
+    <include>
+      <uri>model://sun</uri>
+    </include>
+    <include>
+      <uri>model://ground_plane</uri>
+      <pose>0 0 -0.1 0 -0 0</pose>
+    </include>
+
+    <!-- MODELS -->
+    <model name="central_wall_1">
+      <allow_auto_disable>false</allow_auto_disable>
+      <static>true</static>
+      <pose>0 5.5 1.2 0 0 0</pose>
+      <static>true</static>
+      <link name="central_wall_1_link">
+        <collision name="central_wall_1_collision">
+          <pose>0 0 0 0 0 0</pose>
+          <geometry>
+            <box>
+              <size>0.2 9 2.4</size>
+            </box>
+          </geometry>
+        </collision>
+        <visual name="central_wall_1_visual">
+          <pose>0 0 0 0 0 0</pose>
+          <geometry>
+            <box>
+              <size>0.2 9 2.4</size>
+            </box>
+          </geometry>
+        </visual>
+      </link>
+    </model>
+
+    <model name="central_wall_2">
+      <allow_auto_disable>false</allow_auto_disable>
+      <static>true</static>
+      <pose>0 -5.5 1.2 0 0 0</pose>
+      <static>true</static>
+      <link name="central_wall_2_link">
+        <collision name="central_wall_2_collision">
+          <pose>0 0 0 0 0 0</pose>
+          <geometry>
+            <box>
+              <size>0.2 9 2.4</size>
+            </box>
+          </geometry>
+        </collision>
+        <visual name="central_wall_2_visual">
+          <pose>0 0 0 0 0 0</pose>
+          <geometry>
+            <box>
+              <size>0.2 9 2.4</size>
+            </box>
+          </geometry>
+        </visual>
+      </link>
+    </model>
+
+    <model name="architrave_south">
+      <allow_auto_disable>false</allow_auto_disable>
+      <static>true</static>
+      <pose>0 0 2.25 0 0 0</pose>
+      <static>true</static>
+      <link name="architrave_south_link">
+        <collision name="architrave_south_collision">
+          <pose>0 0 0 0 0 0</pose>
+          <geometry>
+            <box>
+              <size>0.2 2 0.3</size>
+            </box>
+          </geometry>
+        </collision>
+        <visual name="architrave_south_visual">
+          <pose>0 0 0 0 0 0</pose>
+          <geometry>
+            <box>
+              <size>0.2 2 0.3</size>
+            </box>
+          </geometry>
+        </visual>
+      </link>
+    </model>
+
+    <!-- ACTORS -->
+    <!-- GROUP1 /////////////////////////////////////////////////////////////////////////////////////////// -->
+    <!-- actor1 -->
+    <actor name="actor1">
+      <pose>-2 0 1.25 0 0 0</pose>
+      <skin>
+        <filename>walk.dae</filename>
+        <scale>1.0</scale>
+      </skin>
+      <animation name="walking">
+        <filename>walk.dae</filename>
+        <scale>1.000000</scale>
+        <interpolate_x>true</interpolate_x>
+      </animation>
+      <plugin name="actor1_plugin" filename="libPedestrianMHSFMPlugin.so">
+        <runge_kutta_45>false</runge_kutta_45>
+        <sampling_time>0.033</sampling_time>
+        <publish_forces>true</publish_forces>
+        <topic_name>forces/actor1</topic_name>
+        <node_name>Actor1</node_name>
+        <velocity>0.9</velocity> 
+        <radius>0.3</radius> 
+        <mass>80</mass> 
+        <relaxation_time>0.5</relaxation_time> 
+        <k_orthogonal>1</k_orthogonal> 
+        <k_damping>500</k_damping> 
+        <k_lambda>0.3</k_lambda> 
+        <alpha>3</alpha> 
+        <group_distance_forward>2</group_distance_forward>
+        <group_distance_orthogonal>3</group_distance_orthogonal> 
+        <k1g>200</k1g> 
+        <k2g>200</k2g> 
+        <Ai>2000</Ai> 
+        <Aw>2000</Aw> 
+        <Bi>0.08</Bi> 
+        <Bw>0.08</Bw>
+        <Ci>1000</Ci>
+        <Cw>1000</Cw>
+        <Di>0.2</Di> 
+        <Dw>0.2</Dw> 
+        <k1>120000</k1> 
+        <k2>240000</k2> 
+        <animation_factor>5.1</animation_factor>
+        <animation_name>walking</animation_name>
+        <people_distance>6.0</people_distance>
+        <group>
+            <model>actor2</model>
+            <model>actor3</model>
+            <model>actor4</model>
+            <model>actor5</model>
+            <model>actor6</model>
+            <model>actor13</model>
+            <model>actor14</model>
+            <model>actor15</model>
+            <model>actor16</model>
+            <model>actor17</model>
+            <model>actor18</model>
+        </group>
+        <ignore_obstacles>
+          <model>ground_plane</model>
+          <model>architrave_south</model>
+        </ignore_obstacles>
+        <trajectory>
+          <cyclic>true</cyclic>
+          <waypoint>-2 0 0</waypoint>
+          <waypoint>0 0 0</waypoint>
+          <waypoint>3 0 0</waypoint>
+          <waypoint>10 0 0</waypoint>
+        </trajectory>
+      </plugin>
+    </actor>
+    <!-- actor2 -->
+    <actor name="actor2">
+      <pose>-2 1 1.25 0 0 0</pose>
+      <skin>
+        <filename>walk.dae</filename>
+        <scale>1.0</scale>
+      </skin>
+      <animation name="walking">
+        <filename>walk.dae</filename>
+        <scale>1.000000</scale>
+        <interpolate_x>true</interpolate_x>
+      </animation>
+      <plugin name="actor2_plugin" filename="libPedestrianMHSFMPlugin.so">
+        <runge_kutta_45>false</runge_kutta_45>
+        <sampling_time>0.033</sampling_time>
+        <publish_forces>true</publish_forces>
+        <topic_name>forces/actor2</topic_name>
+        <node_name>Actor2</node_name>
+        <velocity>0.9</velocity> 
+        <radius>0.3</radius> 
+        <mass>85</mass> 
+        <relaxation_time>0.5</relaxation_time> 
+        <k_orthogonal>1</k_orthogonal> 
+        <k_damping>500</k_damping> 
+        <k_lambda>0.3</k_lambda> 
+        <alpha>3</alpha> 
+        <group_distance_forward>2</group_distance_forward>
+        <group_distance_orthogonal>1</group_distance_orthogonal> 
+        <k1g>200</k1g> 
+        <k2g>200</k2g> 
+        <Ai>2000</Ai> 
+        <Aw>2000</Aw> 
+        <Bi>0.08</Bi> 
+        <Bw>0.08</Bw> 
+        <Ci>1000</Ci>
+        <Cw>1000</Cw>
+        <Di>0.2</Di> 
+        <Dw>0.2</Dw>
+        <k1>120000</k1> 
+        <k2>240000</k2> 
+        <animation_factor>5.1</animation_factor>
+        <animation_name>walking</animation_name>
+        <people_distance>6.0</people_distance>
+        <group>
+            <model>actor1</model>
+            <model>actor3</model>
+            <model>actor4</model>
+            <model>actor5</model>
+            <model>actor6</model>
+            <model>actor13</model>
+            <model>actor14</model>
+            <model>actor15</model>
+            <model>actor16</model>
+            <model>actor17</model>
+            <model>actor18</model>
+        </group>
+        <ignore_obstacles>
+          <model>ground_plane</model>
+          <model>architrave_south</model>
+        </ignore_obstacles>
+        <trajectory>
+          <cyclic>true</cyclic>
+          <waypoint>-2 1 0</waypoint>
+          <waypoint>0 0 0</waypoint>
+          <waypoint>3 0 0</waypoint>
+          <waypoint>10 0 0</waypoint>
+        </trajectory>
+      </plugin>
+    </actor>
+    <!-- actor3 -->
+    <actor name="actor3">
+      <pose>-2 -1 1.25 0 0 0</pose>
+      <skin>
+        <filename>walk.dae</filename>
+        <scale>1.0</scale>
+      </skin>
+      <animation name="walking">
+        <filename>walk.dae</filename>
+        <scale>1.000000</scale>
+        <interpolate_x>true</interpolate_x>
+      </animation>
+      <plugin name="actor3_plugin" filename="libPedestrianMHSFMPlugin.so">
+        <runge_kutta_45>false</runge_kutta_45>
+        <sampling_time>0.033</sampling_time>
+        <publish_forces>true</publish_forces>
+        <topic_name>forces/actor3</topic_name>
+        <node_name>Actor3</node_name>
+        <velocity>0.9</velocity> 
+        <radius>0.3</radius> 
+        <mass>85</mass> 
+        <relaxation_time>0.5</relaxation_time> 
+        <k_orthogonal>1</k_orthogonal> 
+        <k_damping>500</k_damping> 
+        <k_lambda>0.3</k_lambda> 
+        <alpha>3</alpha> 
+        <group_distance_forward>2</group_distance_forward>
+        <group_distance_orthogonal>1</group_distance_orthogonal> 
+        <k1g>200</k1g> 
+        <k2g>200</k2g> 
+        <Ai>2000</Ai> 
+        <Aw>2000</Aw> 
+        <Bi>0.08</Bi> 
+        <Bw>0.08</Bw> 
+        <Ci>1000</Ci>
+        <Cw>1000</Cw>
+        <Di>0.2</Di> 
+        <Dw>0.2</Dw>
+        <k1>120000</k1> 
+        <k2>240000</k2> 
+        <animation_factor>5.1</animation_factor>
+        <animation_name>walking</animation_name>
+        <people_distance>6.0</people_distance>
+        <group>
+            <model>actor1</model>
+            <model>actor2</model>
+            <model>actor4</model>
+            <model>actor5</model>
+            <model>actor6</model>
+            <model>actor13</model>
+            <model>actor14</model>
+            <model>actor15</model>
+            <model>actor16</model>
+            <model>actor17</model>
+            <model>actor18</model>
+        </group>
+        <ignore_obstacles>
+          <model>ground_plane</model>
+          <model>architrave_south</model>
+        </ignore_obstacles>
+        <trajectory>
+          <cyclic>true</cyclic>
+          <waypoint>-2 -1 0</waypoint>
+          <waypoint>0 0 0</waypoint>
+          <waypoint>3 0 0</waypoint>
+          <waypoint>10 0 0</waypoint>
+        </trajectory>
+      </plugin>
+    </actor>
+    <!-- actor4 -->
+    <actor name="actor4">
+      <pose>-3 1 1.25 0 0 0</pose>
+      <skin>
+        <filename>walk.dae</filename>
+        <scale>1.0</scale>
+      </skin>
+      <animation name="walking">
+        <filename>walk.dae</filename>
+        <scale>1.000000</scale>
+        <interpolate_x>true</interpolate_x>
+      </animation>
+      <plugin name="actor4_plugin" filename="libPedestrianMHSFMPlugin.so">
+        <runge_kutta_45>false</runge_kutta_45>
+        <sampling_time>0.033</sampling_time>
+        <publish_forces>true</publish_forces>
+        <topic_name>forces/actor4</topic_name>
+        <node_name>Actor4</node_name>
+        <velocity>0.9</velocity> 
+        <radius>0.3</radius> 
+        <mass>85</mass> 
+        <relaxation_time>0.5</relaxation_time> 
+        <k_orthogonal>1</k_orthogonal> 
+        <k_damping>500</k_damping> 
+        <k_lambda>0.3</k_lambda> 
+        <alpha>3</alpha> 
+        <group_distance_forward>2</group_distance_forward>
+        <group_distance_orthogonal>1</group_distance_orthogonal> 
+        <k1g>200</k1g> 
+        <k2g>200</k2g> 
+        <Ai>2000</Ai> 
+        <Aw>2000</Aw> 
+        <Bi>0.08</Bi> 
+        <Bw>0.08</Bw> 
+        <Ci>1000</Ci>
+        <Cw>1000</Cw>
+        <Di>0.2</Di> 
+        <Dw>0.2</Dw>
+        <k1>120000</k1> 
+        <k2>240000</k2> 
+        <animation_factor>5.1</animation_factor>
+        <animation_name>walking</animation_name>
+        <people_distance>6.0</people_distance>
+        <group>
+            <model>actor1</model>
+            <model>actor2</model>
+            <model>actor3</model>
+            <model>actor5</model>
+            <model>actor6</model>
+            <model>actor13</model>
+            <model>actor14</model>
+            <model>actor15</model>
+            <model>actor16</model>
+            <model>actor17</model>
+            <model>actor18</model>
+        </group>
+        <ignore_obstacles>
+          <model>ground_plane</model>
+          <model>architrave_south</model>
+        </ignore_obstacles>
+        <trajectory>
+          <cyclic>true</cyclic>
+          <waypoint>-3 1 0</waypoint>
+          <waypoint>0 0 0</waypoint>
+          <waypoint>3 0 0</waypoint>
+          <waypoint>10 0 0</waypoint>
+        </trajectory>
+      </plugin>
+    </actor>
+    <!-- actor5 -->
+    <actor name="actor5">
+      <pose>-3 -1 1.25 0 0 0</pose>
+      <skin>
+        <filename>walk.dae</filename>
+        <scale>1.0</scale>
+      </skin>
+      <animation name="walking">
+        <filename>walk.dae</filename>
+        <scale>1.000000</scale>
+        <interpolate_x>true</interpolate_x>
+      </animation>
+      <plugin name="actor5_plugin" filename="libPedestrianMHSFMPlugin.so">
+        <runge_kutta_45>false</runge_kutta_45>
+        <sampling_time>0.033</sampling_time>
+        <publish_forces>true</publish_forces>
+        <topic_name>forces/actor5</topic_name>
+        <node_name>Actor5</node_name>
+        <velocity>0.9</velocity> 
+        <radius>0.3</radius> 
+        <mass>90</mass> 
+        <relaxation_time>0.5</relaxation_time> 
+        <k_orthogonal>1</k_orthogonal> 
+        <k_damping>500</k_damping> 
+        <k_lambda>0.3</k_lambda> 
+        <alpha>3</alpha> 
+        <group_distance_forward>2</group_distance_forward>
+        <group_distance_orthogonal>1</group_distance_orthogonal> 
+        <k1g>200</k1g> 
+        <k2g>200</k2g> 
+        <Ai>2000</Ai> 
+        <Aw>2000</Aw> 
+        <Bi>0.08</Bi> 
+        <Bw>0.08</Bw> 
+        <Ci>1000</Ci>
+        <Cw>1000</Cw>
+        <Di>0.2</Di> 
+        <Dw>0.2</Dw>
+        <k1>120000</k1> 
+        <k2>240000</k2> 
+        <animation_factor>5.1</animation_factor>
+        <animation_name>walking</animation_name>
+        <people_distance>6.0</people_distance>
+        <group>
+            <model>actor1</model>
+            <model>actor2</model>
+            <model>actor3</model>
+            <model>actor4</model>
+            <model>actor6</model>
+            <model>actor13</model>
+            <model>actor14</model>
+            <model>actor15</model>
+            <model>actor16</model>
+            <model>actor17</model>
+            <model>actor18</model>
+        </group>
+        <ignore_obstacles>
+          <model>ground_plane</model>
+          <model>architrave_south</model>
+        </ignore_obstacles>
+        <trajectory>
+          <cyclic>true</cyclic>
+          <waypoint>-3 -1 0</waypoint>
+          <waypoint>0 0 0</waypoint>
+          <waypoint>3 0 0</waypoint>
+          <waypoint>10 0 0</waypoint>
+        </trajectory>
+      </plugin>
+    </actor>
+    <!-- actor6 -->
+    <actor name="actor6">
+      <pose>-3 2 1.25 0 0 0</pose>
+      <skin>
+        <filename>walk.dae</filename>
+        <scale>1.0</scale>
+      </skin>
+      <animation name="walking">
+        <filename>walk.dae</filename>
+        <scale>1.000000</scale>
+        <interpolate_x>true</interpolate_x>
+      </animation>
+      <plugin name="actor6_plugin" filename="libPedestrianMHSFMPlugin.so">
+        <runge_kutta_45>false</runge_kutta_45>
+        <sampling_time>0.033</sampling_time>
+        <publish_forces>true</publish_forces>
+        <topic_name>forces/actor6</topic_name>
+        <node_name>Actor6</node_name>
+        <velocity>0.9</velocity> 
+        <radius>0.3</radius> 
+        <mass>75</mass> 
+        <relaxation_time>0.5</relaxation_time> 
+        <k_orthogonal>1</k_orthogonal> 
+        <k_damping>500</k_damping> 
+        <k_lambda>0.3</k_lambda> 
+        <alpha>3</alpha> 
+        <group_distance_forward>2</group_distance_forward>
+        <group_distance_orthogonal>1</group_distance_orthogonal> 
+        <k1g>200</k1g> 
+        <k2g>200</k2g> 
+        <Ai>2000</Ai> 
+        <Aw>2000</Aw> 
+        <Bi>0.08</Bi> 
+        <Bw>0.08</Bw> 
+        <Ci>1000</Ci>
+        <Cw>1000</Cw>
+        <Di>0.2</Di> 
+        <Dw>0.2</Dw>
+        <k1>120000</k1> 
+        <k2>240000</k2> 
+        <animation_factor>5.1</animation_factor>
+        <animation_name>walking</animation_name>
+        <people_distance>6.0</people_distance>
+        <group>
+            <model>actor1</model>
+            <model>actor2</model>
+            <model>actor3</model>
+            <model>actor4</model>
+            <model>actor5</model>
+            <model>actor13</model>
+            <model>actor14</model>
+            <model>actor15</model>
+            <model>actor16</model>
+            <model>actor17</model>
+            <model>actor18</model>
+        </group>
+        <ignore_obstacles>
+          <model>ground_plane</model>
+          <model>architrave_south</model>
+        </ignore_obstacles>
+        <trajectory>
+          <cyclic>true</cyclic>
+          <waypoint>-3 2 0</waypoint>
+          <waypoint>0 0 0</waypoint>
+          <waypoint>3 0 0</waypoint>
+          <waypoint>10 0 0</waypoint>
+        </trajectory>
+      </plugin>
+    </actor>
+    <!-- actor13 -->
+    <actor name="actor13">
+      <pose>-3 -2 1.25 0 0 0</pose>
+      <skin>
+        <filename>walk.dae</filename>
+        <scale>1.0</scale>
+      </skin>
+      <animation name="walking">
+        <filename>walk.dae</filename>
+        <scale>1.000000</scale>
+        <interpolate_x>true</interpolate_x>
+      </animation>
+      <plugin name="actor13_plugin" filename="libPedestrianMHSFMPlugin.so">
+        <runge_kutta_45>false</runge_kutta_45>
+        <sampling_time>0.033</sampling_time>
+        <publish_forces>true</publish_forces>
+        <topic_name>forces/actor13</topic_name>
+        <node_name>Actor13</node_name>
+        <velocity>0.9</velocity> 
+        <radius>0.3</radius> 
+        <mass>75</mass> 
+        <relaxation_time>0.5</relaxation_time> 
+        <k_orthogonal>1</k_orthogonal> 
+        <k_damping>500</k_damping> 
+        <k_lambda>0.3</k_lambda> 
+        <alpha>3</alpha> 
+        <group_distance_forward>2</group_distance_forward>
+        <group_distance_orthogonal>1</group_distance_orthogonal> 
+        <k1g>200</k1g> 
+        <k2g>200</k2g> 
+        <Ai>2000</Ai> 
+        <Aw>2000</Aw> 
+        <Bi>0.08</Bi> 
+        <Bw>0.08</Bw> 
+        <Ci>1000</Ci>
+        <Cw>1000</Cw>
+        <Di>0.2</Di> 
+        <Dw>0.2</Dw>
+        <k1>120000</k1> 
+        <k2>240000</k2> 
+        <animation_factor>5.1</animation_factor>
+        <animation_name>walking</animation_name>
+        <people_distance>6.0</people_distance>
+        <group>
+            <model>actor1</model>
+            <model>actor2</model>
+            <model>actor3</model>
+            <model>actor4</model>
+            <model>actor5</model>
+            <model>actor6</model>
+            <model>actor14</model>
+            <model>actor15</model>
+            <model>actor16</model>
+            <model>actor17</model>
+            <model>actor18</model>
+        </group>
+        <ignore_obstacles>
+          <model>ground_plane</model>
+          <model>architrave_south</model>
+        </ignore_obstacles>
+        <trajectory>
+          <cyclic>true</cyclic>
+          <waypoint>-3 -2 0</waypoint>
+          <waypoint>0 0 0</waypoint>
+          <waypoint>3 0 0</waypoint>
+          <waypoint>10 0 0</waypoint>
+        </trajectory>
+      </plugin>
+    </actor>
+    <!-- actor14 -->
+    <actor name="actor14">
+      <pose>-4 -1 1.25 0 0 0</pose>
+      <skin>
+        <filename>walk.dae</filename>
+        <scale>1.0</scale>
+      </skin>
+      <animation name="walking">
+        <filename>walk.dae</filename>
+        <scale>1.000000</scale>
+        <interpolate_x>true</interpolate_x>
+      </animation>
+      <plugin name="actor14_plugin" filename="libPedestrianMHSFMPlugin.so">
+        <runge_kutta_45>false</runge_kutta_45>
+        <sampling_time>0.033</sampling_time>
+        <publish_forces>true</publish_forces>
+        <topic_name>forces/actor14</topic_name>
+        <node_name>Actor14</node_name>
+        <velocity>0.9</velocity> 
+        <radius>0.3</radius> 
+        <mass>75</mass> 
+        <relaxation_time>0.5</relaxation_time> 
+        <k_orthogonal>1</k_orthogonal> 
+        <k_damping>500</k_damping> 
+        <k_lambda>0.3</k_lambda> 
+        <alpha>3</alpha> 
+        <group_distance_forward>2</group_distance_forward>
+        <group_distance_orthogonal>1</group_distance_orthogonal> 
+        <k1g>200</k1g> 
+        <k2g>200</k2g> 
+        <Ai>2000</Ai> 
+        <Aw>2000</Aw> 
+        <Bi>0.08</Bi> 
+        <Bw>0.08</Bw> 
+        <Ci>1000</Ci>
+        <Cw>1000</Cw>
+        <Di>0.2</Di> 
+        <Dw>0.2</Dw>
+        <k1>120000</k1> 
+        <k2>240000</k2> 
+        <animation_factor>5.1</animation_factor>
+        <animation_name>walking</animation_name>
+        <people_distance>6.0</people_distance>
+        <group>
+            <model>actor1</model>
+            <model>actor2</model>
+            <model>actor3</model>
+            <model>actor4</model>
+            <model>actor5</model>
+            <model>actor6</model>
+            <model>actor13</model>
+            <model>actor15</model>
+            <model>actor16</model>
+            <model>actor17</model>
+            <model>actor18</model>
+        </group>
+        <ignore_obstacles>
+          <model>ground_plane</model>
+          <model>architrave_south</model>
+        </ignore_obstacles>
+        <trajectory>
+          <cyclic>true</cyclic>
+          <waypoint>-4 -1 0</waypoint>
+          <waypoint>0 0 0</waypoint>
+          <waypoint>3 0 0</waypoint>
+          <waypoint>10 0 0</waypoint>
+        </trajectory>
+      </plugin>
+    </actor>
+    <!-- actor15 -->
+    <actor name="actor15">
+      <pose>-4 -2 1.25 0 0 0</pose>
+      <skin>
+        <filename>walk.dae</filename>
+        <scale>1.0</scale>
+      </skin>
+      <animation name="walking">
+        <filename>walk.dae</filename>
+        <scale>1.000000</scale>
+        <interpolate_x>true</interpolate_x>
+      </animation>
+      <plugin name="actor15_plugin" filename="libPedestrianMHSFMPlugin.so">
+        <runge_kutta_45>false</runge_kutta_45>
+        <sampling_time>0.033</sampling_time>
+        <publish_forces>true</publish_forces>
+        <topic_name>forces/actor15</topic_name>
+        <node_name>Actor15</node_name>
+        <velocity>0.9</velocity> 
+        <radius>0.3</radius> 
+        <mass>75</mass> 
+        <relaxation_time>0.5</relaxation_time> 
+        <k_orthogonal>1</k_orthogonal> 
+        <k_damping>500</k_damping> 
+        <k_lambda>0.3</k_lambda> 
+        <alpha>3</alpha> 
+        <group_distance_forward>2</group_distance_forward>
+        <group_distance_orthogonal>1</group_distance_orthogonal> 
+        <k1g>200</k1g> 
+        <k2g>200</k2g> 
+        <Ai>2000</Ai> 
+        <Aw>2000</Aw> 
+        <Bi>0.08</Bi> 
+        <Bw>0.08</Bw> 
+        <Ci>1000</Ci>
+        <Cw>1000</Cw>
+        <Di>0.2</Di> 
+        <Dw>0.2</Dw>
+        <k1>120000</k1> 
+        <k2>240000</k2> 
+        <animation_factor>5.1</animation_factor>
+        <animation_name>walking</animation_name>
+        <people_distance>6.0</people_distance>
+        <group>
+            <model>actor1</model>
+            <model>actor2</model>
+            <model>actor3</model>
+            <model>actor4</model>
+            <model>actor5</model>
+            <model>actor6</model>
+            <model>actor13</model>
+            <model>actor14</model>
+            <model>actor16</model>
+            <model>actor17</model>
+            <model>actor18</model>
+        </group>
+        <ignore_obstacles>
+          <model>ground_plane</model>
+          <model>architrave_south</model>
+        </ignore_obstacles>
+        <trajectory>
+          <cyclic>true</cyclic>
+          <waypoint>-4 -2 0</waypoint>
+          <waypoint>0 0 0</waypoint>
+          <waypoint>3 0 0</waypoint>
+          <waypoint>10 0 0</waypoint>
+        </trajectory>
+      </plugin>
+    </actor>
+    <!-- actor16 -->
+    <actor name="actor16">
+      <pose>-4 1 1.25 0 0 0</pose>
+      <skin>
+        <filename>walk.dae</filename>
+        <scale>1.0</scale>
+      </skin>
+      <animation name="walking">
+        <filename>walk.dae</filename>
+        <scale>1.000000</scale>
+        <interpolate_x>true</interpolate_x>
+      </animation>
+      <plugin name="actor16_plugin" filename="libPedestrianMHSFMPlugin.so">
+        <runge_kutta_45>false</runge_kutta_45>
+        <sampling_time>0.033</sampling_time>
+        <publish_forces>true</publish_forces>
+        <topic_name>forces/actor16</topic_name>
+        <node_name>Actor16</node_name>
+        <velocity>0.9</velocity> 
+        <radius>0.3</radius> 
+        <mass>75</mass> 
+        <relaxation_time>0.5</relaxation_time> 
+        <k_orthogonal>1</k_orthogonal> 
+        <k_damping>500</k_damping> 
+        <k_lambda>0.3</k_lambda> 
+        <alpha>3</alpha> 
+        <group_distance_forward>2</group_distance_forward>
+        <group_distance_orthogonal>1</group_distance_orthogonal> 
+        <k1g>200</k1g> 
+        <k2g>200</k2g> 
+        <Ai>2000</Ai> 
+        <Aw>2000</Aw> 
+        <Bi>0.08</Bi> 
+        <Bw>0.08</Bw> 
+        <Ci>1000</Ci>
+        <Cw>1000</Cw>
+        <Di>0.2</Di> 
+        <Dw>0.2</Dw>
+        <k1>120000</k1> 
+        <k2>240000</k2> 
+        <animation_factor>5.1</animation_factor>
+        <animation_name>walking</animation_name>
+        <people_distance>6.0</people_distance>
+        <group>
+            <model>actor1</model>
+            <model>actor2</model>
+            <model>actor3</model>
+            <model>actor4</model>
+            <model>actor5</model>
+            <model>actor6</model>
+            <model>actor13</model>
+            <model>actor14</model>
+            <model>actor15</model>
+            <model>actor17</model>
+            <model>actor18</model>
+        </group>
+        <ignore_obstacles>
+          <model>ground_plane</model>
+          <model>architrave_south</model>
+        </ignore_obstacles>
+        <trajectory>
+          <cyclic>true</cyclic>
+          <waypoint>-4 1 0</waypoint>
+          <waypoint>0 0 0</waypoint>
+          <waypoint>3 0 0</waypoint>
+          <waypoint>10 0 0</waypoint>
+        </trajectory>
+      </plugin>
+    </actor>
+    <!-- actor17 -->
+    <actor name="actor17">
+      <pose>-4 2 1.25 0 0 0</pose>
+      <skin>
+        <filename>walk.dae</filename>
+        <scale>1.0</scale>
+      </skin>
+      <animation name="walking">
+        <filename>walk.dae</filename>
+        <scale>1.000000</scale>
+        <interpolate_x>true</interpolate_x>
+      </animation>
+      <plugin name="actor17_plugin" filename="libPedestrianMHSFMPlugin.so">
+        <runge_kutta_45>false</runge_kutta_45>
+        <sampling_time>0.033</sampling_time>
+        <publish_forces>true</publish_forces>
+        <topic_name>forces/actor17</topic_name>
+        <node_name>Actor17</node_name>
+        <velocity>0.9</velocity> 
+        <radius>0.3</radius> 
+        <mass>75</mass> 
+        <relaxation_time>0.5</relaxation_time> 
+        <k_orthogonal>1</k_orthogonal> 
+        <k_damping>500</k_damping> 
+        <k_lambda>0.3</k_lambda> 
+        <alpha>3</alpha> 
+        <group_distance_forward>2</group_distance_forward>
+        <group_distance_orthogonal>1</group_distance_orthogonal> 
+        <k1g>200</k1g> 
+        <k2g>200</k2g> 
+        <Ai>2000</Ai> 
+        <Aw>2000</Aw> 
+        <Bi>0.08</Bi> 
+        <Bw>0.08</Bw> 
+        <Ci>1000</Ci>
+        <Cw>1000</Cw>
+        <Di>0.2</Di> 
+        <Dw>0.2</Dw>
+        <k1>120000</k1> 
+        <k2>240000</k2> 
+        <animation_factor>5.1</animation_factor>
+        <animation_name>walking</animation_name>
+        <people_distance>6.0</people_distance>
+        <group>
+            <model>actor1</model>
+            <model>actor2</model>
+            <model>actor3</model>
+            <model>actor4</model>
+            <model>actor5</model>
+            <model>actor6</model>
+            <model>actor13</model>
+            <model>actor14</model>
+            <model>actor15</model>
+            <model>actor16</model>
+            <model>actor18</model>
+        </group>
+        <ignore_obstacles>
+          <model>ground_plane</model>
+          <model>architrave_south</model>
+        </ignore_obstacles>
+        <trajectory>
+          <cyclic>true</cyclic>
+          <waypoint>-4 2 0</waypoint>
+          <waypoint>0 0 0</waypoint>
+          <waypoint>3 0 0</waypoint>
+          <waypoint>10 0 0</waypoint>
+        </trajectory>
+      </plugin>
+    </actor>
+    <!-- actor18 -->
+    <actor name="actor18">
+      <pose>-5 0 1.25 0 0 0</pose>
+      <skin>
+        <filename>walk.dae</filename>
+        <scale>1.0</scale>
+      </skin>
+      <animation name="walking">
+        <filename>walk.dae</filename>
+        <scale>1.000000</scale>
+        <interpolate_x>true</interpolate_x>
+      </animation>
+      <plugin name="actor18_plugin" filename="libPedestrianMHSFMPlugin.so">
+        <runge_kutta_45>false</runge_kutta_45>
+        <sampling_time>0.033</sampling_time>
+        <publish_forces>true</publish_forces>
+        <topic_name>forces/actor18</topic_name>
+        <node_name>Actor18</node_name>
+        <velocity>0.9</velocity> 
+        <radius>0.3</radius> 
+        <mass>75</mass> 
+        <relaxation_time>0.5</relaxation_time> 
+        <k_orthogonal>1</k_orthogonal> 
+        <k_damping>500</k_damping> 
+        <k_lambda>0.3</k_lambda> 
+        <alpha>3</alpha> 
+        <group_distance_forward>2</group_distance_forward>
+        <group_distance_orthogonal>1</group_distance_orthogonal> 
+        <k1g>200</k1g> 
+        <k2g>200</k2g> 
+        <Ai>2000</Ai> 
+        <Aw>2000</Aw> 
+        <Bi>0.08</Bi> 
+        <Bw>0.08</Bw> 
+        <Ci>1000</Ci>
+        <Cw>1000</Cw>
+        <Di>0.2</Di> 
+        <Dw>0.2</Dw>
+        <k1>120000</k1> 
+        <k2>240000</k2> 
+        <animation_factor>5.1</animation_factor>
+        <animation_name>walking</animation_name>
+        <people_distance>6.0</people_distance>
+        <group>
+            <model>actor1</model>
+            <model>actor2</model>
+            <model>actor3</model>
+            <model>actor4</model>
+            <model>actor5</model>
+            <model>actor6</model>
+            <model>actor13</model>
+            <model>actor14</model>
+            <model>actor15</model>
+            <model>actor16</model>
+            <model>actor17</model>
+        </group>
+        <ignore_obstacles>
+          <model>ground_plane</model>
+          <model>architrave_south</model>
+        </ignore_obstacles>
+        <trajectory>
+          <cyclic>true</cyclic>
+          <waypoint>-5 0 0</waypoint>
+          <waypoint>0 0 0</waypoint>
+          <waypoint>3 0 0</waypoint>
+          <waypoint>10 0 0</waypoint>
+        </trajectory>
+      </plugin>
+    </actor>
+
+    <!-- GROUP2 /////////////////////////////////////////////////////////////////////////////////////////// -->
+    <!-- actor7 -->
+    <actor name="actor7">
+      <pose>2 2 1.25 0 0 0</pose>
+      <skin>
+        <filename>walk.dae</filename>
+        <scale>1.0</scale>
+      </skin>
+      <animation name="walking">
+        <filename>walk.dae</filename>
+        <scale>1.000000</scale>
+        <interpolate_x>true</interpolate_x>
+      </animation>
+      <plugin name="actor7_plugin" filename="libPedestrianMHSFMPlugin.so">
+        <runge_kutta_45>false</runge_kutta_45>
+        <sampling_time>0.033</sampling_time>
+        <publish_forces>true</publish_forces>
+        <topic_name>forces/actor7</topic_name>
+        <node_name>Actor7</node_name>
+        <velocity>0.9</velocity> 
+        <radius>0.3</radius> 
+        <mass>90</mass> 
+        <relaxation_time>0.5</relaxation_time> 
+        <k_orthogonal>1</k_orthogonal> 
+        <k_damping>500</k_damping> 
+        <k_lambda>0.3</k_lambda> 
+        <alpha>3</alpha> 
+        <group_distance_forward>2</group_distance_forward>
+        <group_distance_orthogonal>3</group_distance_orthogonal> 
+        <k1g>200</k1g> 
+        <k2g>200</k2g> 
+        <Ai>2000</Ai> 
+        <Aw>2000</Aw> 
+        <Bi>0.08</Bi> 
+        <Bw>0.08</Bw> 
+        <Ci>1000</Ci>
+        <Cw>1000</Cw>
+        <Di>0.2</Di> 
+        <Dw>0.2</Dw>
+        <k1>120000</k1> 
+        <k2>240000</k2> 
+        <animation_factor>5.1</animation_factor>
+        <animation_name>walking</animation_name>
+        <people_distance>6.0</people_distance>
+        <group>
+            <model>actor8</model>
+            <model>actor9</model>
+            <model>actor10</model>
+            <model>actor11</model>
+            <model>actor12</model>
+            <model>actor19</model>
+            <model>actor20</model>
+            <model>actor21</model>
+            <model>actor22</model>
+            <model>actor23</model>
+            <model>actor24</model>
+        </group>
+        <ignore_obstacles>
+          <model>ground_plane</model>
+          <model>architrave_south</model>
+        </ignore_obstacles>
+        <trajectory>
+          <cyclic>true</cyclic>
+          <waypoint>2 2 0</waypoint>
+          <waypoint>0 0 0</waypoint>
+          <waypoint>-3 0 0</waypoint>
+          <waypoint>-10 0 0</waypoint>
+        </trajectory>
+      </plugin>
+    </actor>
+    <!-- actor8 -->
+    <actor name="actor8">
+      <pose>2 3 1.25 0 0 0</pose>
+      <skin>
+        <filename>walk.dae</filename>
+        <scale>1.0</scale>
+      </skin>
+      <animation name="walking">
+        <filename>walk.dae</filename>
+        <scale>1.000000</scale>
+        <interpolate_x>true</interpolate_x>
+      </animation>
+      <plugin name="actor8_plugin" filename="libPedestrianMHSFMPlugin.so">
+        <runge_kutta_45>false</runge_kutta_45>
+        <sampling_time>0.033</sampling_time>
+        <publish_forces>true</publish_forces>
+        <topic_name>forces/actor8</topic_name>
+        <node_name>Actor8</node_name>
+        <velocity>0.9</velocity> 
+        <radius>0.3</radius> 
+        <mass>85</mass> 
+        <relaxation_time>0.5</relaxation_time> 
+        <k_orthogonal>1</k_orthogonal> 
+        <k_damping>500</k_damping> 
+        <k_lambda>0.3</k_lambda> 
+        <alpha>3</alpha> 
+        <group_distance_forward>2</group_distance_forward>
+        <group_distance_orthogonal>1</group_distance_orthogonal> 
+        <k1g>200</k1g> 
+        <k2g>200</k2g> 
+        <Ai>2000</Ai> 
+        <Aw>2000</Aw> 
+        <Bi>0.08</Bi> 
+        <Bw>0.08</Bw> 
+        <Ci>1000</Ci>
+        <Cw>1000</Cw>
+        <Di>0.2</Di> 
+        <Dw>0.2</Dw>
+        <k1>120000</k1> 
+        <k2>240000</k2> 
+        <animation_factor>5.1</animation_factor>
+        <animation_name>walking</animation_name>
+        <people_distance>6.0</people_distance>
+        <group>
+            <model>actor7</model>
+            <model>actor9</model>
+            <model>actor10</model>
+            <model>actor11</model>
+            <model>actor12</model>
+            <model>actor19</model>
+            <model>actor20</model>
+            <model>actor21</model>
+            <model>actor22</model>
+            <model>actor23</model>
+            <model>actor24</model>
+        </group>
+        <ignore_obstacles>
+          <model>ground_plane</model>
+          <model>architrave_south</model>
+        </ignore_obstacles>
+        <trajectory>
+          <cyclic>true</cyclic>
+          <waypoint>2 3 0</waypoint>
+          <waypoint>0 0 0</waypoint>
+          <waypoint>-3 0 0</waypoint>
+          <waypoint>-10 0 0</waypoint>
+        </trajectory>
+      </plugin>
+    </actor>
+    <!-- actor9 -->
+    <actor name="actor9">
+      <pose>3 3 1.25 0 0 0</pose>
+      <skin>
+        <filename>walk.dae</filename>
+        <scale>1.0</scale>
+      </skin>
+      <animation name="walking">
+        <filename>walk.dae</filename>
+        <scale>1.000000</scale>
+        <interpolate_x>true</interpolate_x>
+      </animation>
+      <plugin name="actor9_plugin" filename="libPedestrianMHSFMPlugin.so">
+        <runge_kutta_45>false</runge_kutta_45>
+        <sampling_time>0.033</sampling_time>
+        <publish_forces>true</publish_forces>
+        <topic_name>forces/actor9</topic_name>
+        <node_name>Actor9</node_name>
+        <velocity>0.9</velocity> 
+        <radius>0.3</radius> 
+        <mass>85</mass> 
+        <relaxation_time>0.5</relaxation_time> 
+        <k_orthogonal>1</k_orthogonal> 
+        <k_damping>500</k_damping> 
+        <k_lambda>0.3</k_lambda> 
+        <alpha>3</alpha> 
+        <group_distance_forward>2</group_distance_forward>
+        <group_distance_orthogonal>1</group_distance_orthogonal> 
+        <k1g>200</k1g> 
+        <k2g>200</k2g> 
+        <Ai>2000</Ai> 
+        <Aw>2000</Aw> 
+        <Bi>0.08</Bi> 
+        <Bw>0.08</Bw> 
+        <Ci>1000</Ci>
+        <Cw>1000</Cw>
+        <Di>0.2</Di> 
+        <Dw>0.2</Dw>
+        <k1>120000</k1> 
+        <k2>240000</k2> 
+        <animation_factor>5.1</animation_factor>
+        <animation_name>walking</animation_name>
+        <people_distance>6.0</people_distance>
+        <group>
+            <model>actor8</model>
+            <model>actor7</model>
+            <model>actor10</model>
+            <model>actor11</model>
+            <model>actor12</model>
+            <model>actor19</model>
+            <model>actor20</model>
+            <model>actor21</model>
+            <model>actor22</model>
+            <model>actor23</model>
+            <model>actor24</model>
+        </group>
+        <ignore_obstacles>
+          <model>ground_plane</model>
+          <model>architrave_south</model>
+        </ignore_obstacles>
+        <trajectory>
+          <cyclic>true</cyclic>
+          <waypoint>3 3 0</waypoint>
+          <waypoint>0 0 0</waypoint>
+          <waypoint>-3 0 0</waypoint>
+          <waypoint>-10 0 0</waypoint>
+        </trajectory>
+      </plugin>
+    </actor>
+    <!-- actor10 -->
+    <actor name="actor10">
+      <pose>1 2 1.25 0 0 0</pose>
+      <skin>
+        <filename>walk.dae</filename>
+        <scale>1.0</scale>
+      </skin>
+      <animation name="walking">
+        <filename>walk.dae</filename>
+        <scale>1.000000</scale>
+        <interpolate_x>true</interpolate_x>
+      </animation>
+      <plugin name="actor10_plugin" filename="libPedestrianMHSFMPlugin.so">
+        <runge_kutta_45>false</runge_kutta_45>
+        <sampling_time>0.033</sampling_time>
+        <publish_forces>true</publish_forces>
+        <topic_name>forces/actor10</topic_name>
+        <node_name>Actor10</node_name>
+        <velocity>0.9</velocity> 
+        <radius>0.3</radius> 
+        <mass>85</mass> 
+        <relaxation_time>0.5</relaxation_time> 
+        <k_orthogonal>1</k_orthogonal> 
+        <k_damping>500</k_damping> 
+        <k_lambda>0.3</k_lambda> 
+        <alpha>3</alpha> 
+        <group_distance_forward>2</group_distance_forward>
+        <group_distance_orthogonal>1</group_distance_orthogonal> 
+        <k1g>200</k1g> 
+        <k2g>200</k2g> 
+        <Ai>2000</Ai> 
+        <Aw>2000</Aw> 
+        <Bi>0.08</Bi> 
+        <Bw>0.08</Bw> 
+        <Ci>1000</Ci>
+        <Cw>1000</Cw>
+        <Di>0.2</Di> 
+        <Dw>0.2</Dw>
+        <k1>120000</k1> 
+        <k2>240000</k2> 
+        <animation_factor>5.1</animation_factor>
+        <animation_name>walking</animation_name>
+        <people_distance>6.0</people_distance>
+        <group>
+            <model>actor8</model>
+            <model>actor9</model>
+            <model>actor7</model>
+            <model>actor11</model>
+            <model>actor12</model>
+            <model>actor19</model>
+            <model>actor20</model>
+            <model>actor21</model>
+            <model>actor22</model>
+            <model>actor23</model>
+            <model>actor24</model>
+        </group>
+        <ignore_obstacles>
+          <model>ground_plane</model>
+          <model>architrave_south</model>
+        </ignore_obstacles>
+        <trajectory>
+          <cyclic>true</cyclic>
+          <waypoint>1 2 0</waypoint>
+          <waypoint>0 0 0</waypoint>
+          <waypoint>-3 0 0</waypoint>
+          <waypoint>-10 0 0</waypoint>
+        </trajectory>
+      </plugin>
+    </actor>
+    <!-- actor11 -->
+    <actor name="actor11">
+      <pose>1 3 1.25 0 0 0</pose>
+      <skin>
+        <filename>walk.dae</filename>
+        <scale>1.0</scale>
+      </skin>
+      <animation name="walking">
+        <filename>walk.dae</filename>
+        <scale>1.000000</scale>
+        <interpolate_x>true</interpolate_x>
+      </animation>
+      <plugin name="actor11_plugin" filename="libPedestrianMHSFMPlugin.so">
+        <runge_kutta_45>false</runge_kutta_45>
+        <sampling_time>0.033</sampling_time>
+        <publish_forces>true</publish_forces>
+        <topic_name>forces/actor11</topic_name>
+        <node_name>Actor11</node_name>
+        <velocity>0.9</velocity> 
+        <radius>0.3</radius> 
+        <mass>75</mass> 
+        <relaxation_time>0.5</relaxation_time> 
+        <k_orthogonal>1</k_orthogonal> 
+        <k_damping>500</k_damping> 
+        <k_lambda>0.3</k_lambda> 
+        <alpha>3</alpha> 
+        <group_distance_forward>2</group_distance_forward>
+        <group_distance_orthogonal>1</group_distance_orthogonal> 
+        <k1g>200</k1g> 
+        <k2g>200</k2g> 
+        <Ai>2000</Ai> 
+        <Aw>2000</Aw> 
+        <Bi>0.08</Bi> 
+        <Bw>0.08</Bw> 
+        <Ci>1000</Ci>
+        <Cw>1000</Cw>
+        <Di>0.2</Di> 
+        <Dw>0.2</Dw>
+        <k1>120000</k1> 
+        <k2>240000</k2> 
+        <animation_factor>5.1</animation_factor>
+        <animation_name>walking</animation_name>
+        <people_distance>6.0</people_distance>
+        <group>
+            <model>actor8</model>
+            <model>actor9</model>
+            <model>actor10</model>
+            <model>actor7</model>
+            <model>actor12</model>
+            <model>actor19</model>
+            <model>actor20</model>
+            <model>actor21</model>
+            <model>actor22</model>
+            <model>actor23</model>
+            <model>actor24</model>
+        </group>
+        <ignore_obstacles>
+          <model>ground_plane</model>
+          <model>architrave_south</model>
+        </ignore_obstacles>
+        <trajectory>
+          <cyclic>true</cyclic>
+          <waypoint>1 3 0</waypoint>
+          <waypoint>0 0 0</waypoint>
+          <waypoint>-3 0 0</waypoint>
+          <waypoint>-10 0 0</waypoint>
+        </trajectory>
+      </plugin>
+    </actor>
+    <!-- actor12 -->
+    <actor name="actor12">
+      <pose>2 4 1.25 0 0 0</pose>
+      <skin>
+        <filename>walk.dae</filename>
+        <scale>1.0</scale>
+      </skin>
+      <animation name="walking">
+        <filename>walk.dae</filename>
+        <scale>1.000000</scale>
+        <interpolate_x>true</interpolate_x>
+      </animation>
+      <plugin name="actor12_plugin" filename="libPedestrianMHSFMPlugin.so">
+        <runge_kutta_45>false</runge_kutta_45>
+        <sampling_time>0.033</sampling_time>
+        <publish_forces>true</publish_forces>
+        <topic_name>forces/actor12</topic_name>
+        <node_name>Actor12</node_name>
+        <velocity>0.9</velocity> 
+        <radius>0.3</radius> 
+        <mass>75</mass> 
+        <relaxation_time>0.5</relaxation_time> 
+        <k_orthogonal>1</k_orthogonal> 
+        <k_damping>500</k_damping> 
+        <k_lambda>0.3</k_lambda> 
+        <alpha>3</alpha> 
+        <group_distance_forward>2</group_distance_forward>
+        <group_distance_orthogonal>1</group_distance_orthogonal> 
+        <k1g>200</k1g> 
+        <k2g>200</k2g> 
+        <Ai>2000</Ai> 
+        <Aw>2000</Aw> 
+        <Bi>0.08</Bi> 
+        <Bw>0.08</Bw> 
+        <Ci>1000</Ci>
+        <Cw>1000</Cw>
+        <Di>0.2</Di> 
+        <Dw>0.2</Dw>
+        <k1>120000</k1> 
+        <k2>240000</k2> 
+        <animation_factor>5.1</animation_factor>
+        <animation_name>walking</animation_name>
+        <people_distance>6.0</people_distance>
+        <group>
+            <model>actor8</model>
+            <model>actor9</model>
+            <model>actor10</model>
+            <model>actor11</model>
+            <model>actor7</model>
+            <model>actor19</model>
+            <model>actor20</model>
+            <model>actor21</model>
+            <model>actor22</model>
+            <model>actor23</model>
+            <model>actor24</model>
+        </group>
+        <ignore_obstacles>
+          <model>ground_plane</model>
+          <model>architrave_south</model>
+        </ignore_obstacles>
+        <trajectory>
+          <cyclic>true</cyclic>
+          <waypoint>2 4 0</waypoint>
+          <waypoint>0 0 0</waypoint>
+          <waypoint>-3 0 0</waypoint>
+          <waypoint>-10 0 0</waypoint>
+        </trajectory>
+      </plugin>
+    </actor>
+    <!-- actor19 -->
+    <actor name="actor19">
+      <pose>2 -2 1.25 0 0 0</pose>
+      <skin>
+        <filename>walk.dae</filename>
+        <scale>1.0</scale>
+      </skin>
+      <animation name="walking">
+        <filename>walk.dae</filename>
+        <scale>1.000000</scale>
+        <interpolate_x>true</interpolate_x>
+      </animation>
+      <plugin name="actor19_plugin" filename="libPedestrianMHSFMPlugin.so">
+        <runge_kutta_45>false</runge_kutta_45>
+        <sampling_time>0.033</sampling_time>
+        <publish_forces>true</publish_forces>
+        <topic_name>forces/actor19</topic_name>
+        <node_name>Actor19</node_name>
+        <velocity>0.9</velocity> 
+        <radius>0.3</radius> 
+        <mass>90</mass> 
+        <relaxation_time>0.5</relaxation_time> 
+        <k_orthogonal>1</k_orthogonal> 
+        <k_damping>500</k_damping> 
+        <k_lambda>0.3</k_lambda> 
+        <alpha>3</alpha> 
+        <group_distance_forward>2</group_distance_forward>
+        <group_distance_orthogonal>3</group_distance_orthogonal> 
+        <k1g>200</k1g> 
+        <k2g>200</k2g> 
+        <Ai>2000</Ai> 
+        <Aw>2000</Aw> 
+        <Bi>0.08</Bi> 
+        <Bw>0.08</Bw> 
+        <Ci>1000</Ci>
+        <Cw>1000</Cw>
+        <Di>0.2</Di> 
+        <Dw>0.2</Dw>
+        <k1>120000</k1> 
+        <k2>240000</k2> 
+        <animation_factor>5.1</animation_factor>
+        <animation_name>walking</animation_name>
+        <people_distance>6.0</people_distance>
+        <group>
+            <model>actor8</model>
+            <model>actor9</model>
+            <model>actor10</model>
+            <model>actor11</model>
+            <model>actor12</model>
+            <model>actor7</model>
+            <model>actor20</model>
+            <model>actor21</model>
+            <model>actor22</model>
+            <model>actor23</model>
+            <model>actor24</model>
+        </group>
+        <ignore_obstacles>
+          <model>ground_plane</model>
+          <model>architrave_south</model>
+        </ignore_obstacles>
+        <trajectory>
+          <cyclic>true</cyclic>
+          <waypoint>2 -2 0</waypoint>
+          <waypoint>0 0 0</waypoint>
+          <waypoint>-3 0 0</waypoint>
+          <waypoint>-10 0 0</waypoint>
+        </trajectory>
+      </plugin>
+    </actor>
+    <!-- actor20 -->
+    <actor name="actor20">
+      <pose>2 -3 1.25 0 0 0</pose>
+      <skin>
+        <filename>walk.dae</filename>
+        <scale>1.0</scale>
+      </skin>
+      <animation name="walking">
+        <filename>walk.dae</filename>
+        <scale>1.000000</scale>
+        <interpolate_x>true</interpolate_x>
+      </animation>
+      <plugin name="actor20_plugin" filename="libPedestrianMHSFMPlugin.so">
+        <runge_kutta_45>false</runge_kutta_45>
+        <sampling_time>0.033</sampling_time>
+        <publish_forces>true</publish_forces>
+        <topic_name>forces/actor20</topic_name>
+        <node_name>Actor20</node_name>
+        <velocity>0.9</velocity> 
+        <radius>0.3</radius> 
+        <mass>85</mass> 
+        <relaxation_time>0.5</relaxation_time> 
+        <k_orthogonal>1</k_orthogonal> 
+        <k_damping>500</k_damping> 
+        <k_lambda>0.3</k_lambda> 
+        <alpha>3</alpha> 
+        <group_distance_forward>2</group_distance_forward>
+        <group_distance_orthogonal>1</group_distance_orthogonal> 
+        <k1g>200</k1g> 
+        <k2g>200</k2g> 
+        <Ai>2000</Ai> 
+        <Aw>2000</Aw> 
+        <Bi>0.08</Bi> 
+        <Bw>0.08</Bw> 
+        <Ci>1000</Ci>
+        <Cw>1000</Cw>
+        <Di>0.2</Di> 
+        <Dw>0.2</Dw>
+        <k1>120000</k1> 
+        <k2>240000</k2> 
+        <animation_factor>5.1</animation_factor>
+        <animation_name>walking</animation_name>
+        <people_distance>6.0</people_distance>
+        <group>
+            <model>actor7</model>
+            <model>actor9</model>
+            <model>actor10</model>
+            <model>actor11</model>
+            <model>actor12</model>
+            <model>actor19</model>
+            <model>actor8</model>
+            <model>actor21</model>
+            <model>actor22</model>
+            <model>actor23</model>
+            <model>actor24</model>
+        </group>
+        <ignore_obstacles>
+          <model>ground_plane</model>
+          <model>architrave_south</model>
+        </ignore_obstacles>
+        <trajectory>
+          <cyclic>true</cyclic>
+          <waypoint>2 -3 0</waypoint>
+          <waypoint>0 0 0</waypoint>
+          <waypoint>-3 0 0</waypoint>
+          <waypoint>-10 0 0</waypoint>
+        </trajectory>
+      </plugin>
+    </actor>
+    <!-- actor21 -->
+    <actor name="actor21">
+      <pose>3 -3 1.25 0 0 0</pose>
+      <skin>
+        <filename>walk.dae</filename>
+        <scale>1.0</scale>
+      </skin>
+      <animation name="walking">
+        <filename>walk.dae</filename>
+        <scale>1.000000</scale>
+        <interpolate_x>true</interpolate_x>
+      </animation>
+      <plugin name="actor21_plugin" filename="libPedestrianMHSFMPlugin.so">
+        <runge_kutta_45>false</runge_kutta_45>
+        <sampling_time>0.033</sampling_time>
+        <publish_forces>true</publish_forces>
+        <topic_name>forces/actor21</topic_name>
+        <node_name>Actor21</node_name>
+        <velocity>0.9</velocity> 
+        <radius>0.3</radius> 
+        <mass>85</mass> 
+        <relaxation_time>0.5</relaxation_time> 
+        <k_orthogonal>1</k_orthogonal> 
+        <k_damping>500</k_damping> 
+        <k_lambda>0.3</k_lambda> 
+        <alpha>3</alpha> 
+        <group_distance_forward>2</group_distance_forward>
+        <group_distance_orthogonal>1</group_distance_orthogonal> 
+        <k1g>200</k1g> 
+        <k2g>200</k2g> 
+        <Ai>2000</Ai> 
+        <Aw>2000</Aw> 
+        <Bi>0.08</Bi> 
+        <Bw>0.08</Bw> 
+        <Ci>1000</Ci>
+        <Cw>1000</Cw>
+        <Di>0.2</Di> 
+        <Dw>0.2</Dw>
+        <k1>120000</k1> 
+        <k2>240000</k2> 
+        <animation_factor>5.1</animation_factor>
+        <animation_name>walking</animation_name>
+        <people_distance>6.0</people_distance>
+        <group>
+            <model>actor8</model>
+            <model>actor7</model>
+            <model>actor10</model>
+            <model>actor11</model>
+            <model>actor12</model>
+            <model>actor19</model>
+            <model>actor20</model>
+            <model>actor9</model>
+            <model>actor22</model>
+            <model>actor23</model>
+            <model>actor24</model>
+        </group>
+        <ignore_obstacles>
+          <model>ground_plane</model>
+          <model>architrave_south</model>
+        </ignore_obstacles>
+        <trajectory>
+          <cyclic>true</cyclic>
+          <waypoint>3 -3 0</waypoint>
+          <waypoint>0 0 0</waypoint>
+          <waypoint>-3 0 0</waypoint>
+          <waypoint>-10 0 0</waypoint>
+        </trajectory>
+      </plugin>
+    </actor>
+    <!-- actor22 -->
+    <actor name="actor22">
+      <pose>1 -2 1.25 0 0 0</pose>
+      <skin>
+        <filename>walk.dae</filename>
+        <scale>1.0</scale>
+      </skin>
+      <animation name="walking">
+        <filename>walk.dae</filename>
+        <scale>1.000000</scale>
+        <interpolate_x>true</interpolate_x>
+      </animation>
+      <plugin name="actor22_plugin" filename="libPedestrianMHSFMPlugin.so">
+        <runge_kutta_45>false</runge_kutta_45>
+        <sampling_time>0.033</sampling_time>
+        <publish_forces>true</publish_forces>
+        <topic_name>forces/actor22</topic_name>
+        <node_name>Actor22</node_name>
+        <velocity>0.9</velocity> 
+        <radius>0.3</radius> 
+        <mass>85</mass> 
+        <relaxation_time>0.5</relaxation_time> 
+        <k_orthogonal>1</k_orthogonal> 
+        <k_damping>500</k_damping> 
+        <k_lambda>0.3</k_lambda> 
+        <alpha>3</alpha> 
+        <group_distance_forward>2</group_distance_forward>
+        <group_distance_orthogonal>1</group_distance_orthogonal> 
+        <k1g>200</k1g> 
+        <k2g>200</k2g> 
+        <Ai>2000</Ai> 
+        <Aw>2000</Aw> 
+        <Bi>0.08</Bi> 
+        <Bw>0.08</Bw> 
+        <Ci>1000</Ci>
+        <Cw>1000</Cw>
+        <Di>0.2</Di> 
+        <Dw>0.2</Dw>
+        <k1>120000</k1> 
+        <k2>240000</k2> 
+        <animation_factor>5.1</animation_factor>
+        <animation_name>walking</animation_name>
+        <people_distance>6.0</people_distance>
+        <group>
+            <model>actor8</model>
+            <model>actor9</model>
+            <model>actor7</model>
+            <model>actor11</model>
+            <model>actor12</model>
+            <model>actor19</model>
+            <model>actor20</model>
+            <model>actor21</model>
+            <model>actor10</model>
+            <model>actor23</model>
+            <model>actor24</model>
+        </group>
+        <ignore_obstacles>
+          <model>ground_plane</model>
+          <model>architrave_south</model>
+        </ignore_obstacles>
+        <trajectory>
+          <cyclic>true</cyclic>
+          <waypoint>1 -2 0</waypoint>
+          <waypoint>0 0 0</waypoint>
+          <waypoint>-3 0 0</waypoint>
+          <waypoint>-10 0 0</waypoint>
+        </trajectory>
+      </plugin>
+    </actor>
+    <!-- actor23 -->
+    <actor name="actor23">
+      <pose>1 -3 1.25 0 0 0</pose>
+      <skin>
+        <filename>walk.dae</filename>
+        <scale>1.0</scale>
+      </skin>
+      <animation name="walking">
+        <filename>walk.dae</filename>
+        <scale>1.000000</scale>
+        <interpolate_x>true</interpolate_x>
+      </animation>
+      <plugin name="actor23_plugin" filename="libPedestrianMHSFMPlugin.so">
+        <runge_kutta_45>false</runge_kutta_45>
+        <sampling_time>0.033</sampling_time>
+        <publish_forces>true</publish_forces>
+        <topic_name>forces/actor23</topic_name>
+        <node_name>Actor23</node_name>
+        <velocity>0.9</velocity> 
+        <radius>0.3</radius> 
+        <mass>75</mass> 
+        <relaxation_time>0.5</relaxation_time> 
+        <k_orthogonal>1</k_orthogonal> 
+        <k_damping>500</k_damping> 
+        <k_lambda>0.3</k_lambda> 
+        <alpha>3</alpha> 
+        <group_distance_forward>2</group_distance_forward>
+        <group_distance_orthogonal>1</group_distance_orthogonal> 
+        <k1g>200</k1g> 
+        <k2g>200</k2g> 
+        <Ai>2000</Ai> 
+        <Aw>2000</Aw> 
+        <Bi>0.08</Bi> 
+        <Bw>0.08</Bw> 
+        <Ci>1000</Ci>
+        <Cw>1000</Cw>
+        <Di>0.2</Di> 
+        <Dw>0.2</Dw>
+        <k1>120000</k1> 
+        <k2>240000</k2> 
+        <animation_factor>5.1</animation_factor>
+        <animation_name>walking</animation_name>
+        <people_distance>6.0</people_distance>
+        <group>
+            <model>actor8</model>
+            <model>actor9</model>
+            <model>actor10</model>
+            <model>actor7</model>
+            <model>actor12</model>
+            <model>actor19</model>
+            <model>actor20</model>
+            <model>actor21</model>
+            <model>actor22</model>
+            <model>actor11</model>
+            <model>actor24</model>
+        </group>
+        <ignore_obstacles>
+          <model>ground_plane</model>
+          <model>architrave_south</model>
+        </ignore_obstacles>
+        <trajectory>
+          <cyclic>true</cyclic>
+          <waypoint>1 -3 0</waypoint>
+          <waypoint>0 0 0</waypoint>
+          <waypoint>-3 0 0</waypoint>
+          <waypoint>-10 0 0</waypoint>
+        </trajectory>
+      </plugin>
+    </actor>
+    <!-- actor24 -->
+    <actor name="actor24">
+      <pose>2 -4 1.25 0 0 0</pose>
+      <skin>
+        <filename>walk.dae</filename>
+        <scale>1.0</scale>
+      </skin>
+      <animation name="walking">
+        <filename>walk.dae</filename>
+        <scale>1.000000</scale>
+        <interpolate_x>true</interpolate_x>
+      </animation>
+      <plugin name="actor24_plugin" filename="libPedestrianMHSFMPlugin.so">
+        <runge_kutta_45>false</runge_kutta_45>
+        <sampling_time>0.033</sampling_time>
+        <publish_forces>true</publish_forces>
+        <topic_name>forces/actor24</topic_name>
+        <node_name>Actor24</node_name>
+        <velocity>0.9</velocity> 
+        <radius>0.3</radius> 
+        <mass>75</mass> 
+        <relaxation_time>0.5</relaxation_time> 
+        <k_orthogonal>1</k_orthogonal> 
+        <k_damping>500</k_damping> 
+        <k_lambda>0.3</k_lambda> 
+        <alpha>3</alpha> 
+        <group_distance_forward>2</group_distance_forward>
+        <group_distance_orthogonal>1</group_distance_orthogonal> 
+        <k1g>200</k1g> 
+        <k2g>200</k2g> 
+        <Ai>2000</Ai> 
+        <Aw>2000</Aw> 
+        <Bi>0.08</Bi> 
+        <Bw>0.08</Bw> 
+        <Ci>1000</Ci>
+        <Cw>1000</Cw>
+        <Di>0.2</Di> 
+        <Dw>0.2</Dw>
+        <k1>120000</k1> 
+        <k2>240000</k2> 
+        <animation_factor>5.1</animation_factor>
+        <animation_name>walking</animation_name>
+        <people_distance>6.0</people_distance>
+        <group>
+            <model>actor8</model>
+            <model>actor9</model>
+            <model>actor10</model>
+            <model>actor11</model>
+            <model>actor7</model>
+            <model>actor19</model>
+            <model>actor20</model>
+            <model>actor21</model>
+            <model>actor22</model>
+            <model>actor23</model>
+            <model>actor12</model>
+        </group>
+        <ignore_obstacles>
+          <model>ground_plane</model>
+          <model>architrave_south</model>
+        </ignore_obstacles>
+        <trajectory>
+          <cyclic>true</cyclic>
+          <waypoint>2 -4 0</waypoint>
+          <waypoint>0 0 0</waypoint>
+          <waypoint>-3 0 0</waypoint>
+          <waypoint>-10 0 0</waypoint>
+        </trajectory>
+      </plugin>
+    </actor>
+
+  </world>
+</sdf>

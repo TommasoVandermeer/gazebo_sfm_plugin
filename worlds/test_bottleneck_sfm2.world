@@ -123,7 +123,7 @@
         <scale>1.000000</scale>
         <interpolate_x>true</interpolate_x>
       </animation>
-      <plugin name="actor1_plugin" filename="libPedestrianMHSFMPlugin.so">
+      <plugin name="actor1_plugin" filename="libPedestrianSFM2Plugin.so">
         <runge_kutta_45>false</runge_kutta_45>
         <sampling_time>0.033</sampling_time>
         <publish_forces>true</publish_forces>
@@ -133,22 +133,12 @@
         <radius>0.3</radius> 
         <mass>75</mass> 
         <relaxation_time>0.5</relaxation_time> 
-        <k_orthogonal>1</k_orthogonal> 
-        <k_damping>500</k_damping> 
-        <k_lambda>0.3</k_lambda> 
-        <alpha>3</alpha> 
-        <group_distance_forward>2</group_distance_forward>
-        <group_distance_orthogonal>3</group_distance_orthogonal> 
         <k1g>200</k1g> 
         <k2g>200</k2g> 
         <Ai>2000</Ai> 
         <Aw>2000</Aw> 
         <Bi>0.08</Bi> 
         <Bw>0.08</Bw>
-        <Ci>1000</Ci>
-        <Cw>1000</Cw>
-        <Di>0.2</Di> 
-        <Dw>0.2</Dw> 
         <k1>120000</k1> 
         <k2>240000</k2> 
         <animation_factor>5.1</animation_factor>
@@ -192,7 +182,7 @@
         <scale>1.000000</scale>
         <interpolate_x>true</interpolate_x>
       </animation>
-      <plugin name="actor2_plugin" filename="libPedestrianMHSFMPlugin.so">
+      <plugin name="actor2_plugin" filename="libPedestrianSFM2Plugin.so">
         <runge_kutta_45>false</runge_kutta_45>
         <sampling_time>0.033</sampling_time>
         <publish_forces>true</publish_forces>
@@ -202,22 +192,12 @@
         <radius>0.3</radius> 
         <mass>75</mass> 
         <relaxation_time>0.5</relaxation_time> 
-        <k_orthogonal>1</k_orthogonal> 
-        <k_damping>500</k_damping> 
-        <k_lambda>0.3</k_lambda> 
-        <alpha>3</alpha> 
-        <group_distance_forward>2</group_distance_forward>
-        <group_distance_orthogonal>1</group_distance_orthogonal> 
         <k1g>200</k1g> 
         <k2g>200</k2g> 
         <Ai>2000</Ai> 
         <Aw>2000</Aw> 
         <Bi>0.08</Bi> 
         <Bw>0.08</Bw> 
-        <Ci>1000</Ci>
-        <Cw>1000</Cw>
-        <Di>0.2</Di> 
-        <Dw>0.2</Dw>
         <k1>120000</k1> 
         <k2>240000</k2> 
         <animation_factor>5.1</animation_factor>
@@ -261,7 +241,7 @@
         <scale>1.000000</scale>
         <interpolate_x>true</interpolate_x>
       </animation>
-      <plugin name="actor3_plugin" filename="libPedestrianMHSFMPlugin.so">
+      <plugin name="actor3_plugin" filename="libPedestrianSFM2Plugin.so">
         <runge_kutta_45>false</runge_kutta_45>
         <sampling_time>0.033</sampling_time>
         <publish_forces>true</publish_forces>
@@ -271,22 +251,12 @@
         <radius>0.3</radius> 
         <mass>75</mass> 
         <relaxation_time>0.5</relaxation_time> 
-        <k_orthogonal>1</k_orthogonal> 
-        <k_damping>500</k_damping> 
-        <k_lambda>0.3</k_lambda> 
-        <alpha>3</alpha> 
-        <group_distance_forward>2</group_distance_forward>
-        <group_distance_orthogonal>1</group_distance_orthogonal> 
         <k1g>200</k1g> 
         <k2g>200</k2g> 
         <Ai>2000</Ai> 
         <Aw>2000</Aw> 
         <Bi>0.08</Bi> 
         <Bw>0.08</Bw> 
-        <Ci>1000</Ci>
-        <Cw>1000</Cw>
-        <Di>0.2</Di> 
-        <Dw>0.2</Dw>
         <k1>120000</k1> 
         <k2>240000</k2> 
         <animation_factor>5.1</animation_factor>
@@ -330,7 +300,7 @@
         <scale>1.000000</scale>
         <interpolate_x>true</interpolate_x>
       </animation>
-      <plugin name="actor4_plugin" filename="libPedestrianMHSFMPlugin.so">
+      <plugin name="actor4_plugin" filename="libPedestrianSFM2Plugin.so">
         <runge_kutta_45>false</runge_kutta_45>
         <sampling_time>0.033</sampling_time>
         <publish_forces>true</publish_forces>
@@ -340,22 +310,12 @@
         <radius>0.3</radius> 
         <mass>75</mass> 
         <relaxation_time>0.5</relaxation_time> 
-        <k_orthogonal>1</k_orthogonal> 
-        <k_damping>500</k_damping> 
-        <k_lambda>0.3</k_lambda> 
-        <alpha>3</alpha> 
-        <group_distance_forward>2</group_distance_forward>
-        <group_distance_orthogonal>1</group_distance_orthogonal> 
         <k1g>200</k1g> 
         <k2g>200</k2g> 
         <Ai>2000</Ai> 
         <Aw>2000</Aw> 
         <Bi>0.08</Bi> 
         <Bw>0.08</Bw> 
-        <Ci>1000</Ci>
-        <Cw>1000</Cw>
-        <Di>0.2</Di> 
-        <Dw>0.2</Dw>
         <k1>120000</k1> 
         <k2>240000</k2> 
         <animation_factor>5.1</animation_factor>
@@ -399,7 +359,7 @@
         <scale>1.000000</scale>
         <interpolate_x>true</interpolate_x>
       </animation>
-      <plugin name="actor5_plugin" filename="libPedestrianMHSFMPlugin.so">
+      <plugin name="actor5_plugin" filename="libPedestrianSFM2Plugin.so">
         <runge_kutta_45>false</runge_kutta_45>
         <sampling_time>0.033</sampling_time>
         <publish_forces>true</publish_forces>
@@ -409,22 +369,12 @@
         <radius>0.3</radius> 
         <mass>75</mass> 
         <relaxation_time>0.5</relaxation_time> 
-        <k_orthogonal>1</k_orthogonal> 
-        <k_damping>500</k_damping> 
-        <k_lambda>0.3</k_lambda> 
-        <alpha>3</alpha> 
-        <group_distance_forward>2</group_distance_forward>
-        <group_distance_orthogonal>1</group_distance_orthogonal> 
         <k1g>200</k1g> 
         <k2g>200</k2g> 
         <Ai>2000</Ai> 
         <Aw>2000</Aw> 
         <Bi>0.08</Bi> 
         <Bw>0.08</Bw> 
-        <Ci>1000</Ci>
-        <Cw>1000</Cw>
-        <Di>0.2</Di> 
-        <Dw>0.2</Dw>
         <k1>120000</k1> 
         <k2>240000</k2> 
         <animation_factor>5.1</animation_factor>
@@ -468,7 +418,7 @@
         <scale>1.000000</scale>
         <interpolate_x>true</interpolate_x>
       </animation>
-      <plugin name="actor6_plugin" filename="libPedestrianMHSFMPlugin.so">
+      <plugin name="actor6_plugin" filename="libPedestrianSFM2Plugin.so">
         <runge_kutta_45>false</runge_kutta_45>
         <sampling_time>0.033</sampling_time>
         <publish_forces>true</publish_forces>
@@ -478,22 +428,12 @@
         <radius>0.3</radius> 
         <mass>75</mass> 
         <relaxation_time>0.5</relaxation_time> 
-        <k_orthogonal>1</k_orthogonal> 
-        <k_damping>500</k_damping> 
-        <k_lambda>0.3</k_lambda> 
-        <alpha>3</alpha> 
-        <group_distance_forward>2</group_distance_forward>
-        <group_distance_orthogonal>1</group_distance_orthogonal> 
         <k1g>200</k1g> 
         <k2g>200</k2g> 
         <Ai>2000</Ai> 
         <Aw>2000</Aw> 
         <Bi>0.08</Bi> 
         <Bw>0.08</Bw> 
-        <Ci>1000</Ci>
-        <Cw>1000</Cw>
-        <Di>0.2</Di> 
-        <Dw>0.2</Dw>
         <k1>120000</k1> 
         <k2>240000</k2> 
         <animation_factor>5.1</animation_factor>
@@ -537,7 +477,7 @@
         <scale>1.000000</scale>
         <interpolate_x>true</interpolate_x>
       </animation>
-      <plugin name="actor13_plugin" filename="libPedestrianMHSFMPlugin.so">
+      <plugin name="actor13_plugin" filename="libPedestrianSFM2Plugin.so">
         <runge_kutta_45>false</runge_kutta_45>
         <sampling_time>0.033</sampling_time>
         <publish_forces>true</publish_forces>
@@ -547,22 +487,12 @@
         <radius>0.3</radius> 
         <mass>75</mass> 
         <relaxation_time>0.5</relaxation_time> 
-        <k_orthogonal>1</k_orthogonal> 
-        <k_damping>500</k_damping> 
-        <k_lambda>0.3</k_lambda> 
-        <alpha>3</alpha> 
-        <group_distance_forward>2</group_distance_forward>
-        <group_distance_orthogonal>1</group_distance_orthogonal> 
         <k1g>200</k1g> 
         <k2g>200</k2g> 
         <Ai>2000</Ai> 
         <Aw>2000</Aw> 
         <Bi>0.08</Bi> 
         <Bw>0.08</Bw> 
-        <Ci>1000</Ci>
-        <Cw>1000</Cw>
-        <Di>0.2</Di> 
-        <Dw>0.2</Dw>
         <k1>120000</k1> 
         <k2>240000</k2> 
         <animation_factor>5.1</animation_factor>
@@ -606,7 +536,7 @@
         <scale>1.000000</scale>
         <interpolate_x>true</interpolate_x>
       </animation>
-      <plugin name="actor14_plugin" filename="libPedestrianMHSFMPlugin.so">
+      <plugin name="actor14_plugin" filename="libPedestrianSFM2Plugin.so">
         <runge_kutta_45>false</runge_kutta_45>
         <sampling_time>0.033</sampling_time>
         <publish_forces>true</publish_forces>
@@ -616,22 +546,12 @@
         <radius>0.3</radius> 
         <mass>75</mass> 
         <relaxation_time>0.5</relaxation_time> 
-        <k_orthogonal>1</k_orthogonal> 
-        <k_damping>500</k_damping> 
-        <k_lambda>0.3</k_lambda> 
-        <alpha>3</alpha> 
-        <group_distance_forward>2</group_distance_forward>
-        <group_distance_orthogonal>1</group_distance_orthogonal> 
         <k1g>200</k1g> 
         <k2g>200</k2g> 
         <Ai>2000</Ai> 
         <Aw>2000</Aw> 
         <Bi>0.08</Bi> 
         <Bw>0.08</Bw> 
-        <Ci>1000</Ci>
-        <Cw>1000</Cw>
-        <Di>0.2</Di> 
-        <Dw>0.2</Dw>
         <k1>120000</k1> 
         <k2>240000</k2> 
         <animation_factor>5.1</animation_factor>
@@ -675,7 +595,7 @@
         <scale>1.000000</scale>
         <interpolate_x>true</interpolate_x>
       </animation>
-      <plugin name="actor15_plugin" filename="libPedestrianMHSFMPlugin.so">
+      <plugin name="actor15_plugin" filename="libPedestrianSFM2Plugin.so">
         <runge_kutta_45>false</runge_kutta_45>
         <sampling_time>0.033</sampling_time>
         <publish_forces>true</publish_forces>
@@ -685,22 +605,12 @@
         <radius>0.3</radius> 
         <mass>75</mass> 
         <relaxation_time>0.5</relaxation_time> 
-        <k_orthogonal>1</k_orthogonal> 
-        <k_damping>500</k_damping> 
-        <k_lambda>0.3</k_lambda> 
-        <alpha>3</alpha> 
-        <group_distance_forward>2</group_distance_forward>
-        <group_distance_orthogonal>1</group_distance_orthogonal> 
         <k1g>200</k1g> 
         <k2g>200</k2g> 
         <Ai>2000</Ai> 
         <Aw>2000</Aw> 
         <Bi>0.08</Bi> 
         <Bw>0.08</Bw> 
-        <Ci>1000</Ci>
-        <Cw>1000</Cw>
-        <Di>0.2</Di> 
-        <Dw>0.2</Dw>
         <k1>120000</k1> 
         <k2>240000</k2> 
         <animation_factor>5.1</animation_factor>
@@ -744,7 +654,7 @@
         <scale>1.000000</scale>
         <interpolate_x>true</interpolate_x>
       </animation>
-      <plugin name="actor16_plugin" filename="libPedestrianMHSFMPlugin.so">
+      <plugin name="actor16_plugin" filename="libPedestrianSFM2Plugin.so">
         <runge_kutta_45>false</runge_kutta_45>
         <sampling_time>0.033</sampling_time>
         <publish_forces>true</publish_forces>
@@ -754,22 +664,12 @@
         <radius>0.3</radius> 
         <mass>75</mass> 
         <relaxation_time>0.5</relaxation_time> 
-        <k_orthogonal>1</k_orthogonal> 
-        <k_damping>500</k_damping> 
-        <k_lambda>0.3</k_lambda> 
-        <alpha>3</alpha> 
-        <group_distance_forward>2</group_distance_forward>
-        <group_distance_orthogonal>1</group_distance_orthogonal> 
         <k1g>200</k1g> 
         <k2g>200</k2g> 
         <Ai>2000</Ai> 
         <Aw>2000</Aw> 
         <Bi>0.08</Bi> 
         <Bw>0.08</Bw> 
-        <Ci>1000</Ci>
-        <Cw>1000</Cw>
-        <Di>0.2</Di> 
-        <Dw>0.2</Dw>
         <k1>120000</k1> 
         <k2>240000</k2> 
         <animation_factor>5.1</animation_factor>
@@ -813,7 +713,7 @@
         <scale>1.000000</scale>
         <interpolate_x>true</interpolate_x>
       </animation>
-      <plugin name="actor17_plugin" filename="libPedestrianMHSFMPlugin.so">
+      <plugin name="actor17_plugin" filename="libPedestrianSFM2Plugin.so">
         <runge_kutta_45>false</runge_kutta_45>
         <sampling_time>0.033</sampling_time>
         <publish_forces>true</publish_forces>
@@ -823,22 +723,12 @@
         <radius>0.3</radius> 
         <mass>75</mass> 
         <relaxation_time>0.5</relaxation_time> 
-        <k_orthogonal>1</k_orthogonal> 
-        <k_damping>500</k_damping> 
-        <k_lambda>0.3</k_lambda> 
-        <alpha>3</alpha> 
-        <group_distance_forward>2</group_distance_forward>
-        <group_distance_orthogonal>1</group_distance_orthogonal> 
         <k1g>200</k1g> 
         <k2g>200</k2g> 
         <Ai>2000</Ai> 
         <Aw>2000</Aw> 
         <Bi>0.08</Bi> 
         <Bw>0.08</Bw> 
-        <Ci>1000</Ci>
-        <Cw>1000</Cw>
-        <Di>0.2</Di> 
-        <Dw>0.2</Dw>
         <k1>120000</k1> 
         <k2>240000</k2> 
         <animation_factor>5.1</animation_factor>
@@ -882,7 +772,7 @@
         <scale>1.000000</scale>
         <interpolate_x>true</interpolate_x>
       </animation>
-      <plugin name="actor18_plugin" filename="libPedestrianMHSFMPlugin.so">
+      <plugin name="actor18_plugin" filename="libPedestrianSFM2Plugin.so">
         <runge_kutta_45>false</runge_kutta_45>
         <sampling_time>0.033</sampling_time>
         <publish_forces>true</publish_forces>
@@ -892,22 +782,12 @@
         <radius>0.3</radius> 
         <mass>75</mass> 
         <relaxation_time>0.5</relaxation_time> 
-        <k_orthogonal>1</k_orthogonal> 
-        <k_damping>500</k_damping> 
-        <k_lambda>0.3</k_lambda> 
-        <alpha>3</alpha> 
-        <group_distance_forward>2</group_distance_forward>
-        <group_distance_orthogonal>1</group_distance_orthogonal> 
         <k1g>200</k1g> 
         <k2g>200</k2g> 
         <Ai>2000</Ai> 
         <Aw>2000</Aw> 
         <Bi>0.08</Bi> 
         <Bw>0.08</Bw> 
-        <Ci>1000</Ci>
-        <Cw>1000</Cw>
-        <Di>0.2</Di> 
-        <Dw>0.2</Dw>
         <k1>120000</k1> 
         <k2>240000</k2> 
         <animation_factor>5.1</animation_factor>
@@ -953,7 +833,7 @@
         <scale>1.000000</scale>
         <interpolate_x>true</interpolate_x>
       </animation>
-      <plugin name="actor7_plugin" filename="libPedestrianMHSFMPlugin.so">
+      <plugin name="actor7_plugin" filename="libPedestrianSFM2Plugin.so">
         <runge_kutta_45>false</runge_kutta_45>
         <sampling_time>0.033</sampling_time>
         <publish_forces>true</publish_forces>
@@ -962,23 +842,13 @@
         <velocity>0.9</velocity> 
         <radius>0.3</radius> 
         <mass>75</mass> 
-        <relaxation_time>0.5</relaxation_time> 
-        <k_orthogonal>1</k_orthogonal> 
-        <k_damping>500</k_damping> 
-        <k_lambda>0.3</k_lambda> 
-        <alpha>3</alpha> 
-        <group_distance_forward>2</group_distance_forward>
-        <group_distance_orthogonal>3</group_distance_orthogonal> 
+        <relaxation_time>0.5</relaxation_time>  
         <k1g>200</k1g> 
         <k2g>200</k2g> 
         <Ai>2000</Ai> 
         <Aw>2000</Aw> 
         <Bi>0.08</Bi> 
         <Bw>0.08</Bw> 
-        <Ci>1000</Ci>
-        <Cw>1000</Cw>
-        <Di>0.2</Di> 
-        <Dw>0.2</Dw>
         <k1>120000</k1> 
         <k2>240000</k2> 
         <animation_factor>5.1</animation_factor>
@@ -1022,7 +892,7 @@
         <scale>1.000000</scale>
         <interpolate_x>true</interpolate_x>
       </animation>
-      <plugin name="actor8_plugin" filename="libPedestrianMHSFMPlugin.so">
+      <plugin name="actor8_plugin" filename="libPedestrianSFM2Plugin.so">
         <runge_kutta_45>false</runge_kutta_45>
         <sampling_time>0.033</sampling_time>
         <publish_forces>true</publish_forces>
@@ -1032,22 +902,12 @@
         <radius>0.3</radius> 
         <mass>75</mass> 
         <relaxation_time>0.5</relaxation_time> 
-        <k_orthogonal>1</k_orthogonal> 
-        <k_damping>500</k_damping> 
-        <k_lambda>0.3</k_lambda> 
-        <alpha>3</alpha> 
-        <group_distance_forward>2</group_distance_forward>
-        <group_distance_orthogonal>1</group_distance_orthogonal> 
         <k1g>200</k1g> 
         <k2g>200</k2g> 
         <Ai>2000</Ai> 
         <Aw>2000</Aw> 
         <Bi>0.08</Bi> 
         <Bw>0.08</Bw> 
-        <Ci>1000</Ci>
-        <Cw>1000</Cw>
-        <Di>0.2</Di> 
-        <Dw>0.2</Dw>
         <k1>120000</k1> 
         <k2>240000</k2> 
         <animation_factor>5.1</animation_factor>
@@ -1091,7 +951,7 @@
         <scale>1.000000</scale>
         <interpolate_x>true</interpolate_x>
       </animation>
-      <plugin name="actor9_plugin" filename="libPedestrianMHSFMPlugin.so">
+      <plugin name="actor9_plugin" filename="libPedestrianSFM2Plugin.so">
         <runge_kutta_45>false</runge_kutta_45>
         <sampling_time>0.033</sampling_time>
         <publish_forces>true</publish_forces>
@@ -1101,22 +961,12 @@
         <radius>0.3</radius> 
         <mass>75</mass> 
         <relaxation_time>0.5</relaxation_time> 
-        <k_orthogonal>1</k_orthogonal> 
-        <k_damping>500</k_damping> 
-        <k_lambda>0.3</k_lambda> 
-        <alpha>3</alpha> 
-        <group_distance_forward>2</group_distance_forward>
-        <group_distance_orthogonal>1</group_distance_orthogonal> 
         <k1g>200</k1g> 
         <k2g>200</k2g> 
         <Ai>2000</Ai> 
         <Aw>2000</Aw> 
         <Bi>0.08</Bi> 
         <Bw>0.08</Bw> 
-        <Ci>1000</Ci>
-        <Cw>1000</Cw>
-        <Di>0.2</Di> 
-        <Dw>0.2</Dw>
         <k1>120000</k1> 
         <k2>240000</k2> 
         <animation_factor>5.1</animation_factor>
@@ -1160,7 +1010,7 @@
         <scale>1.000000</scale>
         <interpolate_x>true</interpolate_x>
       </animation>
-      <plugin name="actor10_plugin" filename="libPedestrianMHSFMPlugin.so">
+      <plugin name="actor10_plugin" filename="libPedestrianSFM2Plugin.so">
         <runge_kutta_45>false</runge_kutta_45>
         <sampling_time>0.033</sampling_time>
         <publish_forces>true</publish_forces>
@@ -1170,22 +1020,12 @@
         <radius>0.3</radius> 
         <mass>75</mass> 
         <relaxation_time>0.5</relaxation_time> 
-        <k_orthogonal>1</k_orthogonal> 
-        <k_damping>500</k_damping> 
-        <k_lambda>0.3</k_lambda> 
-        <alpha>3</alpha> 
-        <group_distance_forward>2</group_distance_forward>
-        <group_distance_orthogonal>1</group_distance_orthogonal> 
         <k1g>200</k1g> 
         <k2g>200</k2g> 
         <Ai>2000</Ai> 
         <Aw>2000</Aw> 
         <Bi>0.08</Bi> 
         <Bw>0.08</Bw> 
-        <Ci>1000</Ci>
-        <Cw>1000</Cw>
-        <Di>0.2</Di> 
-        <Dw>0.2</Dw>
         <k1>120000</k1> 
         <k2>240000</k2> 
         <animation_factor>5.1</animation_factor>
@@ -1229,7 +1069,7 @@
         <scale>1.000000</scale>
         <interpolate_x>true</interpolate_x>
       </animation>
-      <plugin name="actor11_plugin" filename="libPedestrianMHSFMPlugin.so">
+      <plugin name="actor11_plugin" filename="libPedestrianSFM2Plugin.so">
         <runge_kutta_45>false</runge_kutta_45>
         <sampling_time>0.033</sampling_time>
         <publish_forces>true</publish_forces>
@@ -1239,22 +1079,12 @@
         <radius>0.3</radius> 
         <mass>75</mass> 
         <relaxation_time>0.5</relaxation_time> 
-        <k_orthogonal>1</k_orthogonal> 
-        <k_damping>500</k_damping> 
-        <k_lambda>0.3</k_lambda> 
-        <alpha>3</alpha> 
-        <group_distance_forward>2</group_distance_forward>
-        <group_distance_orthogonal>1</group_distance_orthogonal> 
         <k1g>200</k1g> 
         <k2g>200</k2g> 
         <Ai>2000</Ai> 
         <Aw>2000</Aw> 
         <Bi>0.08</Bi> 
         <Bw>0.08</Bw> 
-        <Ci>1000</Ci>
-        <Cw>1000</Cw>
-        <Di>0.2</Di> 
-        <Dw>0.2</Dw>
         <k1>120000</k1> 
         <k2>240000</k2> 
         <animation_factor>5.1</animation_factor>
@@ -1298,7 +1128,7 @@
         <scale>1.000000</scale>
         <interpolate_x>true</interpolate_x>
       </animation>
-      <plugin name="actor12_plugin" filename="libPedestrianMHSFMPlugin.so">
+      <plugin name="actor12_plugin" filename="libPedestrianSFM2Plugin.so">
         <runge_kutta_45>false</runge_kutta_45>
         <sampling_time>0.033</sampling_time>
         <publish_forces>true</publish_forces>
@@ -1308,22 +1138,12 @@
         <radius>0.3</radius> 
         <mass>75</mass> 
         <relaxation_time>0.5</relaxation_time> 
-        <k_orthogonal>1</k_orthogonal> 
-        <k_damping>500</k_damping> 
-        <k_lambda>0.3</k_lambda> 
-        <alpha>3</alpha> 
-        <group_distance_forward>2</group_distance_forward>
-        <group_distance_orthogonal>1</group_distance_orthogonal> 
         <k1g>200</k1g> 
         <k2g>200</k2g> 
         <Ai>2000</Ai> 
         <Aw>2000</Aw> 
         <Bi>0.08</Bi> 
         <Bw>0.08</Bw> 
-        <Ci>1000</Ci>
-        <Cw>1000</Cw>
-        <Di>0.2</Di> 
-        <Dw>0.2</Dw>
         <k1>120000</k1> 
         <k2>240000</k2> 
         <animation_factor>5.1</animation_factor>
@@ -1367,7 +1187,7 @@
         <scale>1.000000</scale>
         <interpolate_x>true</interpolate_x>
       </animation>
-      <plugin name="actor19_plugin" filename="libPedestrianMHSFMPlugin.so">
+      <plugin name="actor19_plugin" filename="libPedestrianSFM2Plugin.so">
         <runge_kutta_45>false</runge_kutta_45>
         <sampling_time>0.033</sampling_time>
         <publish_forces>true</publish_forces>
@@ -1377,22 +1197,12 @@
         <radius>0.3</radius> 
         <mass>75</mass> 
         <relaxation_time>0.5</relaxation_time> 
-        <k_orthogonal>1</k_orthogonal> 
-        <k_damping>500</k_damping> 
-        <k_lambda>0.3</k_lambda> 
-        <alpha>3</alpha> 
-        <group_distance_forward>2</group_distance_forward>
-        <group_distance_orthogonal>3</group_distance_orthogonal> 
         <k1g>200</k1g> 
         <k2g>200</k2g> 
         <Ai>2000</Ai> 
         <Aw>2000</Aw> 
         <Bi>0.08</Bi> 
         <Bw>0.08</Bw> 
-        <Ci>1000</Ci>
-        <Cw>1000</Cw>
-        <Di>0.2</Di> 
-        <Dw>0.2</Dw>
         <k1>120000</k1> 
         <k2>240000</k2> 
         <animation_factor>5.1</animation_factor>
@@ -1436,7 +1246,7 @@
         <scale>1.000000</scale>
         <interpolate_x>true</interpolate_x>
       </animation>
-      <plugin name="actor20_plugin" filename="libPedestrianMHSFMPlugin.so">
+      <plugin name="actor20_plugin" filename="libPedestrianSFM2Plugin.so">
         <runge_kutta_45>false</runge_kutta_45>
         <sampling_time>0.033</sampling_time>
         <publish_forces>true</publish_forces>
@@ -1446,22 +1256,12 @@
         <radius>0.3</radius> 
         <mass>75</mass> 
         <relaxation_time>0.5</relaxation_time> 
-        <k_orthogonal>1</k_orthogonal> 
-        <k_damping>500</k_damping> 
-        <k_lambda>0.3</k_lambda> 
-        <alpha>3</alpha> 
-        <group_distance_forward>2</group_distance_forward>
-        <group_distance_orthogonal>1</group_distance_orthogonal> 
         <k1g>200</k1g> 
         <k2g>200</k2g> 
         <Ai>2000</Ai> 
         <Aw>2000</Aw> 
         <Bi>0.08</Bi> 
         <Bw>0.08</Bw> 
-        <Ci>1000</Ci>
-        <Cw>1000</Cw>
-        <Di>0.2</Di> 
-        <Dw>0.2</Dw>
         <k1>120000</k1> 
         <k2>240000</k2> 
         <animation_factor>5.1</animation_factor>
@@ -1505,7 +1305,7 @@
         <scale>1.000000</scale>
         <interpolate_x>true</interpolate_x>
       </animation>
-      <plugin name="actor21_plugin" filename="libPedestrianMHSFMPlugin.so">
+      <plugin name="actor21_plugin" filename="libPedestrianSFM2Plugin.so">
         <runge_kutta_45>false</runge_kutta_45>
         <sampling_time>0.033</sampling_time>
         <publish_forces>true</publish_forces>
@@ -1515,22 +1315,12 @@
         <radius>0.3</radius> 
         <mass>75</mass> 
         <relaxation_time>0.5</relaxation_time> 
-        <k_orthogonal>1</k_orthogonal> 
-        <k_damping>500</k_damping> 
-        <k_lambda>0.3</k_lambda> 
-        <alpha>3</alpha> 
-        <group_distance_forward>2</group_distance_forward>
-        <group_distance_orthogonal>1</group_distance_orthogonal> 
         <k1g>200</k1g> 
         <k2g>200</k2g> 
         <Ai>2000</Ai> 
         <Aw>2000</Aw> 
         <Bi>0.08</Bi> 
         <Bw>0.08</Bw> 
-        <Ci>1000</Ci>
-        <Cw>1000</Cw>
-        <Di>0.2</Di> 
-        <Dw>0.2</Dw>
         <k1>120000</k1> 
         <k2>240000</k2> 
         <animation_factor>5.1</animation_factor>
@@ -1574,7 +1364,7 @@
         <scale>1.000000</scale>
         <interpolate_x>true</interpolate_x>
       </animation>
-      <plugin name="actor22_plugin" filename="libPedestrianMHSFMPlugin.so">
+      <plugin name="actor22_plugin" filename="libPedestrianSFM2Plugin.so">
         <runge_kutta_45>false</runge_kutta_45>
         <sampling_time>0.033</sampling_time>
         <publish_forces>true</publish_forces>
@@ -1583,23 +1373,13 @@
         <velocity>0.9</velocity> 
         <radius>0.3</radius> 
         <mass>75</mass> 
-        <relaxation_time>0.5</relaxation_time> 
-        <k_orthogonal>1</k_orthogonal> 
-        <k_damping>500</k_damping> 
-        <k_lambda>0.3</k_lambda> 
-        <alpha>3</alpha> 
-        <group_distance_forward>2</group_distance_forward>
-        <group_distance_orthogonal>1</group_distance_orthogonal> 
+        <relaxation_time>0.5</relaxation_time>  
         <k1g>200</k1g> 
         <k2g>200</k2g> 
         <Ai>2000</Ai> 
         <Aw>2000</Aw> 
         <Bi>0.08</Bi> 
         <Bw>0.08</Bw> 
-        <Ci>1000</Ci>
-        <Cw>1000</Cw>
-        <Di>0.2</Di> 
-        <Dw>0.2</Dw>
         <k1>120000</k1> 
         <k2>240000</k2> 
         <animation_factor>5.1</animation_factor>
@@ -1643,7 +1423,7 @@
         <scale>1.000000</scale>
         <interpolate_x>true</interpolate_x>
       </animation>
-      <plugin name="actor23_plugin" filename="libPedestrianMHSFMPlugin.so">
+      <plugin name="actor23_plugin" filename="libPedestrianSFM2Plugin.so">
         <runge_kutta_45>false</runge_kutta_45>
         <sampling_time>0.033</sampling_time>
         <publish_forces>true</publish_forces>
@@ -1653,22 +1433,12 @@
         <radius>0.3</radius> 
         <mass>75</mass> 
         <relaxation_time>0.5</relaxation_time> 
-        <k_orthogonal>1</k_orthogonal> 
-        <k_damping>500</k_damping> 
-        <k_lambda>0.3</k_lambda> 
-        <alpha>3</alpha> 
-        <group_distance_forward>2</group_distance_forward>
-        <group_distance_orthogonal>1</group_distance_orthogonal> 
         <k1g>200</k1g> 
         <k2g>200</k2g> 
         <Ai>2000</Ai> 
         <Aw>2000</Aw> 
         <Bi>0.08</Bi> 
         <Bw>0.08</Bw> 
-        <Ci>1000</Ci>
-        <Cw>1000</Cw>
-        <Di>0.2</Di> 
-        <Dw>0.2</Dw>
         <k1>120000</k1> 
         <k2>240000</k2> 
         <animation_factor>5.1</animation_factor>
@@ -1712,7 +1482,7 @@
         <scale>1.000000</scale>
         <interpolate_x>true</interpolate_x>
       </animation>
-      <plugin name="actor24_plugin" filename="libPedestrianMHSFMPlugin.so">
+      <plugin name="actor24_plugin" filename="libPedestrianSFM2Plugin.so">
         <runge_kutta_45>false</runge_kutta_45>
         <sampling_time>0.033</sampling_time>
         <publish_forces>true</publish_forces>
@@ -1722,22 +1492,12 @@
         <radius>0.3</radius> 
         <mass>75</mass> 
         <relaxation_time>0.5</relaxation_time> 
-        <k_orthogonal>1</k_orthogonal> 
-        <k_damping>500</k_damping> 
-        <k_lambda>0.3</k_lambda> 
-        <alpha>3</alpha> 
-        <group_distance_forward>2</group_distance_forward>
-        <group_distance_orthogonal>1</group_distance_orthogonal> 
         <k1g>200</k1g> 
         <k2g>200</k2g> 
         <Ai>2000</Ai> 
         <Aw>2000</Aw> 
         <Bi>0.08</Bi> 
         <Bw>0.08</Bw> 
-        <Ci>1000</Ci>
-        <Cw>1000</Cw>
-        <Di>0.2</Di> 
-        <Dw>0.2</Dw>
         <k1>120000</k1> 
         <k2>240000</k2> 
         <animation_factor>5.1</animation_factor>

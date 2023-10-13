@@ -352,8 +352,6 @@
           <waypoint>0 5 0</waypoint>
         </trajectory>
       </plugin>
-      <!-- LASER -->
-      
       <!-- Enable collisions -->
       <plugin name="actor1_collision" filename="libAttachModelPlugin.so">
         <link>
